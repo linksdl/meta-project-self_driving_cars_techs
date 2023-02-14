@@ -42,3 +42,9 @@
 > 3,使用cmake
 - 单步调试一定要在CMakeLists.txt中设置 set(CMAKE_BUILD_TYPE DEBUG)
 ***
+
+
+## Git / Github
+
+1, rm -rf ~/.git
+
