@@ -1,0 +1,910 @@
+/* 移动 */
+@media (max-width:768px) {
+    .user-center-header .title {
+        margin-top: 113px !important;
+    }
+	/* .user-center-header .name span{
+		margin-left: 30px;
+	} */
+	.teachers li .bg .main{
+		padding-bottom: 0.05rem;
+	}
+	.teachers li .bg .main .content{
+		margin: 0 auto 0;
+		line-height: 0.2rem;
+	}
+	.new-course-detail .buy-btn-group .btn-1 {
+		bottom: -63px !important;
+		right: 10px !important;
+	}
+	.new-course-detail .content .vip_join .vip_q{
+		font-size: 12px;
+	}
+	.new-course-detail .content .vip_join .vip_q span{
+		font-size: 20px !important;
+	}
+	.new-course-detail .content .vip_join .vip_old{
+		font-size: 14px;
+		margin-left: 4px;
+		margin-top: 2px;
+	}
+	.new-course-detail .content .vip_join .vip_p{
+		left: 162px;
+	}
+	.new-course-detail .content .vip_join{
+		margin-top: 20px !important;
+		margin-left: 23px !important;
+	}
+	
+	/* 会员记录 */
+	.es-section .section-header .vip_top .bt{
+		float: none !important; 
+		width: 120px;
+	}
+	.es-section .section-header .vip_top .ulBox{
+		/* width: 100% !important;
+		float: none !important;
+		padding-left: 18px !important;
+		box-sizing: border-box !important; */
+		display:inline-block;
+	}
+	.es-section .section-header .vip_top .ulBox li{
+		height: auto !important;
+		line-height: none !important;
+		overflow: hidden !important;
+		margin-top: 10px !important;
+	}
+	/* .es-section .section-header .vip_top .ulBox li p.vip_type{
+		height: 60px;
+		line-height: 20px;
+	} */
+	.es-section .section-header .vip_top .ulBox li p.textBox{
+		height: 30px !important;
+		line-height: 20px !important;
+		margin-left: 0 !important;
+		width: auto !important;
+	}
+	.es-section .section-header .vip_top .ulBox li p.no_vip{
+		line-height: 28px !important;
+	}
+	
+	/* 会员 订单页 */
+	.form-horizontal .form-group{
+		margin-left: 0;
+		margin-right: 0;
+	}
+	
+	.order-pay .total-price-vip .text_float{
+		margin-right: -20px !important;
+	}
+	.order-pay .total-price{
+		/* margin:25px 0 0 !important; */
+		/* font-size: 12px; */
+		padding-right: 7px !important;
+			
+	}
+	
+	.new-course-detail .content .vip_mon{
+		margin-left: 23px !important;
+	}
+	.new-course-detail .mb15 {
+		margin-left: 4px !important;
+		margin-bottom: 20px !important;
+	}
+	.new-course-detail .buy-btn-group .btn-1 {
+		bottom: -63px !important;
+		right: 50% !important;
+	}
+	.course-detail-section{
+		padding-bottom: 50px;
+	}
+	
+	.panel-default{
+		padding: 0px 10px !important;
+	}
+	
+	.new-modal-dialog{
+		width: auto !important;
+	}
+}
+
+/* pc */
+/* .new-modal-dialog{
+	width: 900px;
+} */
+.use-coupon .deduction span{
+	color: #3F4A54;
+}
+/* 私信 */
+
+.user-center-header .joinVip{
+	padding: 0px 5px;
+	background: #2C2E40;
+	border-radius: 2px;
+	font-size: 12px;
+    color: #F5CA3A;
+	float: left;
+	margin-left: 8px;
+}
+.user-center-header .joinVip:hover{
+	background: #000000;
+}
+.user-center-header .name{
+	height: 20px;
+}
+.user-center-header .name span{
+	float: left;
+}
+.user-center-header .name .ry-icon{
+	display: block;
+	width: 20px;
+	height: 20px;
+	float: left;
+	margin-left: 8px;
+}
+.user-center-header .name .pt-icon{
+	display: block;
+	width: 23px;
+	height: 23px;
+	float: left;
+	margin-left: 5px;
+
+}
+.user-center-header .name .gj-icon{
+	display: block;
+	width: 23px;
+	height: 19px;
+	float: left;
+	margin-left: 5px;
+
+}
+.course-list .course-item .tags{
+	position: absolute;
+    top: -6px;
+    left: -10px;
+}
+.course-list .course-item .tags .tag-live{
+	display: block;
+	width: 40px;
+    height: 22px;
+    background: #2399F5;
+    border: 2px solid #F5F8FA;
+    border-radius: 12px;
+	font-size: 12px;
+	color: #FFFFFF;
+	/* text-shadow: 0 1px 0 #005BAC; */
+	text-align: center;
+	line-height: 18px;
+	font-weight: bold;
+}
+.course-detail-section .course-detail-top .tags .tag-live{
+	display: block;
+	width: 40px;
+	height: 22px;
+	background: #2399F5;
+	border: 2px solid #F5F8FA;
+	border-radius: 12px;
+	font-size: 12px;
+	color: #FFFFFF;
+	text-shadow: 0 1px 0 #005BAC;
+	text-align: center;
+	line-height: 18px;
+}
+.course-detail-section .course-detail-top .tags{
+	float: none;
+	position: absolute;
+	top: -6px;
+	left: -10px;
+}
+.course-list .course-item .tags-vip{
+	position: absolute;
+    top: -6px;
+    left: 36px;
+}
+
+.course-list .course-item .tags .tag-vip{
+	display: block;
+	width: 40px;
+	height: 22px;
+	background: #F5A623;
+	border: 2px solid #F5F8FA;
+	border-radius: 12px;
+	font-size: 12px;
+	color: #FFFFFF;
+	text-shadow: 0 1px 0 #005BAC;
+	text-align: center;
+	line-height: 18px;
+}
+.course-list .course-item .tags .tag-vip-none{
+	background: #AAAAAA;
+}
+
+.course-list .course-item .course-img{
+	overflow: inherit;
+}
+.course-list-new .course-item .course-img{
+	overflow: inherit;
+}
+.order-pay .total-price .joinSpan{
+	font-size: 12px;
+	color: #005BAC;
+	margin-right: 20px;
+}
+.use-coupon .vip_deduction{
+	background: #F6F8FA;
+    border-radius: 4px 4px 0 0;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #3F4A54;
+    padding-left: 20px;
+    height: 50px;
+    line-height: 50px;
+}
+.use-coupon .vip_deduction .boldText{
+	font-weight: bold;
+}
+.use-coupon .vip_deduction .colText{
+	    color: #FF6000;
+}
+.order-pay .total-price-vip{
+	font-size: 14px;
+	color: #3F4A54;
+	text-align: right;
+	padding-right: 0px;
+	height: 30px;
+    line-height: 30px;
+	margin: 0 ;
+	margin-right: 10px;
+}
+.order-pay .total-price-vip .pos_box{
+	height: auto;
+	position: relative;
+	float: right;
+}
+.order-pay .total-price-vip:first-child{
+	margin-top: 20px;
+}
+.order-pay .total-price-vip .q-icon{
+	display: inline-block;
+	width: 14px;
+	height: 14px;
+	margin-right: 5px;
+	position: relative;
+}
+
+.text_float{
+	width: 315px;
+	height: 54px;
+	background: #FFFFFF;
+	border: 1px solid #E8E8E8;
+	box-shadow: 0 4px 10px 0 rgba(186,186,186,0.29);
+	border-radius: 4px;
+	box-sizing: border-box;
+	padding: 10px;
+	font-size: 12px;
+	color: #666666;
+	text-align: justify;
+	line-height: 18px;
+	display: none;
+	float: right;
+	margin-right: 10px;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+}
+.order-pay .total-price{
+	min-height: 30px;
+	height: auto;
+	margin: 10px 0px 0 10px;
+	overflow: hidden;
+}
+
+
+/* 会员记录 */
+.es-section .section-header .vip_top{
+	width: 100%;
+	min-height: 60px;
+	overflow: hidden;
+	box-sizing: border-box;
+	margin-bottom: 10px;
+	background:  #F9F9F9;
+}
+.es-section .section-header .vip_top .boldText{
+	font-weight: bold;
+}
+.es-section .section-header .vip_top .bt{
+	/* width: 100px; */
+	height: 100%;
+	overflow: hidden;
+	font-size: 14px;
+	color: #2C2E40;
+	line-height: 60px;
+	/* margin-left: 19px; */
+	/* float: left; */
+	display: inline-block;
+}
+/* .es-section .section-header .vip_top .ulBox{
+	float: right;
+	width: 650px;
+	min-height: 60px;
+} */
+/* .es-section .section-header .vip_top .ulBox li{
+	width: 100%;
+	height: 60px;
+	line-height: 60px;
+} */
+.es-section .section-header .vip_top .ulBox li p{
+	line-height:60px;
+}
+/* .es-section .section-header .vip_top .ulBox li p.vip_type{
+	width: 100px;
+	float: left;
+} */
+.es-section .section-header .vip_top .ulBox li p img{
+	width: 20px;
+	height: 20px;
+}   
+.es-section .section-header .vip_top .ulBox li p img.img_2{
+	width: 80px;
+    height: 22px;
+} 
+/* .es-section .section-header .vip_top .ulBox li p.textBox{
+	width: 158px;
+	height: 60px;
+	line-height: 60px;
+	float: left;
+	margin-left: 60px;
+} */
+.es-section .section-header .vip_top .ulBox li p.textBox span:first-child{
+	font-weight: bold;
+	font-size: 14px;
+	color: #2C2E40;
+}
+.es-section .section-header .vip_top .ulBox li p.textBox span:last-child{
+	font-size: 14px;
+	color: #2C2E40;
+}
+.es-section .section-header .vip_top .ulBox li p.textBox a{
+	background: #005BAC;
+	border-radius: 4px;
+	padding: 5px 14px;
+	font-size: 12px;
+	color: #FFFFFF;
+}
+
+/* 课程详情页 */
+.new-course-detail .content .vip_mon{
+	width: 100%;
+    height: auto;
+    overflow: hidden;
+}
+.new-course-detail .content .vip_mon .vip_bt{
+	float: left;
+	width: 60px;
+	height: 16px;
+	background: #2C2E40;
+	border-radius: 2px;
+	text-align: center;
+	line-height: 16px;
+	font-size: 12px;
+	color: #F5CA3A;
+	margin-top: 4px;
+}
+.new-course-detail .content .vip_mon .vip_q{
+	float: left;
+	font-size: 14px;
+	color: #3F4A54;
+	margin-left: 8px;
+}
+.new-course-detail .content .vip_mon .vip_q span{
+	font-size: 18px;
+	font-weight: bold;
+}
+.new-course-detail .content .vip_mon a{
+	float: left;
+	font-size: 12px;
+	color: #005BAC;
+	text-decoration: none;
+	margin-left: 13px;
+}
+.new-course-detail .content .vip_join{
+	position: relative;
+	overflow: initial;
+	height: 26px;
+}
+.new-course-detail .content .vip_join .vip_q {
+	font-size: 14px;
+	color: #FF6000;
+}
+
+.new-course-detail .content .vip_join .vip_q span{
+	font-size: 24px;
+}
+.new-course-detail .content .vip_join .vip_old{
+	float: left;
+	font-size: 16px;
+	color: #999999;
+	text-decoration: line-through;
+	margin-left: 10px;
+}
+.new-course-detail .content .vip_join .vip_p{
+	background: #FF6000;
+	border-radius: 10px 10px 10px 0;
+	width: 40px;
+	height: 20px;
+	font-size: 12px;
+	color: #FFFFFF;
+	font-weight: bold;
+	position: absolute;
+	top: -18px;
+	left: 182px;
+	text-align: center;
+	line-height:20px ;
+}
+
+/* 侧边栏 */
+.es-bar-menu>ul>li>a{
+	text-align: center;
+	cursor: pointer;
+}
+
+.order-pay .pay-rmb{
+	color: #FE5400;
+}
+.order-detail-bg .order-img img{
+	border-radius: 8px;
+}
+
+/* 导航 */
+/* .nav.user-nav .user-avatar-li .dropdown-menu {
+    width: 240px;
+    background: #fff;
+    left: auto;
+    right: -50px !important;
+	padding: 20px 0;
+}
+.nav.user-nav .user-avatar-li .dropdown-menu>li {
+    width: 100px;
+	height: 30px;
+	line-height: 30px;
+	background: #F6F8FA;
+	border-radius: 2px;
+	float: left;
+	margin-right: 2px;
+	margin-bottom: 2px;
+}
+
+.nav.user-nav .user-avatar-li .dropdown-menu>li:last-child{
+		margin-left: 20px;
+	}
+.nav.user-nav .user-avatar-li .dropdown-menu>li:first-child{
+	width: 100%	;
+	padding: 0 20px;
+    margin-bottom: 20px;
+}
+.nav.user-nav .user-avatar-li .dropdown-menu>li:nth-child(4){
+		margin-left: 20px;
+	}
+.nav.user-nav .user-avatar-li .dropdown-menu>li:nth-child(2){
+		margin-left: 20px;
+	}
+.nav.user-nav .user-avatar-li .dropdown-menu .dropdown-header-new{
+	width: 100%;
+	height: 60px;
+	background: none;
+}
+.nav.user-nav .user-avatar-li .dropdown-menu .dropdown-header-new .userImg{
+	width: 60px;
+	height:60px;
+	display:block;
+	float: left;
+	border-radius: 30px;
+}*/
+.nav.user-nav .user-avatar-li .dropdown-menu .dropdown-header-new{
+	width: 100%;
+	height: 70px;
+	background: none;
+	border-bottom: 1px solid #f5f5f5;
+}
+.nav.user-nav .user-avatar-li .dropdown-menu .dropdown-header-new .userDetail{
+	width: 125px;
+	height: 60px;
+	float: left;
+	padding-top: 10px;
+	margin-left: 18px;
+}
+.nav.user-nav .user-avatar-li .dropdown-menu .dropdown-header-new .userDetail p{
+	width: 100%;
+	font-size: 14px;
+	color: #333333;
+	line-height: 20px;
+	 overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap
+}
+.nav.user-nav .dropdown-menu .dropdown-header-new .userDetail p.vip_p{
+	margin-top: 6px;
+}
+.nav.user-nav .user-avatar-li .dropdown-menu .dropdown-header-new .userDetail p img{
+	margin-right: 5px;
+}
+.nav.user-nav .dropdown-menu .dropdown-header-new .userDetail p.vip_p .icon_1{
+	width: 20px;
+	height: 20px;
+}
+.nav.user-nav .user-avatar-li .dropdown-menu .dropdown-header-new .userDetail p a{
+	background: #2C2E40;
+	border-radius: 2px;
+	padding: 2px 4px;
+	font-size: 12px;
+	color: #F5CA3A;
+}
+/* .nav.user-nav .user-avatar-li .dropdown-menu .dropdown-header-new .userDetail p .icon_1{
+	width: 10px;
+	height: 13px;
+}
+.nav.user-nav  .user-avatar-li.dropdown-menu .dropdown-header-new .userDetail p .icon_2{
+	width: 14px;
+	height: 12px;
+}
+.nav.user-nav .user-avatar-li .dropdown-menu .dropdown-header-new .userDetail p .icon_3{
+	width: 14px;
+	height: 12px;
+} 
+.nav.user-nav .user-avatar-li .dropdown-menu .dropdown-header-new .userDetail p a{
+	background: #2C2E40;
+	border-radius: 2px;
+	padding: 2px 4px;
+	font-size: 12px;
+	color: #F5CA3A;
+}
+
+/*.nav.user-nav .user-avatar-li .dropdown-menu>li>a, .mobile header .dropdown-menu>li>a {
+    padding-left: 10px
+}
+.nav.user-nav .user-avatar-li .dropdown-menu>li>a {
+    padding:0;
+	line-height: 30px;
+}
+.nav.user-nav .user-avatar-li .dropdown-menu>li .num, .mobile header .dropdown-menu>li .num {
+    background: #999;
+    padding: 0 10px;
+    border-radius: 20px;
+    color: #fff;
+    transition: all .3s ease
+}
+@media (min-width:1200px) {
+    .hidden-lg {
+        display: none!important;
+    }
+	.nav.user-nav .user-avatar-li .dropdown-menu>li:nth-child(5){
+		margin-left: 20px;
+	}
+}
+@media (max-width:1200px) {
+	
+	.nav.user-nav .user-avatar-li .dropdown-menu>li:nth-child(6){
+		margin-left: 20px;
+	}
+	.nav.user-nav .user-avatar-li .dropdown-menu>li:nth-child(8){
+		margin-left: 20px;
+	}
+	.es-header .nav.user-nav>li.user-avatar-li .dropdown-menu>li .num {
+		background: #999;
+		padding: 0 10px;
+		border-radius: 20px;
+		color: #fff
+	}
+
+	
+} */
+.public-class .pagination{
+	display: inline-block;
+    padding-left: 0;
+    margin: 20px 0;
+    border-radius: 4px;
+	width: auto;
+	padding-bottom: 0;
+}
+
+.open-course-list .tags{
+	position: absolute;
+    top: -6px;
+    left: 0px;
+}
+.open-course-list .tags .tag-live{
+	display: block;
+	width: 40px;
+    height: 22px;
+    background: #2399F5;
+    border: 2px solid #F5F8FA;
+    border-radius: 12px;
+	font-size: 12px;
+	color: #FFFFFF;
+	text-shadow: 0 1px 0 #005BAC;
+	text-align: center;
+	line-height: 18px;
+}
+.public-class .course-list .course-info .title{
+	width: 100%;
+	height: 20px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space:nowrap
+}
+
+
+.tags-new{
+	position: absolute;
+    top: 0;
+    left: 10px;
+}
+
+.dropdown-menu .dropdown-header{
+	text-align: left;
+}
+.dropdown-header .nameP{
+	width: 100%;
+    height: auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-all;
+}
+.dropdown-header .vipP{
+	width: 100%;
+	height: auto;
+	overflow: hidden;
+	margin-top: 6px;
+    margin-bottom: 10px;
+}
+.dropdown-header .icon_1{
+	width: 20px;
+	height: 20px;
+	float: left;
+	margin-right: 5px;
+}
+.dropdown-header .vipAbtn{
+	background: #2C2E40;
+    border-radius: 2px;
+    padding: 0;
+    font-size: 12px;
+    color: #F5CA3A;
+    width: 58px;
+    height: 22px;
+    /* margin: 0 auto; */
+    text-align: center;
+    line-height: 22px;
+	float: left;
+}
+/* 引用自定义图标库svg */
+  @font-face {
+	font-family: 'sl-icon';
+	src:  url('/static-dist/app/fonts/sl-icon.eot?sl202207');
+	src:  url('/static-dist/app/fonts/sl-icon.eot?sl202207#iefix') format('embedded-opentype'),
+	  url('/static-dist/app/fonts/sl-icon.ttf?sl202207') format('truetype'),
+	  url('/static-dist/app/fonts/sl-icon.woff?sl202207') format('woff'),
+	  url('/static-dist/app/fonts/sl-icon.svg?sl202207#sl-icon') format('svg');
+	font-weight: normal;
+	font-style: normal;
+  }
+.sl-icon {
+    font-family: 'sl-icon' !important;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale
+}
+
+.sl-icon-replay:before {
+	content: "\e900";
+  }
+  .sl-icon-fanhuidingbu01b_icon:before {
+	content: "\e901";
+  }
+  .sl-icon-tishi_icon:before {
+	content: "\e902";
+  }
+  .sl-icon-remove:before {
+	content: "\e903";
+  }
+  .sl-icon-shoujihao1_icon:before {
+	content: "\e904";
+  }
+  .sl-icon-yanzhengma_icon:before {
+	content: "\e905";
+  }
+  .sl-icon-zhanghaomimadenglu_icon:before {
+	content: "\e906";
+  }
+  .sl-icon-uniE900:before {
+	content: "\e907";
+  }
+  .sl-icon-xiazai01_icon:before {
+	content: "\e908";
+  }
+  .sl-icon-xiugai01_icon:before {
+	content: "\e909";
+  }
+  .sl-icon-fenxiang01_icon:before {
+	content: "\e90a";
+  }
+  .sl-icon-biji02_icon:before {
+	content: "\e90b";
+  }
+  .sl-icon-huati02_icon:before {
+	content: "\e90c";
+  }
+  .sl-icon-kaoshi02_icon:before {
+	content: "\e90d";
+  }
+  .sl-icon-kecheng02_icon:before {
+	content: "\e90e";
+  }
+  .sl-icon-wenda02_icon:before {
+	content: "\e90f";
+  }
+  .sl-icon-xiaoxi02_icon:before {
+	content: "\e910";
+  }
+  .sl-icon-zuoye02_icon:before {
+	content: "\e911";
+  }
+  .sl-icon-fanhuijiaoshi_icon:before {
+	content: "\e912";
+  }
+  .sl-icon-star02_icon:before {
+	content: "\e913";
+  }
+  .sl-icon-zaixianzixun_icon:before {
+	content: "\e914";
+  }
+  .sl-icon-gongzhonghao_icon:before {
+	content: "\e915";
+  }
+  .sl-icon-mykaoshi_icon:before {
+	content: "\e916";
+  }
+  .sl-icon-mykecheng_icon:before {
+	content: "\e917";
+  }
+  .sl-icon-ziliaoku01_icon:before {
+	content: "\e918";
+  }
+  .sl-icon-shijuan_icon:before {
+	content: "\e919";
+  }
+  .sl-icon-mytopic_icon:before {
+	content: "\e91a";
+  }
+  .sl-icon-xuanzhong_icon:before {
+	content: "\e91b";
+  }
+  .sl-icon-zhankai01_icon:before {
+	content: "\e91c";
+  }
+  .sl-icon-zuoye_icon:before {
+	content: "\e91d";
+  }
+  .sl-icon-mynote_icon:before {
+	content: "\e91e";
+  }
+  .sl-icon-mymessage_icon:before {
+	content: "\e91f";
+  }
+  .sl-icon-myhomework_icon:before {
+	content: "\e920";
+  }
+  .sl-icon-myanswer_icon:before {
+	content: "\e921";
+  }
+  .sl-icon-guanbi_icon-2:before {
+	content: "\e922";
+  }
+  .sl-icon-zhengshu_icon:before {
+	content: "\e923";
+  }
+  .sl-icon-chaxun_icon:before {
+	content: "\e924";
+  }
+  .sl-icon-gouwuche_icon:before {
+	content: "\e925";
+  }
+  .sl-icon-kechengtaolun_icon:before {
+	content: "\e926";
+  }
+
+.price_logo {
+	height: 30vh;
+	overflow: hidden;
+	position: relative
+}
+
+.price_logo .logo_wrap {
+	position: relative;
+	width: 100vw;
+	height: 30vh;
+	overflow: hidden;
+	margin: 0 auto;
+	font-size: 0
+}
+
+.price_logo .logo_wrap .mask {
+	position: absolute;
+	z-index: 10
+}
+
+.price_logo .logo_wrap .left_mask {
+	left: 0
+}
+
+.price_logo .logo_wrap .right_mask {
+	right: 0;
+	-webkit-transform: rotate(180deg);
+	-ms-transform: rotate(180deg);
+	transform: rotate(180deg)
+}
+
+.price_logo .logo_wrap .line_odd {
+	width: 800vw;
+	height: 15vh;
+	-webkit-animation: scrollToRight-data-v-6a32e916 24s linear infinite;
+	animation: scrollToRight-data-v-6a32e916 24s linear infinite;
+}
+
+.price_logo .logo_wrap .line_odd .logo_img {
+	width: 50%;
+	display: inline-block
+}
+
+.price_logo .logo_wrap .line_even {
+	width: 800vw;
+	height: 15vh;
+	-webkit-animation: scrollToRight-data-v-6a32e916 36s linear infinite;
+	animation: scrollToRight-data-v-6a32e916 36s linear infinite
+}
+
+.price_logo .logo_wrap .line_tree {
+	width: 800vw;
+	height: 15vh;
+	-webkit-animation: scrollToRight-data-v-6a32e916 18s linear infinite;
+	animation: scrollToRight-data-v-6a32e916 18s linear infinite
+}
+
+.price_logo .logo_wrap .logo_img {
+	width: 50%;
+	display: inline-block
+}
+
+@-webkit-keyframes scrollToRight-data-v-6a32e916 {
+	from {
+		-webkit-transform: translate3d(-50%, 0, 0);
+		transform: translate3d(-50%, 0, 0)
+	}
+
+	to {
+		-webkit-transform: translate3d(0%, 0, 0);
+		transform: translate3d(0%, 0, 0)
+	}
+}
+
+@keyframes scrollToRight-data-v-6a32e916 {
+	from {
+		-webkit-transform: translate3d(-50%, 0, 0);
+		transform: translate3d(-50%, 0, 0)
+	}
+
+	to {
+		-webkit-transform: translate3d(0%, 0, 0);
+		transform: translate3d(0%, 0, 0)
+	}
+}
+
+@keyframes scrollToRight-data-v-6a32e916 {
+	from {
+		-webkit-transform: translate3d(-50%, 0, 0)
+	}
+
+	to {
+		-webkit-transform: translate3d(0%, 0, 0)
+	}
+}
+  
