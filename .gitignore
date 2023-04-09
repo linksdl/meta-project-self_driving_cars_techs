@@ -30,6 +30,9 @@
 *.exe
 *.out
 *.app
+*.zip
+*.stp
+*.hex
 
 .vscode/*
 .idea/*
@@ -38,3 +41,4 @@
 */devel/*
 .catkin_workspace
 Chrome/*
+OriginBot/src/*
