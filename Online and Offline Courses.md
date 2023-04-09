@@ -22,7 +22,7 @@
 - [深蓝学院](#shenlan)
 - [Udacity](#udacity)
 
-### 深蓝学院<a name="shenlan"></a>
+### 1, [深蓝学院](https://www.shenlanxueyuan.com/)<a name="shenlan"></a>
 > 深蓝学院是专注于前沿科技的教育平台，目前在人工智能、机器人与自动驾驶领域搭建了完善的课程体系，并在积极探索嵌入式、物联网、增强现实领域的教育模式。学院致力于为企业培养踏实上进的工匠型人才，也愿与企业共同探索人才教育方案。
 
 
@@ -194,7 +194,7 @@
 
 
 
-### [优达学城 Udacity](https://www.udacity.com/)<a name="udacity"></a>
+### 2, [优达学城 Udacity](https://www.udacity.com/)<a name="udacity"></a>
 > **The School of Autonomous Systems** 
 > The field of autonomous vehicles is set to grow by 42% within the next four years, with salaries for top engineers averaging between $300-$500k. Advance your career in this rewarding field by studying 15 hours/week.
 
@@ -213,3 +213,41 @@
 - [ ]深度强化学习 Deep Reinforcement Learning
 - [ ]人工智能 Artificial Intelligence
 - [ ]深度学习 Deep Learning
+
+
+### 3, [Coursera](https://www.coursera.org/)
+> **Self-Driving Cars Specialization Offered by University of TORONTO**
+> Launch Your Career in Self-Driving Cars. Be at the forefront of the autonomous driving industry.
+
+- [ ]自动驾驶入门 Introduction to Self-Driving Cars
+- [ ]自动驾驶状态估计和定位 State Estimation and Localization for Self-Driving Cars
+- [ ]自动驾驶视觉感知 Visual Perception for Self-Driving Cars
+- [ ]自动驾驶运动规划 Motion Planning for Self-Driving Cars
+- [x]深度学习专项认证 [Deep Learning Specialization](https://www.coursera.org/specializations/deep-learning?#courses)
+- [x]机器学习 [Machine Learning](https://www.coursera.org/learn/machine-learning)
+
+
+### 4, [中国大学 MOOC](https://www.icourse163.org/course/BIT-1207432808?tid=1465692443)
+> 这是一门面向初学者的无人驾驶车辆慕课，由北京理工大学智能车辆团队倾情打造。理论联系实际，用丰富的案例进行讲解。课程也许不会告诉你无人驾驶全部的“秘密”，但从这门课学到的知识，可以帮助你去探寻无人驾驶的“秘密”。
+
+- [x][无人驾驶车辆](https://www.icourse163.org/learn/BIT-1207432808?tid=1467141702#/learn/announce)
+
+### 5, [古月居/学院](https://www.guyuehome.com/)
+> 古月居是全国知名的ROS机器人开发者社区。这里有专业的ROS机器人博客教程,系统的ROS机器人视频课程及项目仿真实践,帮你从零入门ROS机器人开发。
+
+- ROS入门
+	- [ ]ROS 入门21讲
+	- [ ]ROS2 入门21讲
+
+### 6, [计算机视觉life](https://cvlife.net/)
+> 1.我们平台主营AI项目实战课程：包括视觉/视觉惯性/激光/多传感器融合SLAM、三维重建等课程，是自动驾驶、机器人、无人机、增强现实领域的底层核心技术。点击课程官网：cvlife.net 查看。
+
+> 2.我们有全国最大的SLAM/3D视觉开发者社区，已经有3900+付费会员，运营3年，积累了6500+主题分享、9500+问答/评论，包括小白入门图文/视频教程、疑难点解答、最新论文/开源代码/数据集分享、在线学习小组、笔试面试题、实习/校招/社招岗位推荐、星主私密直播等
+
+
+### 7, [3D与SLAM](https://www.3dcver.com/)
+> 这是国内最大的3D视觉领域学习交流的社区平台，目前已有近5000名活跃的成员，主要涉及3D视觉、CV&深度学习、视觉SLAM、激光SLAM、视觉三维重建、点云后处理、自动驾驶、结构光、双目视觉、CV入门、三维测量、缺陷检测、视觉产品落地、视觉竞赛、硬件选型、学术交流、求职交流等领域。星球内部汇集了众多实战问题（相信一定能帮你少走很多弯路），以及各个模块的学习资料：论文、书籍、源码、视频等。
+> 
+> 针对小白，星球推出了学习路线，能够帮助新人逐渐进阶学习，我们的vip群更是营造了良好的学术交流环境。
+> 
+> 针对需要进阶的童鞋，星球汇总了大量的前沿技术资源，相信这些内容一定能够帮助到个人的成长发展。

@@ -3,8 +3,6 @@
 > For single skill or tech learning includes notes, docs and source code.
 > 自动驾驶技能学习（C/C++，PCL，Ceres, G2o etc.）笔记，文档 和代码片段。
 
-### 定位建图
-- 
 
 ### L-SALAM 定位建图
 - Docker, Ubuntu, ros, rviz, kitti数据集, evo（评估工具）
@@ -29,3 +27,9 @@
 - 惯性器件：误差分析，标定，
 - 姿态表示：欧拉角、旋转矩阵、四元数，此外还有等效旋转矢量
 - 传感器时空标定：内参，外参，时间标定。
+
+
+### CenterNet
+CenterNet 中心点的问题
+- 中心点处的特征表示性不够
+- 对于形变比较大的物体，例如拖挂车，转弯处的两节公交车
