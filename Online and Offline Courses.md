@@ -1,4 +1,28 @@
-## 深蓝学院
+## 在线｜离线课程大全 Online and Offline Courses
+
+
+### 在线课程网站
+- [深蓝学院](https://www.shenlanxueyuan.com/)
+- [Udacity](https://www.udacity.com/)
+- [Coursera](https://www.coursera.org/)
+- [Stanford Online](https://online.stanford.edu/)
+- [MicorSoft Learn](https://learn.microsoft.com/en-us/training/)
+- [MIT Deep Learning](https://deeplearning.mit.edu/)
+- [Apollo Studio](https://apollo.baidu.com/community/online-course)
+- [中国大学MOOC](https://www.icourse163.org/)
+- [B站](https://www.bilibili.com/)
+- [网易公开课](https://open.163.com/)
+- [古月居](https://www.guyuehome.com/)
+- [3D与SLAM](https://www.3dcver.com/)
+- [计算机视觉life](https://cvlife.net/)
+- [睿慕课](https://www.aiimooc.com/)
+- [智东西](https://zhidx.com/)
+
+### 课程列表
+- [深蓝学院](#shenlan)
+- [Udacity](#udacity)
+
+### 深蓝学院<a name="shenlan"></a>
 > 深蓝学院是专注于前沿科技的教育平台，目前在人工智能、机器人与自动驾驶领域搭建了完善的课程体系，并在积极探索嵌入式、物联网、增强现实领域的教育模式。学院致力于为企业培养踏实上进的工匠型人才，也愿与企业共同探索人才教育方案。
 
 
@@ -12,7 +36,7 @@
 - [8.机器学习](#machine-base)
 
 
-### 1. 人工智能基础 <a name="ai-base"></a>
+#### 1. 人工智能基础 <a name="ai-base"></a>
 - 深度神经网络加速：cuDNN 与 TensorRT
 > CUDA核心的并行运算操作，涵盖主流的模型加速工具cuDNN与TensorRT。
 - C++基础与深度解析
@@ -30,7 +54,7 @@
 - 机器学习数学基础
 > 全新撰写课程的配套讲义，紧密结合人工智能算法案例
 
-### 2. 增强现实 <a name="ar-base"></a>
+#### 2. 增强现实 <a name="ar-base"></a>
 - 基于图像的三维重建
 > 拒绝调用现成函数库，核心算法逐行代码实现
 - 视觉SLAM进阶：从零开始手写VIO
@@ -40,11 +64,11 @@
 - 视觉SLAM基础
 > 概括介绍了视觉SLAM框架、三维视觉基础、状态估计的基础，以及视觉SLAM前后端的知识。
 
-### 3. 推荐系统 <a name="recommend-base"></a>
+#### 3. 推荐系统 <a name="recommend-base"></a>
 - 智能推荐系统入门与提高
 > 权威专家授课，内容由经典方法到图神经网络前沿方法
 
-### 4. 智能机器人 <a name="robot-base"></a>
+#### 4. 智能机器人 <a name="robot-base"></a>
 - 【湖州校区】自动驾驶技术线下实训营-工程实践类
 > 熟悉自动驾驶整体架构，掌握定位、感知、规控等核心模块之间的协同配合
 - 视觉SLAM理论与实践
@@ -106,7 +130,7 @@
 - 视觉SLAM技术及其应用
 > vSLAM关键问题研究以及相关应用
 
-### 5. 智能语音 <a name="yuyin-base"></a>
+#### 5. 智能语音 <a name="yuyin-base"></a>
 - 声纹识别：从理论到编程实战
 > 详解声纹识别技术中的基本概念和核心算法
 - 语音识别：从入门到精通
@@ -120,7 +144,7 @@
 - 语音算法：前沿与应用
 > 主讲端到端的语音前沿算法，融入工程应用经验
 
-### 6. 自然语言处理 <a name="nlp-base"></a>
+#### 6. 自然语言处理 <a name="nlp-base"></a>
 - 知识图谱理论与实践（线上）
 > 深入理解知识图谱各生命周期的主流算法，并实践简单的知识图谱问答系统
 - 基于深度学习的自然语言处理
@@ -130,7 +154,7 @@
 - 面向大规模知识图谱的智能问答(知识图谱公开课)
 > 知识图谱发展脉络及关键技术梳理；基于深度融合模型的智能问答框架介绍
 
-### 7. 计算机视觉 <a name="cv-base"></a>
+#### 7. 计算机视觉 <a name="cv-base"></a>
 - 视觉SLAM理论与实践
 > 精心设计作业和实践项目，班主任全程带班，助教1V1批改作业
 - 三维点云处理
@@ -156,7 +180,7 @@
 - 视觉SLAM技术及其应用
 > vSLAM关键问题研究以及相关应用
 
-### 8. 机器学习 <a name="machine-base"></a>
+#### 8. 机器学习 <a name="machine-base"></a>
 - 深度神经网络加速：cuDNN 与 TensorRT
 > CUDA核心的并行运算操作，涵盖主流的模型加速工具cuDNN与TensorRT。
 - 图深度学习：理论与实践
@@ -167,3 +191,25 @@
 > 人工智能入门必备！
 - 机器学习数学基础(第一期)
 > 全新撰写课程的配套讲义，紧密结合人工智能算法案例
+
+
+
+### [优达学城 Udacity](https://www.udacity.com/)<a name="udacity"></a>
+> **The School of Autonomous Systems** 
+> The field of autonomous vehicles is set to grow by 42% within the next four years, with salaries for top engineers averaging between $300-$500k. Advance your career in this rewarding field by studying 15 hours/week.
+
+- [x]自动驾驶入门 Introduction to Self-Driving Cars
+- [ ]机器人软件工程师 Robotics Software Engineer
+- [ ]无人飞行车工程师 Flying Car and Autonomous Flight Engineer
+- [x]自动驾驶工程师 Self-Driving Car Engineer
+- [x]感知融合工程师 Sensor Fusion Engineer
+- [ ]数字的自由职业者 Digital Freelancer
+- [x]C++编程
+- [ ]数据结构与算法 Data Structures and Algorithms
+- [ ]计算机视觉 Computer Vision
+- [ ]AI编程（Python）AI Programming with Python
+- [ ]机器学习入门（PyTorch）Intro to Machine Learning with PyTorch
+- [ ]机器学习入门（TensorFlow）Intro to Machine Learning with TensorFlow
+- [ ]深度强化学习 Deep Reinforcement Learning
+- [ ]人工智能 Artificial Intelligence
+- [ ]深度学习 Deep Learning
