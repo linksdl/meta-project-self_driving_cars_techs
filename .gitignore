@@ -37,6 +37,8 @@
 .vscode/*
 .idea/*
 
+Courses/*
+
 */build/*
 */devel/*
 .catkin_workspace
