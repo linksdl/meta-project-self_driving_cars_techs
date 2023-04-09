@@ -1,16 +1,17 @@
 ## 无人驾驶｜机器人｜无人机｜人工智能 技能综合大纲
 
 This repository is using for recording resources about the **Self-Driving Car, Robotic, UAV, Artifical Intelligence** which are my interests deeply loving.
-
-### 资源大全（Outline of Resouces）
-- 在线学习网站/平台
+### 1, 资源大全（Outline of Resouces）
+- 学习网站/平台
+- 代码仓库
+- 开发/技术/开源社区
 - 论文
 - 公号/期刊
 - 技术文章/笔记
 - 课程文档/笔记
 - 行业报告/新闻/报道
 - 书籍
-- 比赛/挑战赛
+- 编程比赛/挑战赛
 - 证书/行业认证/技能认证
 - 工作机会
 - 公司发展
@@ -30,10 +31,3 @@ This repository is using for recording resources about the **Self-Driving Car, R
 
 
 
-
-## 自动驾驶技能学习
-> For single skill or tech learning includes notes, docs and source code.
-> 自动驾驶技能学习（C/C++，PCL，Ceres, G2o etc.）笔记，文档 和代码片段。
-
-### 定位建图
-- 
