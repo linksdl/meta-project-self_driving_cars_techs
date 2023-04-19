@@ -862,20 +862,15 @@ renderPointCloud(viewer,filterCloud,"filterCloud");
 
 最后，您在各个集群周围放置边界框。由于该场景中所有可检测到的车辆都与我们的汽车位于同一轴上，因此点处理器中已经设置的简单边界框功能应该会产生良好的结果。
 
-
-
 边界框
 
 惊人的！恭喜您在真实的 pcd 文件上完成了点处理管道。一旦您对单帧的结果感到满意，让我们看看处理帧流。
-
-
 
 ##### Streamed PCD
 
 ![Playing back the pcd files.](http://127.0.0.1:8887/Part%2002-Module%2001-Lesson%2004_Working%20with%20Real%20PCD/img/pcdstream.gif)
 
 Playing back the pcd files.
-
 
 Stream PCD with PCL
 
@@ -928,17 +923,14 @@ while (!viewer->wasStopped ())
 
 The first thing the above method does is clear any previous rendered point clouds or shapes. Next it loads up your point cloud using your point processor and stream iterator. Then it calls your `cityBlock` function, and updates the iterator. If the iterator hits the end of the vector it simply sets it back to the beginning and that's it. The `viewer->spinOnce()` call controls the frame rate, by default it waits 1 time step, which would make it run as fast as possible. Depending on how timing efficient your obstacle detection functions were set up the faster the viewer's frame rate will be. If you want to check out the input pcd data at the fastest rate then run the code above and only run a single `renderPointCloud` on the input cloud inside `cityBlock`. Let's check out the results of the streaming pcd viewer below.
 
-
 Streamed Obstacle Detection
 
 ![](http://127.0.0.1:8887/Part%2002-Module%2001-Lesson%2004_Working%20with%20Real%20PCD/img/pcdstreamdetection.gif)
-
 
 Instructions
 
 * Modify `environment.cpp` with the above changes
 * Call `cityBlock` to perform obstacle detection on each frame
-
 
 ##### 激光雷达障碍物检测项目
 
@@ -948,10 +940,7 @@ Instructions
 
 ![激光雷达障碍物检测。](http://127.0.0.1:8887/Part%2002-Module%2001-Lesson%2004_Working%20with%20Real%20PCD/img/obstacledetectionfps.gif)
 
-
-
 ##### Tracking and Challenge Problem
-
 
 关于跟踪的讨论
 
@@ -959,12 +948,9 @@ Instructions
 
 在两个不同帧之间创建关联的一种方法是通过两个检测彼此之间的接近程度以及它们看起来的相似程度。您还可以探索更多的过滤程序，例如在考虑连续帧之前查看在连续帧中看到的检测。您还可以根据边界框、它们的体积和形状进行过滤。通过部署跟踪方法和关联，您可以尝试动态构建障碍物的形状。这方面的例子可能是，也许你看到一辆长卡车的背面，激光雷达只会首先看到卡车的背面。然后你开车经过卡车。让激光雷达看到卡车的一侧。有很多方法可以继续探索并使检测过程更加稳健。
 
-
-
 ##### 挑战题：追踪骑在车前的骑车人。
 
 ![挑战题：追踪骑在车前的骑车人。](http://127.0.0.1:8887/Part%2002-Module%2001-Lesson%2004_Working%20with%20Real%20PCD/img/challengeset.gif)
-
 
 ##### Challenge PCD Set
 
@@ -972,16 +958,11 @@ Instructions
 
 如果您准备好迎接额外的挑战，请查看 `src/sensors/data/pcd/data_2`您检测/跟踪骑在车前的自行车手以及检测/跟踪场景中其他周围障碍物的能力。
 
-
 #### [ **第 05 课：** 激光雷达障碍物检测项目](http://127.0.0.1:8887/Part%2002-Module%2001-Lesson%2005_Lidar%20Obstacle%20Detection%20Project/index.html)
-
-
 
 ### **第 03 部分：** 雷达
 
-
 #### 第 01 课：简介
-
 
 在本课程中，我们将详细讨论雷达如何为自动驾驶汽车生成感知。从头开始，我们将从雷达的基本原理开始构建。我们将介绍信号传播和目标响应生成。然后我们将深入研究实时定位目标所需的距离多普勒生成。
 
@@ -989,13 +970,11 @@ Instructions
 
 让我们开始吧！
 
-
 在整个雷达课程中，您将从 Andrei Vatavu 那里了解有关雷达的观点。[Andrei 在MBRDNA](https://mbrdna.com/)开发传感器融合算法。在下一个视频中，Andrei 将向您介绍一些关于他自己和他在 MBRDNA 的角色。
 
 ##### MATLAB
 
 ![](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2001_Introduction/img/matlab-1.png)
-
 
 In this course, you will be using [MATLAB](https://www.mathworks.com/products/matlab.html) to complete all of the exercises and the projects locally on your computer. To get started, you can follow these steps:
 
@@ -1005,13 +984,1619 @@ In this course, you will be using [MATLAB](https://www.mathworks.com/products/ma
 
 Some of the toolboxes included in the installation are not used in the course (e.g. Computer Vision and Image Processing toolboxes), but feel free to test them out if you like!
 
-
-
 ##### Using MATLAB
 
 If you've never used MATLAB before, there is no need for concern - the language has an intuitive syntax, and you can try to pick up parts of the syntax as-needed while you go through the course. If you'd prefer to have a more formal introduction, there is a great series of tutorials provided by MathWorks, the creators of MATLAB. You can find the tutorials [here](https://www.mathworks.com/learn/tutorials/matlab-onramp.html).
 
-
 #### [ **第 02 课：** 雷达原理](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2002_Radar%20Principles/index.html)
 
 查看雷达功能、FMCW 波形、雷达硬件、原理图和雷达方程
+
+##### 为什么自动驾驶汽车专门用雷达
+
+- 测量径向速度
+- 不受环境影响
+- 可以区分静态障碍物和动态障碍物
+
+##### 雷达传感器FMCW
+
+雷达自 1930 年代以来一直在使用，当时它们主要被军方用来探测飞机，但从那时起，雷达技术已经取得了长足的进步，如今它们越来越多地被用作高级驾驶员辅助系统 (ADAS) 的汽车雷达传感器。下图显示了雷达传感器如何与自动驾驶汽车中的全套其他传感器一起使用：
+
+![1681737254424](image/LearningNotes/1681737254424.png)
+
+![汽车空间中的雷达传感器 来源：cdn.rohde-schwarz.com](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2002_Radar%20Principles/img/image21.png)
+
+汽车领域的雷达传感器
+
+##### RADAR 特性
+
+- 射频技术和数字信号处理的进步使得以低成本和更小尺寸设计高效雷达成为可能。
+- 雷达利用准确的速度和空间信息确定远距离目标的能力使其成为自动驾驶应用的重要传感器。
+- 此外，它在黑暗和恶劣天气（雨、雾）条件下感知物体的能力也有助于它覆盖激光雷达或相机可能失败的领域。
+
+##### 雷达如何探测物体
+
+雷达使用电磁波的传输和检测工作，如下图所示：
+
+![雷达操作<span data-type=](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2002_Radar%20Principles/img/image16.png)\[来源：electricalelibrary\]" />
+
+##### 雷达物理学
+
+如果遇到障碍物，电磁波会被反射。如果这些反射波在它们的原点再次被接收到，那么这意味着在传播方向上有障碍物。
+
+用于雷达的电磁能频率不受黑暗影响，也能穿透雾和云。这允许雷达系统确定由于距离、黑暗或天气而肉眼看不见的道路目标的位置。
+
+现代雷达可以从目标的回波信号中提取比其范围更多的信息。
+
+博世汽车雷达
+
+![博世汽车雷达](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2002_Radar%20Principles/img/image26.png)
+
+汽车雷达是小型传感器，可以轻松安装在前格栅或保险杠下方。如上图所示，雷达模块由不同的部分组成。
+
+* **雷达罩或雷达罩** ：*天线罩*是一种结构性、防风雨的外壳，可保护雷达天线。天线罩由对天线发射或接收的电磁信号衰减最小的材料构成，对无线电波有效透明。
+* **雷达印刷电路板** ：这是模拟硬件，包括无线电波生成所需的雷达收发器和天线。
+* **印刷电路板和处理** ：这包括数字信号处理 (DSP) 单元。
+
+##### 雷达与激光雷达
+
+![雷达和激光雷达的比较<span data-type=](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2002_Radar%20Principles/img/image27.png)\[来源：cleantechnica\]" />
+
+人们可以找到许多比较 LIDAR 和 RADAR 的文章，但实际上，这些传感器是相互补充的。
+
+激光雷达可以根据目标对激光的反射生成高分辨率成像。但激光雷达在恶劣天气条件下会失效，因为非常小的波长无法在雾天或雨天正常工作。此外，激光雷达是一种昂贵的传感器，截至 2019 年，成本从 35,000 美元到 100,000 美元不等。激光雷达是 Waymo 的首选技术。
+
+雷达缺乏生成高分辨率图像的能力，但它具有基于多普勒现象的高精度速度估计，我们将在本课程后面详细介绍。
+此外，雷达波长也使其能够在恶劣天气条件下感知目标。最重要的是雷达的制造成本低。一个雷达单元的成本可能低至几百美元，允许汽车制造商部署多个雷达传感器以实现 360 度全方位感知。特斯拉依靠雷达作为其主要传感器，并没有将激光雷达纳入其传感器融合系统。
+
+[了解 Delphi 如何](https://www.mathworks.com/company/user_stories/delphi-develops-radar-sensor-alignment-algorithm-for-automotive-active-safety-system.html) 使用 MATLAB 和代码生成来实现雷达安全系统
+
+[ ] 对于低价汽车，汽车制造商更愿意安装雷达而不是激光雷达。
+
+[ ] 雷达是一种更好的传感器，可以估算迎面而来的汽车到达自我车辆所需的时间
+
+##### 信号属性
+
+在这个概念中，您将看到信号属性的一般概述，包括信号波长的定义和信号方程的一般形式。
+
+##### 单波参数
+
+![1681737919004](image/LearningNotes/1681737919004.png)
+
+![信号的波长<span data-type=](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2002_Radar%20Principles/img/image.png)\[来源：techplayon\]" />
+
+##### 频率、振幅
+
+波的频率是每秒通过的波数，单位为赫兹 (Hz)  *。* 汽车雷达一般工作在W波段（76GHz-81GHz）。由于波长以毫米为单位，因此该频率的信号称为毫米波。
+
+信号的带宽是连续频带中最高和最低频率分量之间的差异*。*
+
+幅度*是*信号的强度。通常它对应于以 dB/dBm 定义的射频信号/电磁场的功率。它与配置雷达输出功率和感知接收信号有关。雷达信号的幅度越高，雷达的可见度就越高。汽车雷达可在最大 55 dBm 输出功率 (316 W) 下运行
+
+[可以在此处](https://www.rapidtables.com/electric/dBm.html)找到 dB、dBm、mW 和 W 转换。
+
+![信号的频率<span data-type=](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2002_Radar%20Principles/img/image25.png)\[来源\]" />
+
+![信号幅度<span data-type=](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2002_Radar%20Principles/img/image1.png)\[来源\]" />
+
+![1681738047971](image/LearningNotes/1681738047971.png)
+
+![Phase of sinusoidal waveform
+
+source : Wikipedia](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2002_Radar%20Principles/img/image.png)
+
+![正弦波形的相位来源：维基百科](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2002_Radar%20Principles/img/image.png)
+
+##### 阶段
+
+两个周期信号的相位之差称为*相位差* *。*
+当差值为零时，两个信号被称为同相，否则它们彼此异相。
+
+当我们经历多普勒处理以及雷达的到达角技术时，相位信息处理很重要。
+
+![信号的相位](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2002_Radar%20Principles/img/image15.png)
+
+##### General Equation of a Wave
+
+![1681738211729](image/LearningNotes/1681738211729.png)
+
+##### 调频连续波的特点
+
+FMCW雷达（Frequency-Modulated Continuous Wave radar）是一种辐射连续发射功率的特殊雷达传感器。FMCW 雷达能够测量到目标的非常小的距离，并且能够同时测量目标距离及其相对速度，这使其成为汽车应用的首选雷达类型。
+
+##### What is Chirp?
+
+FMCW 波形
+
+![FMCW波形来源：emagtech](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2002_Radar%20Principles/img/image5.png)
+
+![1681738402029](image/LearningNotes/1681738402029.png)
+
+##### Further Research
+
+Additional information can be found on radartutorial.eu [here](http://www.radartutorial.eu/02.basics/Frequency%20Modulated%20Continuous%20Wave%20Radar.en.html).
+
+##### FMCW 硬件概述
+
+![FMCW 雷达的硬件实现](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2002_Radar%20Principles/img/image11.png)
+
+ **频率合成器** ：*频率合成器*是产生频率的组件，在汽车雷达的情况下，将线性调频频率一直提高到 77GHz。
+
+ **功率放大器** ：*功率放大器*放大信号，使信号可以到达很远的距离。由于信号在辐射时会衰减，因此需要更高的功率（幅度）才能到达更远距离的目标。
+
+ **天线** ：*天线*将电能转换为电磁波，电磁波通过空气辐射，击中目标，然后反射回雷达接收天线。天线还通过将能量集中在所需方向来增加信号强度。此外，天线方向图决定了雷达的视野。
+
+ **混频器** ：在 FMCW 雷达中，*混频器*将返回信号与频率合成器生成的扫描信号相乘。该操作用作频率减法以提供频率增量 - 也称为频移或中频 (IF)。IF = 合成器频率 - 返回信号频率。
+
+ **处理器** ：*处理器*是所有数字信号处理、检测、跟踪、聚类和其他算法发生的处理单元。该单元可以是微控制器，甚至是 FPGA。
+
+##### 天线细节
+
+##### 天线特性
+
+按照 FMCW 硬件定义中的定义，天线是一种将电能转换为电磁波的换能器。在雷达的情况下，这些波通过空气传播并击中目标。根据目标的表面类型和形状，波会部分反射回雷达方向。雷达的接收天线进一步放大接收到的信号，并将其发送到接收链进行进一步处理。
+
+##### 天线模式
+
+雷达天线方向图
+
+![道路场景中的雷达照明 来源：sciencedirect.com](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2002_Radar%20Principles/img/image24.png)
+
+##### 天线方向图
+
+天线*方向图*是天线发射的相对场强度的几何方向图。
+
+*天线的波束宽度*决定了雷达传感器的视野。如果对雷达的要求只是检测其自己车道上的目标，则波束宽度需要足够小以覆盖整个车道，达到所需范围。如果波束宽度比车道宽度宽，它也会感应到其他车道上的目标。
+
+![天线方向图](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2002_Radar%20Principles/img/image2.png)
+
+##### 天线旁瓣
+
+天线辐射不仅包括主波束，还包括旁瓣。天线*旁瓣*很重要，因为它们会产生误报并从不需要的方向拾取干扰。从图中可以看出，天线的旁瓣指向不同的方向，可以感应到不在主波束中的目标。为避免旁瓣检测，将旁瓣电平抑制到距主波束峰值 30dB 以上至关重要。
+
+##### 天线阵列
+
+![贴片阵列天线\[[来源](https://www.fhr.fraunhofer.de/en/businessunits/traffic/antenna-development-for-the-automotive-sector.html)]](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2002_Radar%20Principles/img/image14.png)
+
+可以在 77GHz 下使用的天线类型有很多种（偶极子、贴片、喇叭），但汽车雷达中最常用的天线类型是贴片天线。贴片阵列天线的低成本、易于制造和薄型使其成为汽车雷达应用的理想选择。
+
+* 远程雷达 (LRR) 使用更强的主波束（峰值输出功率）。
+* 窄波束宽度用于覆盖较少的车道。
+
+##### 雷达截面RCS
+
+目标的大小和反射雷达能量的能力由一个术语定义，�σ，称为雷达截面，单位为 米2个米2个. 这个单位表示雷达截面积是一个区域。目标雷达截面积取决于：
+
+* 目标的物理几何形状和外部特征：
+  * 光滑的边缘或表面会向各个方向散射波，因此 RCS 较低。然而，尖角会将返回信号聚焦回源方向，从而导致更高的 RCS。（下图针对不同的目标几何形状）
+* 照明雷达的方向，
+* 雷达发射机的频率，
+* 用于汽车、卡车、自行车的材料，甚至在某些情况下，用于行人的服装材料。
+
+![目标车辆的RCS来源：https://arxiv.org/pdf/1607.02434.pdf](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2002_Radar%20Principles/img/image13.png)
+
+目标车辆的RCS
+
+资料来源：[https ://arxiv.org/pdf/1607.02434.pdf](https://arxiv.org/pdf/1607.02434.pdf)
+
+如果目标上的所有入射雷达能量在所有方向上均等反射，则雷达横截面将等于发射机看到的目标横截面面积。实际上，一些能量被吸收，反射能量在所有方向上的分布并不均匀。因此，雷达截面积很难估计，通常通过测量来确定。
+
+##### 从不同的目标几何形状返回
+
+![来自不同目标几何形状的回报来源：http://www.radartutorial.eu](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2002_Radar%20Principles/img/image7.png)
+从不同的目标几何形状返回资料来源： http: //www.radartutorial.eu
+
+![1681739305344](image/LearningNotes/1681739305344.png)
+
+![RCS of different targets
+
+![1681739449015](image/LearningNotes/1681739449015.png)
+
+source : http://www.radartutorial.eu](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2002_Radar%20Principles/img/image12.png)
+
+RCS of different targetssource : http://www.radartutorial.eu
+
+![1681739393618](image/LearningNotes/1681739393618.png)
+
+##### 是什么让隐形飞机不被雷达发现？
+
+* 飞机的光滑表面
+* 不反光漆
+* 飞机的几何形状
+
+##### 雷达距离方程
+
+### 距离方程
+
+使用雷达距离方程，我们可以设计雷达发射器、接收器和天线，使其具有所需的功率、增益和噪声性能，以满足距离要求。
+
+设计用于覆盖 300 米范围并检测横截面较小的目标的远程雷达与设计用于检测类似目标的仅 50 米的短程雷达相比，需要更高的发射功率和更大的天线增益。与横截面较小的目标相比，横截面较大的目标可以在更远的距离内被检测到。
+
+![雷达方程来源：http://www.radartutorial.eu](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2002_Radar%20Principles/img/image9.png)
+
+Radar Equation
+
+source : [http://www.radartutorial.eu](http://www.radartutorial.eu/)
+
+![1681739691125](image/LearningNotes/1681739691125.png)
+
+![The image above shows the variation in the signal strength level as it travels through transmitter, over the air and at the receiver](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2002_Radar%20Principles/img/image15.png)
+
+上图显示了信号强度水平在通过发射器、空中和接收器时的变化
+
+上图显示了信号强度水平的变化：
+
+##### * 发射功率
+
+* 功率放大器进一步提高信号强度 - 传输链增益
+* 使用天线进一步放大信号
+* 单向路径损耗表示信号强度在向目标传播时的损失
+* 从目标反射后，信号根据目标的 RCS 被放大
+* 在 RCS 获得信号后，信号传回雷达，强度损失与前进相似
+* 接收器天线在将返回信号发送到处理单元之前将其放大
+
+##### 范围方程测验
+
+##### 哪些因素有助于远距离行人的成功检测？
+
+* 更高的天线增益
+* 更高的发射功率
+
+##### 雷达探测
+
+##### 信噪比
+
+下图显示了雷达距离检测的输出。峰值对应于目标返回信号的强度，频率与范围相关。频率和范围之间的关系将在下一课讨论。
+
+雷达无法检测到低于噪声水平的信号。噪声电平由接收器产生的热噪声决定。要成功检测到目标，返回信号强度需要大于噪声水平。*这是由称为信噪比*或 _SNR 的属性定义的。
+
+SNR 是信号强度与噪声水平相比的定量测量。如果 SNR 太低，雷达就很难区分信号和噪声。因此，为了成功检测目标，需要更高的 SNR。通常，7-13 dB 的 SNR 可确保在道路场景中成功检测。
+
+![信噪比](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2002_Radar%20Principles/img/image10.png)
+
+The image above shows the logarithmic value of SNR = power level (in dBm) - noise level (dBm). The plot shows the output of Range FFT (discussed in Lesson 2). In general, the higher the SNR value, the greater are the chances of successful Radar detection.
+
+上图显示了 SNR = 功率电平（以 dBm 为单位）- 噪声电平（dBm）的对数值。该图显示了范围 FFT 的输出（在第 2 课中讨论）。一般来说，信噪比值越高，雷达探测成功的几率就越大。
+
+##### Matlab Exercise: Maximum Range Calculation
+
+The following MATLAB code provides some parameters which can be used in the range equation given above. Your task is to complete the TODOs in the following code:
+
+1. Use the speed of light **c** to compute the wavelength **λ**.
+2. Use the results from part 1. along with the range equation to compute the radar range.
+3. Print the range to screen using `disp(range)`.
+
+```matlab
+%Operating frequency (Hz)
+fc = 77.0e9;
+
+%Transmitted power (W)
+Pt = 3e-3;
+
+%Antenna Gain (linear)
+G =  10000;
+
+%Minimum Detectable Power
+Ps = 1e-10;
+
+%RCS of a car
+RCS = 100;
+
+%Speed of light
+c = 3*10^8;
+
+%TODO: Calculate the wavelength
+
+
+%TODO : Measure the Maximum Range a Radar can see. 
+```
+
+##### 传感器融合工程师需要了解的有关雷达的知识?
+
+- 了解传感器的背景
+- 必须深入了解传感器的细节及其局限性
+
+#### [ **第 03 课：** 距离多普勒估计](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2003_Range-Doppler%20Estimation/index.html)
+
+使用 FMCW 雷达估计目标的距离和速度
+
+##### 01. 距离、速度和角度分辨率
+
+**=== Range/Doppler Estimation**
+
+在本课中，您将学习使用**多普勒和傅里叶变换技术**估算距离和速度的基础知识。在开始之前，让我们看一下雷达分辨率的三个主要测量维度。
+
+**距离、速度和角度分辨率**
+
+![雷达根据距离、角度和速度的差异分辨两个目标的能力。](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2003_Range-Doppler%20Estimation/img/image8.png)
+
+雷达根据距离、角度和速度的差异分辨两个目标的能力。
+
+![1681822898210](image/LearningNotes/1681822898210.png)
+
+##### 解决目标
+
+雷达分辨目标的能力对于准确感知非常关键。
+
+ **距离分辨率** ：雷达区分距离非常接近的两个目标的能力。如果雷达的距离分辨率为 4 米，则它无法根据距离将站在距离汽车 1 米处的行人分开。
+
+距离分辨率完全取决于线性调频信号的带宽乙秒�电子电子�乙扫一扫_ _ _的:
+
+��电子秒=�2个乙秒�电子电子�d回复_ _的=2乙扫一扫_ _ _的C的
+
+ **速度分辨率** ：如果两个目标具有相同的距离，如果它们以不同的速度行进，它们仍然可以被解析。速度分辨率取决于线性调频信号的数量。正如针对我们的案例所讨论的，我们选择发送 128 个线性调频信号。线性调频次数越多，速度分辨率越高，但处理信号所需的时间也越长。
+
+ **角度分辨率** ：雷达能够在空间上分离两个目标。如果两个目标以相同的速度处于相似的距离，那么它们仍然可以根据它们在雷达坐标系中的角度来解决。角度分辨率取决于不同的参数，具体取决于所使用的角度估计技术。我们将在下一课中更详细地介绍这一点。
+
+##### 对于密集的城市交通场景，FMCW 雷达有什么有用的功能？
+
+更高的线性调频带宽
+
+##### Range Estimation
+
+![Signal trip time for a radar signal.](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2003_Range-Doppler%20Estimation/img/image5.png)
+
+Signal trip time for a radar signal.
+
+##### 范围估计方程
+
+雷达通过测量其辐射的电磁信号的跳闸时间来确定目标的范围。众所周知，EM 波以已知速度 (300,000,000 m/s) 传播，因此要确定雷达需要计算行程时间的范围。如何？
+
+答：通过测量频率的偏移。
+
+使用 FMCW 进行范围估计
+
+![使用 FMCW 来源的范围估计：Delft University of Technology](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2003_Range-Doppler%20Estimation/img/image3.png)
+
+![1681823518343](image/LearningNotes/1681823518343.png)
+
+##### 系统电平范围计算
+
+![范围计算 - 系统级来源：electronicdesign.com](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2003_Range-Doppler%20Estimation/img/image2.png)
+
+![1681823618198](image/LearningNotes/1681823618198.png)
+
+##### Range Estimation Exercise
+
+Using the following MATLAB code sample, complete the TODOs to calculate the range in meters of four targets with respective measured beat frequencies [0 MHz, 1.1 MHz, 13 MHz, 24 MHz].
+
+You can use the following parameter values:
+
+* The radar maximum range = 300m
+* The range resolution = 1m
+* The speed of light c = 3*10^8
+
+Note : The sweep time can be computed based on the time needed for the signal to travel the maximum range. In general, for an FMCW radar system, the sweep time should be at least 5 to 6 times the round trip time. This example uses a factor of 5.5:
+
+��ℎ���=5.5⋅2⋅����/�**T**c**h**i**r**p=**5**.**5**⋅**2**⋅**R**m**a**x****/**c**
+
+Print your answer using the `disp` function.
+
+![1681823850878](image/LearningNotes/1681823850878.png)
+
+##### 多普勒估计
+
+![多普勒测速](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2003_Range-Doppler%20Estimation/img/image19.png)
+
+##### 多普勒估计理论
+
+雷达的速度估计是基于一种古老的现象，称为多普勒效应。根据多普勒理论，接近的目标会将发射和反射的频率偏移得更高，而后退的目标会使这两个频率都偏移到低于发射频率。
+
+同样的原理被用在雷达枪中以捕捉速度违规者，甚至在运动中用来测量球的速度。
+
+![](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2003_Range-Doppler%20Estimation/img/image18.png)
+
+##### 什么是多普勒效应
+
+FMCW 多普勒测量
+
+![FMCW 多普勒估计来源：Delft University of Technology](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2003_Range-Doppler%20Estimation/img/image8.png)
+
+![1681824361398](image/LearningNotes/1681824361398.png)
+
+![1681824450595](image/LearningNotes/1681824450595.png)
+
+![](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2003_Range-Doppler%20Estimation/img/image-1.png)
+
+##### Doppler Estimation Exercises
+
+Using the following MATLAB code sample, complete the TODOs to calculate thevelocity in m/s of four targets with following doppler frequency shifts: [3 KHz, 4.5 KHz, 11 KHz, -3 KHz].
+
+You can use the following parameter values:
+
+* The radar's operating frequency = 77 GHz
+* The speed of light c = 3*10^8
+
+Doppler Estimation Further Research
+
+For additional resources related to doppler estimation, see these [lecture notes](http://www.phys.uconn.edu/~gibson/Notes/Section6_3/Sec6_3.htm).
+
+##### 快速傅立叶变换 (FFT)
+
+什么是快速傅立叶变换
+
+![使用 FFT 的时域到频域转换。 资料来源：mriquestions.com](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2003_Range-Doppler%20Estimation/img/image22.png)
+
+使用 FFT 的时域到频域转换。
+
+到目前为止，我们讨论了距离和多普勒估计的理论以及计算它们的方程式。但是，对于雷达以数字方式有效地处理这些测量，需要将信号从模拟域转换为数字域，并进一步从时域转换为频域。
+
+ADC（模拟数字转换器）将模拟信号转换为数字信号。但是，在 ADC 之后，快速傅立叶变换用于将信号从时域转换为频域。转换到频域对于进行信号的频谱分析和确定由于范围和多普勒引起的频率偏移很重要。
+
+行进信号在时域中。时域信号由多个频率分量组成，如上图所示。为了分离出所有频率分量，使用了 FFT 技术。
+
+出于本课程的目的，我们不必深入研究 FFT 的数学细节。但是，了解 FFT 在雷达数字信号处理中的使用非常重要。它给出了返回信号的频率响应，频谱中的每个峰值代表检测到的目标的特性。
+
+[在此处](https://www.youtube.com/watch?v=t_NMmqTRPIY&feature=youtu.be)了解有关 FFT 实施的更多信息。
+
+##### FFT 和 FMCW
+
+快速傅里叶变换
+
+范围 FFT
+
+如下图所示，范围 FFT 针对每个线性调频上的每个样本运行。由于每个线性调频脉冲被采样 N 次，它将生成 N *（线性调频脉冲数）的范围 FFT 块。这些 FFT 块也称为 FFT bin。
+
+![Range FFT 来源：Delft University of Technology](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2003_Range-Doppler%20Estimation/img/image1.png)
+
+每个线性调频脉冲都被采样 N 次，并且对于每个样本，它都会产生一个范围箱。对每个线性调频重复该过程。因此创建 N*（线性调频数）的 FFT 块。
+
+块的每一列中的每个 bin 代表增加的范围值，因此最后一个 bin 的末尾代表雷达的最大范围。
+
+![MATLAB 中范围 FFT 的输出。 X 轴 = 拍频，Y 轴 = 以 dBm 为单位的信号功率](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2003_Range-Doppler%20Estimation/img/image11.png)
+
+MATLAB 中范围 FFT 的输出。
+X 轴 = 拍频，
+Y 轴 = 以 dBm 为单位的信号功率
+
+##### Output of Range FFT
+
+Above is the output of the 1st stage FFT (i.e Range FFT). The three peaks in the frequency domain corresponds to the beat frequencies of three different cars located at 150, 240 and 300 m range from the ego vehicle.
+
+Fast Fourier Transform Exercise
+
+##### Steps to Implement Range FFT
+
+In the following exercise, you will use a Fourier transform to find the frequency components of a signal buried in noise. Specify the parameters of a signal with a sampling frequency of 1 kHz and a signal duration of 1.5 seconds.
+
+To implement the 1st stage FFT, you can use the following steps:
+
+1. Define a signal. In this case (amplitude = A, frequency = f)
+
+```
+signal = A*cos(2*pi*f*t)
+```
+
+2. Run the fft for the signal using MATLAB fft function for dimension of samples N.
+
+```
+signal_fft = fft(signal,N);
+```
+
+3. The output of FFT processing of a signal is a complex number (a+jb). Since, we just care about the magnitude we take the absolute value (sqrt(a^2+b^2)) of the complex number.
+
+```
+signal_fft = abs(signal_fft);
+```
+
+4. FFT output generates a mirror image of the signal. But we are only interested in the positive half of signal length L, since it is the replica of negative half and has all the information we need.
+
+```
+signal_fft  = signal_fft(1:L/2-1)   
+```
+
+5. Plot this output against frequency.
+
+You can use the following MATLAB starter code:
+
+```matlab
+Fs = 1000;            % Sampling frequency        
+T = 1/Fs;             % Sampling period   
+L = 1500;             % Length of signal
+t = (0:L-1)*T;        % Time vector
+
+% TODO: Form a signal containing a 77 Hz sinusoid of amplitude 0.7 and a 43Hz sinusoid of amplitude 2.
+S = ?
+
+% Corrupt the signal with noise 
+X = S + 2*randn(size(t));
+
+% Plot the noisy signal in the time domain. It is difficult to identify the frequency components by looking at the signal X(t). 
+plot(1000*t(1:50) ,X(1:50))
+title('Signal Corrupted with Zero-Mean Random Noise')
+xlabel('t (milliseconds)')
+ylabel('X(t)')
+
+% TODO : Compute the Fourier transform of the signal. 
+
+% TODO : Compute the two-sided spectrum P2. Then compute the single-sided spectrum P1 based on P2 and the even-valued signal length L.
+
+
+% Plotting
+f = Fs*(0:(L/2))/L;
+plot(f,P1) 
+title('Single-Sided Amplitude Spectrum of X(t)')
+xlabel('f (Hz)')
+ylabel('|P1(f)|')
+```
+
+##### 二维 FFT
+
+##### 二维快速傅里叶变换
+
+一旦通过跨所有线性调频信号运行距离 FFT 确定距离区间，第二个 FFT 将沿第二个维度实施以确定多普勒频移。如所讨论的，多普勒是通过处理跨多个线性调频的相位变化率来估计的。因此，多普勒 FFT 是在发送段中的所有线性调频信号并对其运行距离 FFT 之后实施的。
+
+第一个 FFT 的输出给出了每个目标的拍频、振幅和相位。由于目标的小位移，当我们从一个线性调频信号移动到另一个线性调频信号（每行一个 bin 到另一个 bin）时，这个阶段会发生变化。一旦实施了第二个 FFT，它就会确定相位的变化率，这只不过是多普勒频移。
+
+![在 FFT 块的行上运行第二次 FFT 后，我们得到了多普勒 FFT。 完整的实现称为 2D FFT。 在 2D FFT 之后，块的每一列中的每个 bin 表示增加的范围值，并且行中的每个 bin 对应一个速度值。](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2003_Range-Doppler%20Estimation/img/image23.png)
+
+在 FFT 块的行上运行第二次 FFT 后，我们得到了多普勒 FFT。完整的实现称为 2D FFT。
+
+在 2D FFT 之后，块的每一列中的每个 bin 表示增加的范围值，并且行中的每个 bin 对应一个速度值。
+
+距离多普勒响应的输出代表一个图像，一个轴上有距离，另一个轴上有多普勒。该图像称为距离多普勒图 (RDM)。这些地图通常用作用户界面以了解目标的感知。
+
+![](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2003_Range-Doppler%20Estimation/img/image11.png)
+
+二维 FFT 输出
+
+![单个目标的 2D FFT 输出。 这里的 x 轴是速度，y 轴是范围。](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2003_Range-Doppler%20Estimation/img/image6.png)
+
+单个目标的 2D FFT 输出。这里的 x 轴是速度，y 轴是范围。
+
+![距离多普勒地图来源：rohde-schwarz](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2003_Range-Doppler%20Estimation/img/image14.png)
+
+![距离多普勒地图来源：rohde-schwarz](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2003_Range-Doppler%20Estimation/img/image14.png)
+
+##### 2D FFT In MATLAB
+
+Steps to implement 2D FFT
+
+The following steps can be used to compute a 2D FFT in MATLAB:
+
+1. Take a 2D signal matrix
+2. In the case of Radar signal processing. Convert the signal in MxN matrix, where M is the size of Range FFT samples and N is the size of Doppler FFT samples:
+
+```matlab
+signal  = reshape(signal, [M, N]);
+```
+
+3. Run the 2D FFT across both the dimensions.
+
+```matlab
+signal_fft = fft2(signal, M, N);
+```
+
+Note the following from the [documentation](https://www.mathworks.com/help/matlab/ref/fft2.html):
+
+> `Y = fft2(X)` returns the 2D FFT of a matrix using a fast Fourier transform algorithm, which is equivalent to computing `fft(fft(X).').'`. If `X` is a multidimensional array, then fft2 takes the 2-D transform of each dimension higher than 2. The output `Y` is the same size as `X`. `Y = fft2(X,M,N)` truncates `X` or pads `X` with trailing zeros to form an m-by-n matrix before computing the transform. `Y` is m-by-n. If `X` is a multidimensional array, then fft2 shapes the first two dimensions of `X` according to m and n.
+
+4. Shift zero-frequency terms to the center of the array
+
+```matlab
+signal_fft = fftshift(signal_fft);
+```
+
+6. Take the absolute value
+
+```matlab
+signal_fft = abs(signal_fft);
+```
+
+7. Here since it is a 2D output, it can be plotted as an image. Hence, we use the `imagesc` function
+
+```matlab
+imagesc(signal_fft);
+```
+
+2D FFT Exercise
+
+In the following exercise, you will practice the 2D FFT in MATLAB using some generated data. The data generated below will have the correct shape already, so you should just need to use steps 3-6 from above. You can use the following starter code:
+
+```matlab
+% 2-D Transform
+% The 2-D Fourier transform is useful for processing 2-D signals and other 2-D data such as images.
+% Create and plot 2-D data with repeated blocks.
+
+P = peaks(20);
+X = repmat(P,[5 10]);
+imagesc(X)
+
+% TODO : Compute the 2-D Fourier transform of the data.  
+% Shift the zero-frequency component to the center of the output, and 
+% plot the resulting 100-by-200 matrix, which is the same size as X.
+```
+
+2D FFT Further Research
+
+[Solution](https://www.mathworks.com/help/matlab/ref/fft2.html) to above workspace
+
+Further Research
+
+For more information about the 2D FFT, see these [notes](http://people.ciirc.cvut.cz/~hlavac/TeachPresEn/11ImageProc/12FourierTxEn.pdf).
+
+##### 雷达工程师应该知道什么样的数学
+
+- 线性代数
+- 三角函数
+- 统计学
+- 快速傅里叶变换
+
+#### [ **第 4 课：** 杂波、CFAR、AoA](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2004_Clutter,%20CFAR,%20AoA/index.html)
+
+讨论 - 杂波的形成，然后使用 CFAR 技术将其去除。在那之后
+
+##### Clutter、CFAR、AoA
+
+##### Clutter
+
+雷达不仅接收来自感兴趣物体的反射信号，还接收来自环境和不需要的物体的反射信号。来自这些不需要的源的反向散射被称为杂波。
+
+这些不需要的信号通常是由地面、海洋、建筑物、树木、雨、雾等的反射产生的。杂波信号的大小取决于：
+
+* 地表的性质——地面、水、雪（例如沙漠反射率低，而冰雪反射率高）
+* 表面光滑度
+* 掠角 - 雷达波束与表面形成的角度
+* 雷达频率
+
+![来自多个目标的返回信号以及一些来自杂波的信号。 资料来源：http://www.redalyc.org/jatsRepo/911/91149521004/index.html](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2004_Clutter,%20CFAR,%20AoA/img/image4.png)
+
+来自多个目标的返回信号以及一些来自杂波的信号。
+
+资料来源：[http ://www.redalyc.org/jatsRepo/911/91149521004/index.html](http://www.redalyc.org/jatsRepo/911/91149521004/index.html)
+
+什么是Clutter以及如何克服它?
+
+##### Clutter阈值
+
+##### 消除混乱
+
+滤除杂波对于成功检测目标非常重要。这在驾驶场景中至关重要，可以避免汽车在没有有效目标的情况下突然刹车。当雷达检测到杂波产生的反射时，就会发生这种突然制动。
+
+一种去除杂波的技术是去除多普勒速度为 0 的信号。由于驾驶场景中的杂波通常是由静止目标造成的，因此 0 多普勒滤波可以帮助消除它们。
+
+0 多普勒滤波的缺点是雷达无法检测到其路径中的静止目标。这将导致检测失败。
+
+另一种技术是使用 *固定的杂波阈值* 。使用固定阈值，拒绝低于阈值的信号。采用这种方法，如果检测阈值设置过高，误报很少，但也会掩盖有效目标。如果阈值设置得太低，则会导致过多的误报。换句话说，*误报率*太高了。
+
+误报率是雷达因噪声或其他干扰信号而检测到错误的比率。当不存在有效目标时，它是对检测到的雷达目标存在的度量。
+
+![修复了导致误报和漏检弱目标的阈值](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2004_Clutter,%20CFAR,%20AoA/img/image9.png)
+
+修复了导致误报和漏检弱目标的阈值
+
+##### 动态阈值CFAR
+
+杂波阈值的另一种方法是使用  *动态阈值* 。动态阈值处理涉及改变阈值水平以降低误报率。
+
+在本课的其余部分，您将了解一种称为 CFAR（恒定误报率）的动态阈值技术。使用这种技术，可以监测每个或一组距离/多普勒频段的噪声，并将信号与本地噪声水平进行比较。该比较用于创建一个阈值，该阈值保持误报率恒定。让我们看看下一个概念！
+
+##### 如果检测阈值设置得太高，那么会导致什么?
+
+* 目标检测失败
+* 减少误报
+
+您认为以下哪项应归类为汽车场景中的杂波？
+
+* 铁隧道
+* 路面
+
+##### 进一步的研究
+
+请参阅资源 [此处]( [http://www.radartutorial.eu/11.coherent/co04.en.html](http://www.radartutorial.eu/11.coherent/co04.en.html)) 和 [此处]( [https://journals.sagepub.com/doi/pdf/10.1177/1550147717729793](https://journals.sagepub.com/doi/pdf/10.1177/1550147717729793)) 有关杂波的更多信息。
+
+##### CFAR
+
+![CA-CFAR 和 OS-CFAR 来源：http://www.radartutorial.eu](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2004_Clutter,%20CFAR,%20AoA/img/image2.png)
+
+CA-CFAR 和 OS-CFAR
+
+资料来源： http: [//www.radartutorial.eu](http://www.radartutorial.eu/)
+
+##### CFAR
+
+误报问题可以通过实施恒定的误报率来解决。CFAR 根据车辆周围环境改变检测阈值。CFAR 技术估计雷达范围内的干扰水平和位于“被测单元”一侧或两侧的多普勒单元“训练单元”。然后使用该估计来确定目标是否在受测单元 (CUT) 中。
+
+该过程遍历所有范围单元格，并根据噪声估计确定目标的存在。该过程的基础是，当存在噪声时，感兴趣单元格周围的单元格将包含对噪声的良好估计，即它假设噪声或干扰在空间或时间上是均匀的。从理论上讲，它会产生一个恒定的误报率，与噪声或杂波水平无关
+
+CFAR 有多种类别：
+
+* 单元平均 CFAR (CA-CFAR)
+* 有序统计 CFAR (OS CFAR)
+* 最大最小统计量 (MAMIS CFAR)
+* 并且，CA-CFAR 的多个变体。
+
+在这里，我们将介绍基本的 CA-CFAR。
+
+##### CA-CFAR
+
+![CA-CFAR
+Training Cells : 3
+Guard Cell : 1](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2004_Clutter,%20CFAR,%20AoA/img/image5.png)
+
+CA-CFAR
+Training Cells : 3
+Guard Cell : 1
+
+### CA-CFAR
+
+CA-CFAR is the most commonly used CFAR detection technique. As seen in the previous lesson, the FFT blocks are generated on implementing range and doppler FFTs across the number of chirps. The CFAR process includes the sliding of a window across the cells in FFT blocks. Each window consists of the following cells.
+
+**Cell Under Test** : The cell that is tested to detect the presence of the target by comparing the signal level against the noise estimate (threshold).
+
+ **Training Cells** ：噪声水平是在Training Cells上测量的。训练单元可以分为两个区域，落后于 CUT 的单元称为滞后训练单元，领先于 CUT 的单元称为领先训练单元。通过平均训练单元下的噪声来估计噪声。在某些情况下，采用超前或滞后单元平均值，而在另一种情况下，结合超前和滞后单元平均值，并考虑两者中的较高者用于噪声水平估计。
+
+训练单元的数量应根据环境决定。如果交通密集，则应使用较少的训练单元，因为间隔很近的目标会影响噪声估计。
+
+ **Guard Cells** ：CUT 旁边的单元格被指定为 Guard Cells。保护单元的目的是避免目标信号泄漏到可能对噪声估计产生不利影响的训练单元中。
+保护单元的数量应根据目标信号从被测单元的泄漏情况来确定。如果目标反射很强，它们通常会进入周围的垃圾箱。
+
+ **阈值因子（偏移）** ：使用偏移值来缩放噪声阈值。如果信号强度以对数形式定义，则将此偏移值添加到平均噪声估计，否则将其相乘。
+
+CFAR 一维图形
+
+![](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2004_Clutter,%20CFAR,%20AoA/img/image7.png)
+
+CFAR 一维和大图
+
+![1681827527574](image/LearningNotes/1681827527574.png)
+
+##### CFAR 1D Implementation
+
+The following steps here can be used to implement CFAR in the next MATLAB exercise. You can use the code template below to get started as well.
+
+**T** : Number of Training Cells
+
+**G** : Number of Guard Cells
+
+**N** : Total number of Cells
+
+1. Define the number of training cells and guard cells
+2. Start sliding the window one cell at a time across the complete FFT 1D array. Total window size should be: 2(T+G)+CUT
+3. For each step, sum the signal (noise) within all the leading or lagging training cells
+4. Average the sum to determine the noise threshold
+5. Using an appropriate offset value scale the threshold
+6. Now, measure the signal in the CUT, which is T+G+1 from the window starting point
+7. Compare the signal measured in 5 against the threshold measured in 4
+8. If the level of signal measured in CUT is smaller than the threshold measured, then assign 0 value to the signal within CUT.
+
+##### CFAR 1D Further Research
+
+```matlab
+% Implement 1D CFAR using lagging cells on the given noise and target scenario.
+
+% Close and delete all currently open figures
+close all;
+
+% Data_points
+Ns = 1000;
+
+% Generate random noise
+s=randn(Ns,1);
+
+%Targets location. Assigning bin 100, 200, 300 and 700 as Targets with the amplitudes of 8, 9, 4, 11.
+s([100 ,200, 300, 700])=[8 9 4 11];
+
+%plot the output
+plot(s);
+
+% TODO: Apply CFAR to detect the targets by filtering the noise.
+
+% 1. Define the following:
+% 1a. Training Cells
+% 1b. Guard Cells 
+
+% Offset : Adding room above noise threshold for desired SNR 
+offset=3;
+
+% Vector to hold threshold values 
+threshold_cfar = [];
+
+%Vector to hold final signal after thresholding
+signal_cfar = [];
+
+% 2. Slide window across the signal length
+for i = 1:(Ns-(G+T))   
+
+    % 2. - 5. Determine the noise threshold by measuring it within the training cells
+
+    % 6. Measuring the signal within the CUT
+
+    % 8. Filter the signal above the threshold
+
+    signal_cfar = [signal_cfar, {signal}];
+end
+
+
+
+
+% plot the filtered signal
+plot (cell2mat(signal_cfar),'g--');
+
+% plot original sig, threshold and filtered signal within the same figure.
+figure,plot(s);
+hold on,plot(cell2mat(circshift(threshold_cfar,G)),'r--','LineWidth',2)
+hold on, plot (cell2mat(circshift(signal_cfar,(T+G))),'g--','LineWidth',4);
+legend('Signal','CFAR Threshold','detection')
+```
+
+![1681827657697](image/LearningNotes/1681827657697.png)
+
+![1681827888365](image/LearningNotes/1681827888365.png)
+
+##### Further Research
+
+For further research, see the articles [here](http://www.radartutorial.eu/01.basics/False%20Alarm%20Rate.en.html) and [here](https://arxiv.org/pdf/1709.09786.pdf).
+
+##### CFAR 2D
+
+CFAR 2D Heading
+
+The 2D CFAR is similar to 1D CFAR, but is implemented in both dimensions of the range doppler block. The 2D CA-CFAR implementation involves the training cells occupying the cells surrounding the cell under test with a guard grid in between to prevent the impact of a target signal on the noise estimate.
+
+![1681827993177](image/LearningNotes/1681827993177.png)
+
+##### 2D CFAR Implementation
+
+You won't need to implement a 2D-CFAR yet, but you will implement a 2D CFAR on the range doppler output for your final project! The following steps can be used to implement 2D-CFAR in MATLAB:
+
+1. Determine the number of Training cells for each dimension Tr and Td. Similarly, pick the number of guard cells Gr and Gd.
+2. Slide the Cell Under Test (CUT) across the complete cell matrix
+3. Select the grid that includes the training, guard and test cells. Grid Size = (2Tr+2Gr+1)(2Td+2Gd+1).
+4. The total number of cells in the guard region and cell under test. (2Gr+1)(2Gd+1).
+5. This gives the Training Cells : (2Tr+2Gr+1)(2Td+2Gd+1) - (2Gr+1)(2Gd+1)
+6. Measure and average the noise across all the training cells. This gives the threshold
+7. Add the offset (if in signal strength in dB) to the threshold to keep the false alarm to the minimum.
+8. Determine the signal level at the Cell Under Test.
+9. If the CUT signal level is greater than the Threshold, assign a value of 1, else equate it to zero.
+10. Since the cell under test are not located at the edges, due to the training cells occupying the edges, we suppress the edges to zero. Any cell value that is neither 1 nor a 0, assign it a zero.
+
+Further Research
+
+You can find out more about this [here]([http://www.radartutorial.eu/01.basics/False%20Alarm%20Rate.en.html](http://www.radartutorial.eu/01.basics/False%20Alarm%20Rate.en.html))
+) and [here](https://arxiv.org/pdf/1709.09786.pdf).
+
+##### Angle of Arrival Introduction
+
+##### Phase Array Introduction Heading
+
+A *phased array antenna* is an antenna array that steers the beam electronically in the desired direction. The array steers the beam if each antenna element in an array is excited by the signal with certain phase values. This phenomenon is referred to as beam scanning.
+
+![1681828156260](image/LearningNotes/1681828156260.png)
+
+Beam Steering Design. Here the Φ**Φ** represents the phase shifters. Phase shifters are the electronic components that changes the phase to make the beam steer in a desired direction.
+
+source : analog.com
+
+![1681828175630](image/LearningNotes/1681828175630.png)
+
+##### Phase Array Graphic
+
+![Radar Module for Automotive Applications from D3 Engineering](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2004_Clutter,%20CFAR,%20AoA/img/image3.png)
+
+Radar Module for Automotive Applications from D3 Engineering
+
+##### Angle of Arrival
+
+![Road scenario for beam steering radar](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2004_Clutter,%20CFAR,%20AoA/img/image11.png)
+
+Road scenario for beam steering radar
+
+As the radar scans the surroundings by steering the beam at the programmed angles, it measures the SNR of reflected signals from targets located at different angles spatially. This helps in creating an angle of arrival vs SNR grid for radar’s spatial perception.
+
+![](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2004_Clutter,%20CFAR,%20AoA/img/image3.png)
+
+Start Quiz:
+
+Unknown quiz type. Please contact the developer to make it compatible with this atom type!
+
+Further Research
+
+For more information about phased array antennas see [here](http://www.radartutorial.eu/06.antennas/Phased%20Array%20Antenna.en.html).
+
+#### 第 05 课_聚类和跟踪
+
+##### 01.聚类和跟踪
+
+##### 02.聚类
+
+![汽车和自行车来源的聚类：https://ieeexplore.ieee.org/document/7226315](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2005_Clustering%20and%20Tracking/img/image7.png)
+
+汽车和自行车的聚类
+
+资料来源： https: [//ieeexplore.ieee.org/document/7226315](https://ieeexplore.ieee.org/document/7226315)
+
+项目概况
+
+##### 为了增强自动驾驶的感知能力，需要分别跟踪多个目标。对象跟踪的计算成本很高，同时跟踪多个目标需要大量的处理能力和内存。
+
+由于雷达技术的进步和传感分辨率的提高，雷达可以从目标上的大量散射点生成检测结果。如果将跟踪器分配给来自同一目标的每个检测，那么它会使处理单元负担过重。因此，重要的是对每个目标的检测进行聚类并为每个目标分配一个轨道。
+
+这就是聚类算法对于成功的对象跟踪变得重要的地方。
+
+##### 系统要求
+
+这里我们将讨论基于欧氏距离的基本聚类算法。这里的算法根据检测点之间的欧几里得距离测量的接近度对检测点进行分组。
+
+所有在目标尺寸范围内的检测点被认为是一个簇，合并到一个质心位置。现在每个集群都被分配了一个新的范围和速度，这是构成集群的所有检测点的测量范围和速度的平均值。
+
+这允许对每个目标进行有效跟踪。
+
+![](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2005_Clustering%20and%20Tracking/img/image2.png)
+
+##### 聚类
+
+以上是集群场景的说明。在图像中，蓝色汽车是一辆自我车辆（带传感器的车辆），检测是从橙色和黄色车辆生成的。使用聚类算法将与单个目标相关的所有检测合并为一个点。这有助于检测并将轨迹分配给目标.
+
+![](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2005_Clustering%20and%20Tracking/img/image5.png)
+
+![](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2005_Clustering%20and%20Tracking/img/image9.png)
+
+信号传播和移动目标场景
+
+上面的集群实现使用以下步骤：
+
+1. 如果检测来自同一个传感器，则循环遍历每个检测点并测量所有检测点之间的欧氏距离。
+2. 继续运行循环，直到检测列表为空
+
+在 while 循环中实现以下内容：
+
+3. 选择检查列表中的第一个检测并检查其聚类邻居。
+4. 如果第一个拾取和其余检测之间的距离小于车辆尺寸，则将这些检测及其各自的雷达传感器测量值（包括距离和速度）分组。
+5. 对于该组，取范围和速度测量值的平均值。
+   **注意：** 雷达测量矢量有 6 个值 - 其中 x 和 y 坐标的范围和速度位于索引 1、2、4 和 5 处：`[x, y, - , Vx, Vy, -]`
+6. 创建一个新的集群 ID。然后，将所有组检测分配给相同的 ID。
+7. 此外，分配集群、平均范围和速度。
+8. 最后，从列表中删除已经分配给集群的检测。
+9. 不断重复这个过程，直到检测列表为空。
+
+##### 卡尔曼跟踪 Kalman Tracking
+
+![1681828907956](image/LearningNotes/1681828907956.png)
+
+![1681828985915](image/LearningNotes/1681828985915.png)
+
+##### Implementation of 2D CFAR
+
+The purpose of the Kalman filter is to estimate the *state* of a tracked vehicle. Here, "state" could include the position, velocity, acceleration or other properties of the vehicle being tracked. The Kalman filter uses measurements that are observed over time that contain noise or random variations and other inaccuracies, and produces values that tend to be closer to the true values of the measurements and their associated calculated values. It is the central algorithm to the majority of all modern radar tracking systems.
+
+Here, we will be keeping the Kalman Filter limited to a basic introduction. You will be covering Kalman filters in detail in the fourth course of this Nanodegree program.
+
+![1681829065219](image/LearningNotes/1681829065219.png)
+
+##### Kalman Tracking and MATLAB
+
+The trackingKF class creates a discrete-time linear Kalman filter used for tracking positions and velocities of objects which can be encountered in an automated driving scenario, such as automobiles, pedestrians, bicycles, and stationary structures or obstacles.
+
+You can learn more about different parameters for the filter [here](https://www.mathworks.com/help/driving/ref/trackingkf-class.html), and you can learn more about the theory behind Kalman filters [here](https://www.mathworks.com/help/driving/ug/linear-kalman-filters.html).
+
+##### Implementation in MATLAB
+
+The following guidelines can be used to implement a basic Kalman filter for the next project.
+
+* You will define the Kalman filter using the `trackingKF` function. The function signature is as follows:
+
+```matlab
+       filter = trackingKF('MotionModel', model, 'State', state, 'MeasurementModel', measurementModel, 'StateCovariance', stateCovrariance, 'MeasurementNoise', measurementNoise)
+```
+
+In this function signature, each property (e.g. `'MotionModel`) is followed by the value for that property (e.g. `model`).
+
+* For the `model` variable, you can pass the string `'2D Constant Velocity'`, which will provides the 2D constant velocity motion model.
+* For the 2D constant velocity model the state vector (x) can be defined as:
+
+```matlab
+[x;vx;y;vy]
+```
+
+Here, `x` and `y` are 2D position coordinates. The variables `vx` and `vy` provide the velocity in 2D.
+
+* A `RadarDetectionGenerator` function is used to generate detection points based on the returns after reflection. Every Radar detection generates a **detection measurement** and **measurement noise** matrix:
+  `detection.Measurement` and `detection.MeasurementNoise`.The detection **measurement vector (z)** has the format `[x;y;vx;vy]`.
+  **Measurement Models**
+  Measurements are what you observe about your system. Measurements depend on the state vector but are not always the same as the state vector.The measurement model assumes that the actual measurement at any time is related to the current state by
+
+```matlab
+z  = H*x
+```
+
+As a result, for the case above the **measurement model** is `H = [1 0 0 0; 0 0 1 0; 0 1 0 0; 0 0 0 1]`
+
+Using this measurement model, the state can derived from the measurements.
+
+```matlab
+ x = H'*z
+state = H'*detection.Measurement
+```
+
+Further, using the generated measurement noise and measurement model define the state covariance matrix:
+
+```matlab
+stateCovariance =H'*detection.MeasurementNoise*H
+```
+
+Further Research
+
+For further explanation of Kalman Filters with MATLAB, you can refer to [this video series](https://www.youtube.com/watch?v=mwn8xhgNpFY&list=PLn8PRpmsu08pzi6EMiYnR-076Mh-q3tWr).
+
+##### MATLAB 传感器融合引导演练
+
+以下步骤将引导您使用 MATLAB 在模拟环境中执行卡尔曼滤波。您可以在本课的参考资料 `Sensor_Fusion_with_Radar.m<span> </span>`部分下载本演练的入门代码文件。
+
+![雷达传感器融合小型项目](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2005_Clustering%20and%20Tracking/img/image6.png)
+
+雷达传感器融合小型项目
+
+项目介绍
+
+自动驾驶系统的传感器融合和控制算法需要进行严格的测试。基于车辆的测试不仅设置耗时，而且难以重现。Automated Driving System Toolbox 提供定义道路网络、参与者、车辆和交通场景的功能，以及用于模拟合成雷达和摄像头传感器检测的统计模型。此示例说明如何生成场景、模拟传感器检测以及使用传感器融合来跟踪模拟车辆。使用场景生成和传感器模拟而不是传感器记录的主要好处是能够创建罕见且具有潜在危险的事件并使用它们测试车辆算法。这个例子涵盖了整个合成数据工作流程。
+
+##### 生成场景
+
+场景生成包括生成道路网络、定义在道路上移动的车辆以及移动车辆。在此示例中，您将测试传感器融合跟踪从自我车辆左侧通过的车辆的能力。该场景模拟高速公路设置，并且在自我车辆的前后有其他车辆。在此处查找有关如何生成这些场景的更多信息：[Automated Driving Toolbox](https://www.mathworks.com/videos/driving-scenario-designer-1529302116471.html)
+
+```matlab
+% Define an empty scenario
+
+scenario = drivingScenario;
+scenario.SampleTime = 0.01;
+
+% Add a stretch of 500 meters of typical highway road with two lanes. 
+% The road is defined using a set of points, where each point defines the center of the 
+% road in 3-D space, and a road width.
+
+roadCenters = [0 0; 50 0; 100 0; 250 20; 500 40];
+roadWidth = 7.2; % Two lanes, each 3.6 meters
+road(scenario, roadCenters, roadWidth);
+
+% Create the ego vehicle and three cars around it: one that overtakes the ego vehicle 
+% and passes it on the left, one that drives right in front of the ego vehicle and 
+% one that drives right behind the ego vehicle. 
+% All the cars follow the path defined by the road waypoints by using the path driving 
+% policy. The passing car will start on the right lane, move to the left lane to pass, 
+% and return to the right lane.
+
+% Create the ego vehicle that travels at 25 m/s along the road.
+egoCar = vehicle(scenario, 'ClassID', 1);
+path(egoCar, roadCenters(2:end,:) - [0 1.8], 25); % On right lane
+
+
+% Add a car in front of the ego vehicle.
+leadCar = vehicle(scenario, 'ClassID', 1);
+path(leadCar, [70 0; roadCenters(3:end,:)] - [0 1.8], 25); % On right lane
+
+% Add a car that travels at 35 m/s along the road and passes the ego vehicle.
+passingCar = vehicle(scenario, 'ClassID', 1);
+waypoints = [0 -1.8; 50 1.8; 100 1.8; 250 21.8; 400 32.2; 500 38.2];
+path(passingCar, waypoints, 35);
+
+% Add a car behind the ego vehicle
+chaseCar = vehicle(scenario, 'ClassID', 1);
+path(chaseCar, [25 0; roadCenters(2:end,:)] - [0 1.8], 25); % On right lane
+```
+
+##### 定义雷达传感器
+
+定义雷达
+
+在此示例中，您模拟了一辆具有 6 个雷达传感器的自我车辆，覆盖 360 度视野。传感器有一些重叠和一些覆盖间隙。ego 车辆在车辆的前部和后部都配备了远程雷达传感器。车辆的每一侧都有两个短程雷达传感器，每个传感器覆盖 90 度。每侧各有一个传感器，从车辆中部一直覆盖到后部。每侧的另一个传感器从车辆中间向前覆盖。下一节中的图显示了覆盖范围。
+
+```matlab
+sensors = cell(6,1);
+
+% Front-facing long-range radar sensor at the center of the front bumper of the car.
+sensors{1} = radarDetectionGenerator('SensorIndex', 1, 'Height', 0.2, 'MaxRange', 174, ...
+ 'SensorLocation', [egoCar.Wheelbase + egoCar.FrontOverhang, 0], 'FieldOfView', [20, 5]);
+```
+
+其余的雷达传感器在项目代码中定义。
+
+##### 创建一个多对象跟踪器
+
+创建一个 `multiObjectTracker`跟踪靠近自我车辆的车辆。跟踪器使用
+`initSimDemoFilter`支持函数来初始化与位置和速度一起工作的恒速线性卡尔曼滤波器。跟踪是在 2-D 中完成的。尽管传感器以 3-D 形式返回测量值，但运动本身仅限于水平面，因此无需跟踪高度。
+
+```matlab
+tracker = multiObjectTracker('FilterInitializationFcn', @initSimDemoFilter, ...
+ 'AssignmentThreshold', 30, 'ConfirmationParameters', [4 5]);
+
+positionSelector = [1 0 0 0; 0 0 1 0]; % Position selector
+velocitySelector = [0 1 0 0; 0 0 0 1]; % Velocity selector
+```
+
+MultiObjectTracker Function 有几个参数，可以针对不同的驾驶场景进行调整。[它控制轨道的创建和删除。您可以在此处](https://www.mathworks.com/help/driving/ref/multiobjecttracker-system-object.html)了解更多信息。
+
+![](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2005_Clustering%20and%20Tracking/img/image4.png)
+
+![](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2005_Clustering%20and%20Tracking/img/image10.png)
+
+##### 模拟场景
+
+以下循环移动车辆、调用传感器模拟并执行跟踪。请注意，场景生成和传感器模拟可以有不同的时间步长。为场景和传感器指定不同的时间步长使您能够将场景模拟与传感器模拟分离。这对于独立于传感器的测量速率对演员运动进行高精度建模非常有用。
+
+另一个例子是当传感器具有不同的更新率时。假设一个传感器每 20 毫秒提供一次更新，而另一个传感器每 50 毫秒提供一次更新。您可以指定更新率为 10 毫秒的场景，传感器将在正确的时间提供更新。在此示例中，场景生成的时间步长为 0.01 秒，而传感器每 0.1 秒检测一次。
+
+传感器返回一个逻辑标志，`isValidTime`如果传感器生成检测，则该标志为真。此标志用于仅在有检测时调用跟踪器。另一个重要的注意事项是传感器可以模拟每个目标的多次检测，特别是当目标非常靠近雷达传感器时。由于跟踪器假定每个传感器对每个目标进行一次检测，因此您必须在跟踪器处理检测之前对检测进行聚类。这是通过实施聚类算法来完成的，就像我们上面讨论的那样。
+
+```matlab
+toSnap = true;
+while advance(scenario) && ishghandle(BEP.Parent)  
+    % Get the scenario time
+    time = scenario.SimulationTime;
+
+    % Get the position of the other vehicle in ego vehicle coordinates
+    ta = targetPoses(egoCar);
+
+    % Simulate the sensors
+    detections = {};
+    isValidTime = false(1,6);
+    for i = 1:6
+        [sensorDets,numValidDets,isValidTime(i)] = sensors{i}(ta, time);
+        if numValidDets
+            detections = [detections; sensorDets]; %#ok<AGROW>
+        end
+    end
+
+    % Update the tracker if there are new detections
+    if any(isValidTime)
+        vehicleLength = sensors{1}.ActorProfiles.Length;
+        detectionClusters = clusterDetections(detections, vehicleLength);
+        confirmedTracks = updateTracks(tracker, detectionClusters, time);
+
+        % Update bird's-eye plot
+        updateBEP(BEP, egoCar, detections, confirmedTracks, positionSelector, velocitySelector);
+    end
+
+    % Snap a figure for the document when the car passes the ego vehicle
+    if ta(1).Position(1) > 0 && toSnap
+        toSnap = false;
+        snapnow
+    end
+end
+```
+
+##### 定义卡尔曼滤波器
+
+在这里定义要与 一起使用的卡尔曼滤波器 `multiObjectTracker`。
+
+在 MATLAB 中，一个 `trackingKF`函数可用于为任何类型的运动模型启动卡尔曼滤波器。这包括 1D、2D 或 3D 恒定速度甚至恒定加速度。[您可以在此处](https://www.mathworks.com/help/driving/ref/trackingkf-class.html)阅读更多相关信息。
+
+initSimDemoFilter
+此函数根据检测初始化恒速滤波器。
+
+```matlab
+function filter = initSimDemoFilter(detection)
+
+% Use a 2-D constant velocity model to initialize a trackingKF filter.
+% The state vector is [x;vx;y;vy]
+% The detection measurement vector is [x;y;vx;vy]
+% As a result, the measurement model is H = [1 0 0 0; 0 0 1 0; 0 1 0 0; 0 0 0 1]
+
+H = [1 0 0 0; 0 0 1 0; 0 1 0 0; 0 0 0 1];
+filter = trackingKF('MotionModel', '2D Constant Velocity', ...
+ 'State', H' * detection.Measurement, ...
+ 'MeasurementModel', H, ...
+ 'StateCovariance', H’ * detection.MeasurementNoise * H, ...
+ 'MeasurementNoise', detection.MeasurementNoise);
+end
+```
+
+##### 集群检测
+
+该功能将疑似同一车辆的多个检测结果合并为一个检测结果。该函数寻找比车辆尺寸更近的检测。符合这个标准的检测被认为是一个集群，并在集群的质心处合并为一个单一的检测。测量噪声被修改以表示每次检测可以在车辆上的任何地方的可能性。因此，噪声的大小应与车辆大小相同。此外，此函数删除了测量的第三个维度（高度）并将测量向量减少为 `[x;y;vx;vy]`。
+
+我们已经在本课的集群概念中完成了它的实现。
+
+##### 运行你的代码
+
+现在，是时候运行代码并查看输出了！
+
+强烈建议花一些时间在这个传感器融合代码上。这是开始学习和实施传感器融合技术的好地方。
+
+#### 第 06 课_雷达目标生成和检测
+
+以下视频将概述该项目。您可以在课堂资源 `Radar_Target_Generation_and_Detection.m`部分的文件中找到项目起始代码。此外，可以在此处找到项目规则。
+
+![](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2006_Radar%20Target%20Generation%20and%20Detection/img/image11.png)
+
+![1681909103660](image/LearningNotes/1681909103660.png)
+
+* 根据系统要求配置 FMCW 波形。
+* 定义目标的范围和速度并模拟其位移。
+* 对于相同的仿真环路，处理发送和接收信号以确定拍频信号
+* 对接收到的信号执行 Range FFT 以确定 Range
+* 最后，对 2nd FFT 的输出执行 CFAR 处理以显示目标。
+
+##### 雷达系统要求
+
+![](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2006_Radar%20Target%20Generation%20and%20Detection/img/image14.png)
+
+![1681909271453](image/LearningNotes/1681909271453.png)
+
+##### Initial Range and velocity of the Target
+
+You will provide the initial range and velocity of the target. Range cannot exceed the max value of 200m and velocity can be any value in the range of -70 to + 70 m/s.
+
+##### 02. 目标生成与检测
+
+![信号传播](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2006_Radar%20Target%20Generation%20and%20Detection/img/image.png)
+
+![1681909378228](image/LearningNotes/1681909378228.png)
+
+##### FFT运算
+
+* 对混合信号实施 1D FFT
+* 将向量重塑为 Nr*Nd 数组。
+* 沿范围 bin 维度 (Nr) 对拍频信号运行 FFT
+* 标准化 FFT 输出。
+* 取该输出的绝对值。
+* 保留二分之一的信号
+* 绘制输出
+* 目标的初始位置应该有一个峰值
+
+![位于 110 米处的目标的第一个 FFT 输出](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2006_Radar%20Target%20Generation%20and%20Detection/img/image10.png)
+
+位于 110 米处的目标的第一个 FFT 输出
+
+第二次 FFT 已在代码中实现。它将生成如下图所示的距离多普勒图，并将由变量“RDM”给出。下一个任务是在此距离多普勒地图上实施 CFAR。
+
+![二维 FFT 输出 - 距离多普勒图](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2006_Radar%20Target%20Generation%20and%20Detection/img/image12.png)
+
+二维 FFT 输出 - 距离多普勒图
+
+##### 二维CFAR
+
+* 确定每个维度的训练单元数。同样，选择保卫细胞的数量。
+* 将被测电池滑过整个矩阵。确保 CUT 从边缘为训练和保护单元留出余量。
+* 对于每次迭代，对所有训练单元内的信号电平求和。要求和，请使用 db2pow 函数将值从对数转换为线性。
+* 平均所有使用的训练单元的总和值。平均后使用 pow2db 将其转换回对数。
+* 进一步向其添加偏移量以确定阈值。
+* 接下来，将 CUT 下的信号与该阈值进行比较。
+* 如果 CUT level > threshold 赋值 1，否则赋值为 0。
+
+上述过程将生成一个阈值块，该块小于距离多普勒图，因为由于目标和保护单元的存在，CUT 不能位于矩阵的边缘。因此，这些细胞不会被阈值化。
+
+* 要保持地图大小与 CFAR 之前相同，请将所有非阈值单元等于 0。
+
+![2D CFAR 过程的输出](http://127.0.0.1:8887/Part%2003-Module%2001-Lesson%2006_Radar%20Target%20Generation%20and%20Detection/img/image13.png)
+
+2D CFAR 过程的输出
+
+一旦你完成了这个，你就完成了。祝贺你在这个最终项目上做得很好！
+
+### **第 04 部分：** 相机
+
+#### 第 01 课：简介
+
+![1681909724991](image/LearningNotes/1681909724991.png)
+
+蒂莫简介
+
+在整个相机课程中，您将从 Timo Rehfeld 那里了解相机。[Timo 在MBRDNA](https://mbrdna.com/)开发传感器融合算法。在下一个视频中，Timo 将向您介绍一些关于他自己和他在 MBRDNA 的角色。
+
+- 相关性的跟踪
+- 校准
+- 分割
+- 分类
+
+#### 第 02 课： 自动驾驶汽车和计算机视觉
+
+##### 01. 自动驾驶级别
+
+根据[CB Insights 的数据](https://www.cbinsights.com/research/autonomous-driverless-vehicles-corporations-list/)，目前有 46 家公司在研发自动驾驶汽车（截至 2019 年 4 月）。这包括奥迪、特斯拉、宝马、沃尔沃或通用汽车等汽车制造商，也包括来自完全不同行业的 Alphabet / Waymo、优步或百度等汽车领域的新成员。
+
+[据Allied Market Research 估计](https://www.techworld.com/picture-gallery/data/-companies-working-on-driverless-cars-3641537/)，预计自动驾驶汽车市场将从 2019 年的 540 亿美元增长到 2026 年的 5560 亿美元。这样的增长率，加上近年来的技术突破，解释了为什么事情发展得如此之快，以及为什么每个人都想在这个新兴市场中分得一杯羹。
+
+除了自动驾驶车辆之外，还有一些系统可以协助驾驶员完成各种驾驶任务，例如变换车道、记住速度标志或及时制动以防前方车辆突然减速。此类系统被称为高级驾驶员辅助系统 (ADAS)，它们是全自动驾驶汽车的前身。然而，市场上有些车辆意味着完全自主（例如特斯拉自动驾驶仪），但“仅”是 ADAS 系统。
+
+在我们分析精选的自动驾驶汽车原型及其各自的传感器之前，让我们看看如何定义自动驾驶——因为并非所有的自动驾驶汽车和驾驶员辅助系统都是生而平等的。下图显示了自主工程师协会 (SAE) 定义的“自动驾驶级别”。
+
+##### 自动驾驶的 SAE 级别
+
+![https://www.nhtsa.gov/technology-innovation/automated-vehicles-safety](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2002_Autonomous%20Vehicles%20and%20Computer%20Vision/img/nhtsa-sae-automation-levels.png)
+
+[https://www.nhtsa.gov/technology-innovation/automated-vehicles-safety](https://www.nhtsa.gov/technology-innovation/automated-vehicles-safety)
+
+多年来，前向碰撞警告 (FCW) 或自适应巡航控制 (ACC) 等 ADAS 产品是唯一可以在选定数量的驾驶情况下（例如高速公路、低海拔城市）至少提供一定程度自动化的可用系统速度）。
+
+特斯拉是全球首批向市场推出承诺高度自治的系统 Auto Pilot 的公司之一。然而，在 SAE 图表上，该系统“仅”处于 2 级，这意味着驾驶员必须保持参与并应始终监控环境。
+
+升级到 3 级是一个很大的步骤，因为驾驶员不再需要监控环境，尽管他必须能够随时收回控制权。从法律的角度来看，这意味着驾驶任务的责任在于汽车，因此也在于制造商。这就是为什么我们还没有看到大量配备 3 级系统的商用车辆。几家制造商已经发布了此类系统，但在撰写本文时（2019 年 5 月），我们在市场上找不到它们。这样做的原因有三：
+
+1. 这样的系统必须构建得足够可靠，以尽量减少错误决策的数量。工程师通常通过在汽车上添加大量传感器来解决这个问题，这使得此类系统（非常）昂贵。
+2. 对因事故引起的法律诉讼的恐惧导致系统的可用性有意降低，例如通过限制行驶速度或场景（例如，仅在高速公路上的交通拥堵中，车道标记清晰可见，速度低于 60 公里/小时）。
+3. 无法保证驾驶员随时准备好控制车辆。由于人类的反应时间和警觉水平，在许多情况下这是不可能的。
+
+因此，许多专家认为，3 级系统只是向在 4 级和 5 级运行的更先进系统的过渡步骤。在这些级别上，车辆能够执行所有驾驶任务，“驾驶员”不需要控制住。显然，此类系统需要强大的工程设计才能始终保证驾驶员和道路使用者的安全。
+
+在下一节中，我们将仔细研究部分自动驾驶汽车及其各自的传感器套件。但是现在，您应该尝试通过回答以下测验问题来测试您的知识。
+
+- FCW
+- ACC
+- NOA
+
+##### 自动驾驶汽车传感器组
+
+在上一节中，您了解了不同级别的自动驾驶以及从 2 级到 3 级甚至更高级别所需的飞跃。现在应该很明显，实现 4 级和 5 级自动驾驶的一个关键是传感器和感知算法的智能组合，以始终监控车辆环境，以确保对所有交通事件做出适当和安全的反应。
+
+为了让您了解在实践中如何解决这个问题，本节简要概述了一些旨在实现 4 级甚至 5 级驾驶的车辆。由于本课程主要是关于相机和计算机视觉，并在一定程度上涉及激光雷达，因此让我们主要关注这两种传感器类型。现在让我们来看看一些自动驾驶汽车及其各自的传感器套件。
+
+##### Uber ATG 自动驾驶汽车
+
+当前版本的 Uber 自动驾驶汽车结合了顶部安装的 360° 激光雷达扫描仪和放置在汽车周围的多个摄像头和雷达传感器。
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2002_Autonomous%20Vehicles%20and%20Computer%20Vision/img/uber-atg-volvo.jpg)
+
+让我们一一了解这些传感器类别：
+
+1. *摄像头* ：优步改装的沃尔沃 XC90 SUV 车队在车顶配备了一系列摄像头，另外还有指向汽车侧面和后方的摄像头。车顶摄像头能够聚焦近场和远场，观察刹车车辆、过马路的行人、交通信号灯和标志。摄像头将它们的材料传送到中央车载计算机，该计算机还接收其他传感器的信号，以创建车辆周围环境的精确图像。就像人眼一样，摄像头系统在夜间的性能会大大降低，这使得它们无法以所需的检测率和位置精度定位物体。这就是优步车队配备两种额外传感器类型的原因。
+2. *雷达* ：雷达系统发射的无线电波被（许多但不是全部）物体反射。可以根据它们的运行时间（给出距离）以及它们的偏移频率（给出相对速度）来分析返回波。后一种特性清楚地将雷达与其他两种传感器类型区分开来，因为它是唯一能够直接测量物体速度的传感器。此外，雷达在大雪和浓雾等恶劣天气条件下也非常强大。巡航控制系统使用多年，雷达在识别具有良好反射特性的较大物体时效果最佳。在检测反射特性降低的较小或“软”物体（人、动物）时，雷达检测性能会下降。即使相机和雷达结合得很好，
+3. *激光雷达* ：激光雷达的工作方式与雷达类似，但它不发射无线电波，而是使用红外线。屋顶安装的传感器高速旋转，并构建其周围环境的详细 3D 图像。在 Velodyne VLS-128 的情况下，总共使用 128 束激光束来检测最远 300 米距离的障碍物。在单次旋转 360 度期间，每秒总共生成多达 400 万个数据点。与相机类似，激光雷达是一种光学传感器。然而，它具有“自带光源”的显着优势，而摄像头则依赖于环境光和车辆前照灯。但必须注意的是，激光雷达在恶劣的环境条件下（例如雪、大雨）也会降低性能或雾。再加上某些材料的低反射特性，因此，激光雷达可能无法为交通中的某些物体生成足够密集的点云，只留下几个 3D 点可供使用。因此，将激光雷达与其他传感器相结合是一个好主意，以确保检测性能足以在交通中自主导航。
+
+以下场景显示了优步自动驾驶汽车生成的激光雷达 3D 点云以及左上角叠加的前置摄像头图像。重建场景的整体印象非常积极。但是，如果仔细观察，您会发现场景中不同对象的激光雷达点数差异很大。
+
+[https://eng.uber.com/atg-dataviz/](https://eng.uber.com/atg-dataviz/)
+
+![https://eng.uber.com/atg-dataviz/](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2002_Autonomous%20Vehicles%20and%20Computer%20Vision/img/camera-2-2.gif)
+
+车辆日志描述了车辆正在做什么、看到了什么以及如何行动。基于传感器数据运行算法的三个关键阶段：感知（测量）、预测（forecasting）和运动规划（acting）。为了成功运行，车辆需要能够通过其传感器*感知*周围的活动。基于这些信息，它可以*预测*这些物体在不久的将来会在哪里，这将提供足够的信息来正确*规划*它的下一步行动（想想：改变车道或在停车标志处停车）
+
+![](http://eng.uber.com/wp-content/uploads/2017/08/triage-2-1.gif)
+
+![](http://eng.uber.com/wp-content/uploads/2017/08/camera-2-1.gif)
+
+![](http://eng.uber.com/wp-content/uploads/2017/08/debug.gif)
+
+##### 梅赛德斯奔驰自主原型车
+
+目前，德国汽车制造商梅赛德斯奔驰正在开发一款配备摄像头、激光雷达和雷达传感器的自动驾驶汽车原型，类似于优步汽车。梅赛德斯使用多个摄像头扫描车辆周围的区域。特别感兴趣的是由两个同步相机组成的立体设置，它能够通过在两个图像中找到相应的特征来测量深度。下图显示了系统使用的所有摄像机。梅赛德斯表示，单是立体摄像头，每行驶一公里就会产生总计 100 GB 的数据。
+
+https://www.mercedes-benz.com/en/mercedes-benz/innovation/successful-autonomous-driving-a-pilot-project-by-daimler-and-bosch/
+
+![https://www.mercedes-benz.com/en/mercedes-benz/innovation/successful-autonomous-driving-a-pilot-project-by-daimler-and-bosch/](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2002_Autonomous%20Vehicles%20and%20Computer%20Vision/img/draggedimage.png)
+
+##### 特斯拉自动驾驶仪
+
+当 Autopilot 系统首次销售时，它基本上是自适应巡航控制和变道辅助的组合——全球其他制造商长期以来一直提供的一组功能。然而，“Autopilot”这个名字暗示着汽车将是真正的自动驾驶。事实上，许多特斯拉车主通过爬上后座、读书或在系统驱动下小睡来测试系统的极限。然而，在 SAE 等级上，Autopilot 只能“仅”归类为 2 级，即驾驶员始终负责驾驶任务。
+
+2016 年 10 月，特斯拉 Model S 和 X 传感器组得到显着升级，自动驾驶仪的功能通过定期机载软件更新得到扩展。
+
+该图像显示了特斯拉的内部，相机视图叠加在右侧。该图像显示了左右后置摄像头以及用于中距离感知的前向摄像头。
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2002_Autonomous%20Vehicles%20and%20Computer%20Vision/img/screen-shot-2018-04-25-at-10-14-46-pm.jpg)
+
+从概述中可以看出，该系统将多个具有部分重叠视野的摄像头传感器与一个前向雷达传感器结合在一起。
+
+![https://www.tesla.com/de_DE/autopilot](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2002_Autonomous%20Vehicles%20and%20Computer%20Vision/img/tesla-autopilot-hardware.png)
+
+https://www.tesla.com/de_DE/autopilot
+
+让我们依次看看每种传感器类型：
+
+1. *相机* ：前向光学阵列由四个不同焦距的相机组成。窄前摄像头拍摄前方 250m 的镜头，稍大开口角度的前摄像头可拍摄前方 150m，广角摄像头可拍摄前方 60m，一组前视侧摄像头可在汽车前方和侧面拍摄 80 米的镜头。广角摄像头旨在读取道路标志和交通信号灯，让汽车做出相应的反应。然而，是否可以在流量中可靠地使用此功能存在争议。
+2. *雷达* ：前视雷达最多可看到汽车前方 160 米。根据特斯拉创始人埃隆·马斯克的说法，它能够看穿“沙子、雪、雾——几乎任何东西”。
+3. *声纳* ：360°超声波声纳检测汽车周围八米半径内的障碍物。超声波传感器可以在任何速度下工作，用于发现汽车附近的物体。超声波传感器还可用于在自动切换车道时辅助汽车。然而，与该组中的其他传感器相比，它们的范围非常有限，并且在大约 8 米的距离处结束。
+
+您可能已经注意到，尽管特斯拉计划通过此设置提供 4 级甚至 5 级自动驾驶，但它并未使用激光雷达传感器。与 Uber、Waymo 和其他几家以完全自主为目标的许多其他制造商不同，特斯拉相信，一套高性能摄像头加上强大的雷达传感器就足以实现 4 级/5 级自主。在撰写本文时，关于自动驾驶汽车的最佳传感器组的争论仍在激烈进行。特斯拉辩称，激光雷达的价格和包装劣势会使自动驾驶仪对客户没有吸引力。通用汽车自动驾驶汽车集成总监斯科特·米勒等严厉的批评者不同意自动驾驶汽车的高度安全要求，仅靠摄像头和雷达无法满足这些要求。
+
+然而，必须注意的是，在所有传感器设置中，无论是优步、特斯拉、Waymo 还是传统制造商，如梅赛德斯或奥迪，始终使用摄像头。尽管关于雷达或激光雷达或两者的组合哪个更好的争论一直在持续，但相机永远不会受到质疑。因此，学习相机和计算机视觉是个好主意，我们将在本课程中详细介绍。
+
+##### 传感器选择标准
+
+自动驾驶或配备 ADAS 的车辆的设计涉及选择合适的传感器组。正如您在上一节中了解到的，目前正在讨论需要哪种传感器组合才能实现完全（甚至部分）自主。在本节中，您将了解传感器选择标准以及相机、激光雷达和雷达在每个标准方面的差异。
+
+下面简要讨论最典型的选择标准。
+
+1. **范围** ：激光雷达和雷达系统可以检测距离从几米到 200 多米不等的物体。许多激光雷达系统难以检测非常近距离的物体，而雷达可以检测不到一米的物体，具体取决于系统类型（长距离、中距离或短距离）。单声道相机无法可靠地测量到物体的公制距离——这只能通过对世界的性质（例如平面路面）做出一些假设来实现。另一方面，立体相机可以测量距离，但最多只能测量大约 10 米的距离。80m，精度从那里显着下降。
+2. **空间分辨率** ：由于发射的红外激光波长较短，激光雷达扫描的空间分辨率约为 0.1°。这允许进行高分辨率 3D 扫描，从而表征场景中的对象。另一方面，雷达不能很好地分辨小特征，尤其是随着距离的增加。相机系统的空间分辨率由光学器件、图像上的像素大小及其信噪比决定。一旦从小物体发出的光线扩散到图像传感器上的几个像素（模糊），小物体的细节就会丢失。此外，当存在很少的环境光来照亮物体时，空间分辨率会随着物体细节通过增加成像器的噪声水平而叠加而增加。
+3. **黑暗中的鲁棒性** ：雷达和激光雷达在黑暗中具有出色的鲁棒性，因为它们都是主动传感器。虽然激光雷达系统的白天性能非常好，但它们在夜间的性能甚至更好，因为没有可能干扰红外激光反射检测的环境阳光。另一方面，摄像头在夜间的检测能力非常低，因为它们是依赖环境光的被动传感器。尽管图像传感器的夜间性能有所提高，但它们在三种传感器类型中的性能最低。
+4. **在雨、雪、雾中的稳健性** ：雷达传感器的最大优势之一是它们在恶劣天气条件下的性能。它们不会受到雪、大雨或空气中的任何其他障碍物（如雾或沙粒）的显着影响。作为一种光学系统，激光雷达和相机容易受到恶劣天气的影响，其性能通常会随着逆境程度的增加而显着下降。
+5. **物体分类** ：相机擅长对车辆、行人、速度标志等物体进行分类。这是相机系统的主要优势之一，人工智能的最新进展更加强调了这一点。具有高密度 3D 点云的激光雷达扫描也允许进行一定程度的分类，尽管对象多样性不如相机。雷达系统不允许进行太多的对象分类。
+6. **感知二维结构** ：摄像头系统是唯一能够解释二维信息（如速度标志、车道标记或交通信号灯）的传感器，因为它们能够测量颜色和光强度。这是相机相对于其他传感器类型的主要优势。
+7. **测量速度** ：雷达可以利用多普勒频移直接测量物体的速度。这是雷达传感器的主要优势之一。激光雷达只能通过使用连续的距离测量来近似速度，这使得它在这方面不太准确。相机即使无法测量距离，也可以通过观察图像平面上物体的位移来测量碰撞时间。本课程稍后将使用此属性。
+8. **系统成本** ：近年来，雷达系统已广泛用于汽车行业，目前的系统非常紧凑且价格适中。单色相机也是如此，在大多数情况下价格远低于 100 美元。由于硬件成本增加和市场上单位数量明显减少，立体相机更加昂贵。激光雷达在过去几年中越来越受欢迎，尤其是在汽车行业。由于技术进步，其成本已从 75,000 多美元降至 5,000 美元以下。许多专家预测，未来几年激光雷达模块的成本可能会降至 500 美元以下。
+9. **封装尺寸** ：雷达和单摄像头都可以很好地集成到车辆中。立体摄像头在某些情况下体积庞大，这使得将它们集成到挡风玻璃后面变得更加困难，因为它们有时可能会限制驾驶员的视野。激光雷达系统有各种尺寸。360° 扫描激光雷达通常安装在屋顶顶部，因此非常清晰可见。行业转向更小的固态激光雷达系统将在不久的将来显着缩小激光雷达传感器的系统尺寸。
+10. **计算要求** ：激光雷达和雷达几乎不需要后端处理。虽然相机是一种经济高效且易于使用的传感器，但它们需要进行大量处理才能从图像中提取有用信息，这会增加整体系统成本。
+
+![1681911669571](image/LearningNotes/1681911669571.png)
+
+![1681911718707](image/LearningNotes/1681911718707.png)
+
+![1681911733946](image/LearningNotes/1681911733946.png)
+
+![1681911753424](image/LearningNotes/1681911753424.png)
+
+##### 相机技术概述
+
+在本节中，您将了解相机的基本属性。我们将从称为“针孔相机”的最基本模型开始，然后逐步使用镜头，这是相机系统的关键组件。您需要这些知识才能了解相机如何创建图像，其哪些属性会影响图像外观和质量，以及您必须考虑哪些参数才能成功地从这些图像中提取有意义的信息。
+
+针孔相机
+
+可以通过在感兴趣的物体之间放置一个带有微小开口（针孔）的光栅来设计一个非常简单的相机。物体发出的光通过针孔到达感光表面，感光表面将光信息存储为图像。之所以将针孔做得如此之小，是为了避免由于来自感兴趣对象的各个部分的光线叠加而导致图像模糊。
+
+这个简单的原则几个世纪以来一直广为人知，例如，艺术家使用它来创作逼真的肖像。
+
+![https://owlcation.com/humanities/Leonardo-da-Vincis-Camera-Obscura](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2002_Autonomous%20Vehicles%20and%20Computer%20Vision/img/draggedimage.png)
+
+https://owlcation.com/humanities/Leonardo-da-Vincis-Camera-Obscura
+
+针孔相机模型的正式模型如下所示。
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2002_Autonomous%20Vehicles%20and%20Computer%20Vision/img/draggedimage-1.png)
+
+左边的感光面称为 *像面* ，而针孔称为 *相机中心* 。相机中心和图像平面之间的距离称为 *焦距 f* 。
+
+感兴趣对象上的点 P 可以映射到图像平面上的点 P'，方法是通过投影中心投射光束，直到它到达图像平面，如下图所示。
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2002_Autonomous%20Vehicles%20and%20Computer%20Vision/img/draggedimage-2.png)
+
+在三维空间中，之间的关系�P和�‘P‘由以下等式表示：
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2002_Autonomous%20Vehicles%20and%20Computer%20Vision/img/draggedimage-3.png)
+
+基于这些方程，我们能够计算物体在图像平面上的 2D 位置，给定物体在空间中的 3D 位置以及相机的焦距。但是请注意，生成的坐标 x' 和 y' 是公制坐标，而不是像素位置。
+
+针孔相机的问题是通过针孔的光量不足以在图像传感器上生成像样的图像。如果像下图那样通过加宽针孔开口来增加光量，来自目标物体其他部分的光线会相互叠加，导致模糊效果：针孔越大，越亮图像，但同时，图像平面上物体的模糊会越严重。
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2002_Autonomous%20Vehicles%20and%20Computer%20Vision/img/draggedimage-4.png)
+
+解决此问题的一种方法是使用镜头，它能够捕获从感兴趣对象上的同一点发出的多条光线。接下来让我们看看镜头。
+
+尺寸和位置适当的透镜会折射从空间中物体上的点 P1 发出的所有光线，使它们会聚到一个点�1个‘p1个‘的在图像平面中。穿过镜头中心的光线不会被折射，但是它们会继续保持直线直到与图像平面相交。
+
+物体上较近或较远的点，例如�2个P2个的，在图像平面上看起来没有焦点，因为从它们发出的光线集不会会聚在一个点上，而是会聚在一个具有有限半径的圆上。这个模糊的圆圈通常被称为 *混乱圈（COF）* 。为减少模糊，可以使用光圈，这是一个通常可调节大小的同心开口，直接放置在镜头后面。下图说明了原理：
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2002_Autonomous%20Vehicles%20and%20Computer%20Vision/img/draggedimage-5.png)
+
+通过减小光圈的直径，在外边缘通过透镜的光线被阻挡，从而减小了像平面上的 COF 尺寸。很容易看出，较小的光圈会减少模糊，但会降低感光度。光圈越大，聚焦到图像区域的光线就越多，从而产生具有更好信噪比的更明亮的图像。
+
+那么我们如何计算空间中的物体将出现在图像中的什么位置呢？给定一个空间中的 3D 点，它在通过镜头后在图像平面上的 2D 位置可以类似于针孔相机来计算。实际上，根据镜头类型，镜头会导致图像失真。与实践最相关的失真称为“径向失真”。这是由于镜头的焦距在其直径上不均匀造成的。因此，镜头的放大效果会根据相机中心（光轴）与穿过镜头的光线之间的距离而变化。如果放大倍数增加，所产生的失真效果称为“枕形失真”。如果它减小，则称为“桶形失真”。使用广角镜头时，通常会出现桶形畸变。
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2002_Autonomous%20Vehicles%20and%20Computer%20Vision/img/rad027.png)
+
+从相机图像中提取信息时，许多应用程序试图得出有关感兴趣对象（例如车辆）的空间位置的结论。为此，必须消除或至少减轻镜头的畸变效应。相关过程称为校准。对于每个相机镜头设置，必须执行 *校准程序，以便可以单独计算失真参数。* 这通常是通过拍摄一组众所周知的物体的照片来完成的，例如平面棋盘图案，从已知的几何形状中可以可靠地导出所有镜头和图像传感器参数。从相机图像中去除失真的过程称为 *校正* . 在下图中，显示了用于校正本课程中大部分图像的校准设置。很容易看出左右两边的线条都明显扭曲。
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2002_Autonomous%20Vehicles%20and%20Computer%20Vision/img/0000000000.png)
+
+然而，深入了解失真校正的细节超出了本课程的范围。您将使用的大多数图像都没有镜头失真。但是，当使用您自己的相机设置时，如果目标是精确测量和对象的空间重建，则必须执行校准程序。
+
+*如前所述，3D 空间中的点在图像平面上的投影并不直接对应于我们在实际数字图像中看到的内容，这些图像由数千个图片元素*或*像素*组成。要了解图像如何以离散像素表示，我们需要再次仔细研究上述相机模型。在下图中，相机中心显示了一个位置欧欧在空间中以及它自己的带轴的坐标系我我,�j和�k， 在哪里�k指向图像平面的方向。职位�‘C‘在哪里�k与图像平面相交的点称为主点，代表图像坐标系的中心。
+
+投影点后的第一步�P因此，在图像平面上的空间中减去主点坐标，以便离散图像具有其自己的坐标系，例如以图像平面的左下角为中心
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2002_Autonomous%20Vehicles%20and%20Computer%20Vision/img/draggedimage-6.png)
+
+转换过程的第二步是从公制坐标转换为像素坐标。为此，我们可以使用参数�k和升升由将米转换为像素的校准程序提供，并且可以很容易地集成到投影方程中，如下所示。请注意，在图像坐标中，y 轴的原点位于左上角并指向下方。
+
+在本课程的后面部分，我们将把激光雷达 3D 点映射到相机图像中。为此，我们将使用这些方程式。具体来说，焦距的乘积�F和�k和升升 分别（也称为 alpha 和 beta）将用于校准矩阵以显着简化映射操作。
+
+关于图像校正的最后一个注意事项：在许多应用程序（例如特征跟踪）中，当计算校正图像并且转换后的像素没有恰好落在校正图像中离散像素的中心时，处理原始图像以避免插值错误是有意义的图像但靠近另一个像素的边界。在这种情况下，建议在未修改的原始图像中定位特征，然后使用上述等式转换结果坐标。当使用基于一组训练权重的深度学习时，在将图像提供给网络之前首先纠正图像是有意义的——如果我们使用原始图像，失真（例如来自鱼眼镜头）将导致检测错误，因为网络通常是在无失真图像集上训练的。
+
+##### Imagers and Bayer Pattern
+
+在最后一节中，您将了解特定波长的光线如何转换为可以数字存储的彩色像素。
+
+当相机拍摄图像时，光线穿过镜头并落在图像传感器上。该传感器由光敏元件组成，这些元件记录落在其上的光量并将其转换为相应数量的电子。光越多，产生的电子就越多。曝光时间结束后，产生的电子将转换为电压，最后通过 A/D 转换器转换为离散数。
+
+目前，主要有两种图像技术，即CCD（电荷耦合器件）和CMOS（互补金属氧化物半导体）。这两种技术都将电子转换为电压，并且本质上是色盲的，因为它们无法区分产生电子的不同波长。为了实现色觉，微小的滤光元件（也称为微透镜）被放置在每个像素的前面，只允许特定波长通过。将波长映射到颜色的一种常见方法是以 RGB（红、绿、蓝）模式排列滤光片元件，以允许原色单独通过，这为我们提供了三个单独的图像——每个原色一个。
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2002_Autonomous%20Vehicles%20and%20Computer%20Vision/img/color-filter-array.png)
+
+以不同的组合混合，RGB 值可以产生人眼可见的大部分颜色。当每个离散颜色值用 8 位编码（即 256 个值）时，可以使用 RGB 滤镜概念创建总共 1670 万种不同的颜色。排列 RGB 滤镜的最常见方式称为 *拜耳模式* ，其中交替排列着红-绿和绿-蓝滤光片。由于人眼对绿色比对红色或蓝色更敏感，因此拜耳阵列具有两倍数量的绿色滤光片。在计算机视觉应用程序中处理彩色图像时，所有三个 RGB 层都可用，必须决定使用哪些颜色层。如果处理能力有限，则将不同的通道组合成灰度图像。在接下来的计算机视觉部分，您将了解 OpenCV 计算机视觉库。您可以在此处查看方法*cvtColor*中使用的从 RGB 到灰度的转换公式： https: [//docs.opencv.org/3.1.0/de/d25/imgproc_color_conversions.html](https://docs.opencv.org/3.1.0/de/d25/imgproc_color_conversions.html)
+
+## CCD 与 CMOS
+
+在*CCD 传感器*中，每个像素中收集的电子通过单个或仅几个输出节点从芯片传输。然后将电荷转换为电压电平、缓冲并作为模拟信号发送出去。然后使用传感器外部的 A/D 转换器将该信号放大并转换为离散数字。最初，CCD 技术与 CMOS 相比有几个优势，例如更高的感光度和更低的噪声。然而，近年来，这些差异几乎消失了。CCD 的主要缺点是生产价格较高和功耗较高（高达 CMOS 的 100 倍），这通常会导致相机出现发热问题。
+
+CMOS*传感器*最初用于机器视觉应用，但由于感光度差，图像质量较差。然而，对于现代 CMOS 传感器，质量和感光度都有显着提高。CMOS 技术有几个优点： 与 CCD 不同，CMOS 芯片集成了放大器和 A/D 转换器，这带来了巨大的成本优势。对于 CCD，这些组件位于芯片外部。CMOS 传感器还具有更快的数据读出速度、更低的功耗、更高的抗噪性和更小的系统尺寸。在汽车应用中，由于这些优势，几乎所有相机都使用 CMOS 传感器。可以在此处找到用于记录本课程中大部分图像序列的相机设置：[http://www.cvlibs.net/datasets/kitti/setup.php](http://www.cvlibs.net/datasets/kitti/setup.php)
+
+审查
+
+现在您应该了解从感兴趣的物体（例如行人）折射的光在通过镜头后如何进入图像传感器并最终转换为离散颜色值，可以由计算机视觉算法。让我们通过一个小测验来测试您的知识，然后我们继续下一节，这是关于操作和解释这些像素的基本操作。
+
+##### 04. MBRDNA的相机技术
+
+##### OpenCV 计算机视觉库
+
+在本课程中，您将使用 OpenCV [，](https://opencv.org/)它是一个跨平台计算机视觉库，最初于 2000 年开发，旨在为计算机视觉应用程序提供通用基础设施，并加速机器视觉在科学和工程项目中的使用. 这个开源库最初由英特尔创立，现在得到了全球多家公司和数百名专家的支持。
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2002_Autonomous%20Vehicles%20and%20Computer%20Vision/img/opencv-logo-with-text-svg-version.svg.png)
+
+该库拥有 2500 多种算法，可用于检测和识别人脸、识别物体、对视频中的人类行为进行分类、跟踪摄像机运动、跟踪移动物体、执行机器学习等等。OpenCV 是用 C++ 编写的，但也有 Python、Java 和 Matlab 的接口。在本课程中，您将使用 C++ 版本的 OpenCV。
+
+使用 OpenCV 库的主要优势是您将能够利用一组经过良好测试的最先进的计算机视觉算法。无需专注于 Sobel 算子、关键点检测或机器学习等计算机视觉概念的实际实施，您可以开箱即用并专注于以正确的方式组合它们以开发工作软件原型。然而，尽管使用起来很方便，但要正确使用它们，还需要很好地理解这些概念背后的理论。
+
+在下文中，您将熟悉一些开始使用 OpenCV 所需的基本概念，并为课程后面的更高级课程做好准备。下面列出的库将在整个讲座中广泛使用。然而，它们只是整个 OpenCV 的一小部分。稍后，您还将包括一些专门的库，例如 *flann* （近似最近邻的快速库）或 *dnn* （深度神经网络），它们将仅在本课程中使用它们的部分进行描述。
+
+关于命名空间的注意事项：大多数 OpenCV 函数都存在于*cv*命名空间中。通常，为了缩短代码，在许多应用程序中使用*using namespace cv*命令。然而，在本课程中，当我们使用来自 OpenCV 的函数调用时，并没有这样做以明确说明。
+
+##### OpenCV 库概述
+
+核心模块是包含所有基本对象类型及其操作的库部分。要在您的代码中使用该库，必须包含以下标头：
+
+```cpp
+#include "opencv2/core/core.hpp"
+```
+
+*highgui*模块包含可用于显示图像或进行简单用户输入的用户界面函数。要在您的代码中使用该库，必须包含以下标头：
+
+```cpp
+#include "opencv2/highgui/highgui.hpp"
+```
+
+在这个项目中，基本功能如 `cv::imshow`将用于在窗口中显示图像。
+
+imgproc （图像处理）模块包含对图像*的*基本变换，例如图像过滤、几何变换、特征检测和跟踪。要在您的代码中使用该库，必须包含以下标头：
+
+```cpp
+#include "opencv2/imgproc/imgproc.hpp"
+```
+
+*features2d*模块包含用于检测、描述和匹配图像之间关键点的算法。要在您的代码中使用该库，必须包含以下标头：
+
+```cpp
+#include "opencv2/features2d/features2d.hpp"
+
+```
+
+##### OpenCV 矩阵数据类型
+
+OpenCV 中用于存储和操作图像的基本数据类型是 `cv::Mat datatype`. 它可用于任意维数的数组。中存储的数据 `cv::Mat`以所谓的 `raster scan order`. 对于二维数组（如灰度图像），这意味着数据被组织成行，每一行一个接一个地出现。一个三维数组（如彩色图像）按平面排列，每个平面逐行填充，然后平面一个接一个地填充。`cv::Mat`要了解这是如何工作的，让我们更深入地研究数据类型：
+
+变量中的数据 `cv::Mat`可以是单个数字或多个数字。在多个数字的情况下（例如用 表示 `cv::Scalar`），矩阵被称为多通道阵列。有几种方法可以创建和初始化 `cv::Mat`变量。下面工作区中的文件 `create_matrix.cpp`说明了如何完成此操作的一种方法。
+
+ **注意：** 要构建和运行下面的代码，请使用以下步骤：
+
+1. 确保 `GPU`已启用并单击按钮转到虚拟桌面 `Desktop`。您可以使用 Terminator 或 VSCode 终端运行以下命令：
+2. 从 `/home/workspace/OpenCV_exercises`目录中，运行命令：`mkdir build && cd build`
+3. `cmake ..`
+4. `make`
+5. 使用以下命令运行 `create_matrix`可执行文件 `build`：`./create_matrix`
+
+在代码示例中，创建的变量*m18u*具有 480 行和 640 列，颜色深度为 8 位作为无符号字符和单个通道（因此为 _8UC1）。然后，将整个图像设置为 8 位最大值 255，对应白色。该函数 `cv::imshow`在屏幕上显示图像。当您执行代码时，您应该会看到一个白色图像出现在屏幕上的一个窗口中。
+
+OpenCV 中的矩阵也可以用三个通道来表示颜色。
+
+ **这是给你的一个小任务** ：在 `create_matrix.cpp`文件中，创建一个类型为 `cv::Mat`name的变量 `m3_8u`，它具有三个通道，每个通道的深度为 8 位。然后，使用数据类型将第一个通道设置为 255 `cv::Scalar`并显示结果。如果遇到困难，可以使用[此处的文档。](https://docs.opencv.org/4.1.0/d6/d6d/tutorial_mat_the_basic_image_container.html)
+
+操作矩阵
+
+现在您可以创建矩阵，让我们尝试更改它们的一些条目：通过使用命令，`cv::Mat::at<data type>(row, col) = data`可以用数据替换给定位置的元素。请注意，您提供给 -function 的数据类型 `at`必须与存储在您尝试访问的矩阵中的实际数据相匹配。
+
+ **这是给您的另一个小任务** ：在 `change_pixels.cpp`文件中，编写一个嵌套循环，在下面的示例中遍历矩阵的整个宽度。然后，将每个元素设置为 255。请特别注意为给定格式选择正确的数据类型。结果图像是什么样的？
+
+ **注意：** 您可以使用与上述相同的步骤为此任务构建和运行代码，除了本练习之外，可执行文件将命名为 `change_pixels`.
+
+![来自“change_pixels.cpp”文件的代码](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2002_Autonomous%20Vehicles%20and%20Computer%20Vision/img/draggedimage-1.png)
+
+change_pixels.cpp文件中的代码
+
+
+加载和处理图像
+
+接下来我们要做的是从文件中加载图像。让我们假设图像与可执行文件位于同一路径中。通过调用 `cv::imread`我们可以从文件中加载图像并将其分配给一个 `cv::Mat`变量。查看以下代码示例，了解如何从文件加载单个图像。您可以像上面那样构建代码，并且可以使用可执行文件从虚拟桌面运行代码 `load_image_1`。
+
+
+![load_image_1.cpp</code></code> 文件中的代码](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2002_Autonomous%20Vehicles%20and%20Computer%20Vision/img/draggedimage-2.png)
+
+load_image_1.cpp文件中的代码
+
+假设代码目录中总共有 5 张图像 (img0005.png - img0009.png) ，使用字符串连接可以很容易地从文件中一个接一个地读取它们。下一个示例展示了如何使用字符串连接和 setfill 函数轻松地从单个元素组装文件名，这确保在将循环变量附加到文件名之前将前置零添加到循环变量中。您可以使用可执行文件运行下一个示例 `load_image_2`。
+
+![load_image_2.cpp</code></code> 文件中的代码](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2002_Autonomous%20Vehicles%20and%20Computer%20Vision/img/draggedimage-3.png)
+
+load_image_2.cpp文件中的代码
+
+
+在课程的后面，我们将一个接一个地加载和处理多张图像。以巧妙的方式处理大量数据非常重要，这样图像和其他结构就不会被不必要地复制。此外，我们希望灵活地重新排列数据以及定期删除和添加元素。在 C++ 中，这可以通过使用向量轻松实现。在下面的代码中，一组图像像以前一样从文件中加载并推送到类型为 的动态列表中 `vector<cv::Mat>`。然后，使用迭代器遍历列表并一张一张地显示加载的图像。
+
+您可以使用可执行文件运行下面的代码 `load_image_3`。
+
+![load_image_3.cpp</code></code> 文件中的代码](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2002_Autonomous%20Vehicles%20and%20Computer%20Vision/img/draggedimage-4.png)
+
+load_image_3.cpp文件中的代码
+
+
+关键字 `auto`只是要求编译器从初始化中推导出变量的类型，这比 `vector<cv::Mat>::iterator it`直接写要方便得多。可以使用表达式访问循环内的当前图像 `*it`。
+
+ **这是给你的最后一个练习** ：在 的循环中 `load_image_3.cpp`，防止显示编号为 7 的图像。
