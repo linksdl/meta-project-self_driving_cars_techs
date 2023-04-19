@@ -33,6 +33,10 @@
 *.zip
 *.stp
 *.hex
+*.ini
+*._.DS_Store*
+*.pcd
+
 
 .vscode/*
 .idea/*
