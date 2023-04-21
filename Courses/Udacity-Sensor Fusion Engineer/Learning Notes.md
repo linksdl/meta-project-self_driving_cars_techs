@@ -1490,7 +1490,7 @@ signal_fft  = signal_fft(1:L/2-1)
 You can use the following MATLAB starter code:
 
 ```matlab
-Fs = 1000;            % Sampling frequency        
+Fs = 1000;            % Sampling frequency    
 T = 1/Fs;             % Sampling period   
 L = 1500;             % Length of signal
 t = (0:L-1)*T;        % Time vector
@@ -2484,7 +2484,7 @@ https://owlcation.com/humanities/Leonardo-da-Vincis-Camera-Obscura
 
 以不同的组合混合，RGB 值可以产生人眼可见的大部分颜色。当每个离散颜色值用 8 位编码（即 256 个值）时，可以使用 RGB 滤镜概念创建总共 1670 万种不同的颜色。排列 RGB 滤镜的最常见方式称为 *拜耳模式* ，其中交替排列着红-绿和绿-蓝滤光片。由于人眼对绿色比对红色或蓝色更敏感，因此拜耳阵列具有两倍数量的绿色滤光片。在计算机视觉应用程序中处理彩色图像时，所有三个 RGB 层都可用，必须决定使用哪些颜色层。如果处理能力有限，则将不同的通道组合成灰度图像。在接下来的计算机视觉部分，您将了解 OpenCV 计算机视觉库。您可以在此处查看方法*cvtColor*中使用的从 RGB 到灰度的转换公式： https: [//docs.opencv.org/3.1.0/de/d25/imgproc_color_conversions.html](https://docs.opencv.org/3.1.0/de/d25/imgproc_color_conversions.html)
 
-## CCD 与 CMOS
+CCD 与 CMOS
 
 在*CCD 传感器*中，每个像素中收集的电子通过单个或仅几个输出节点从芯片传输。然后将电荷转换为电压电平、缓冲并作为模拟信号发送出去。然后使用传感器外部的 A/D 转换器将该信号放大并转换为离散数字。最初，CCD 技术与 CMOS 相比有几个优势，例如更高的感光度和更低的噪声。然而，近年来，这些差异几乎消失了。CCD 的主要缺点是生产价格较高和功耗较高（高达 CMOS 的 100 倍），这通常会导致相机出现发热问题。
 
@@ -2571,32 +2571,752 @@ OpenCV 中的矩阵也可以用三个通道来表示颜色。
 
 change_pixels.cpp文件中的代码
 
-
 加载和处理图像
 
 接下来我们要做的是从文件中加载图像。让我们假设图像与可执行文件位于同一路径中。通过调用 `cv::imread`我们可以从文件中加载图像并将其分配给一个 `cv::Mat`变量。查看以下代码示例，了解如何从文件加载单个图像。您可以像上面那样构建代码，并且可以使用可执行文件从虚拟桌面运行代码 `load_image_1`。
 
-
-![load_image_1.cpp</code></code> 文件中的代码](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2002_Autonomous%20Vehicles%20and%20Computer%20Vision/img/draggedimage-2.png)
+![load_image_1.cpp</code></code></code></code></code></code></code></code> 文件中的代码](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2002_Autonomous%20Vehicles%20and%20Computer%20Vision/img/draggedimage-2.png)
 
 load_image_1.cpp文件中的代码
 
 假设代码目录中总共有 5 张图像 (img0005.png - img0009.png) ，使用字符串连接可以很容易地从文件中一个接一个地读取它们。下一个示例展示了如何使用字符串连接和 setfill 函数轻松地从单个元素组装文件名，这确保在将循环变量附加到文件名之前将前置零添加到循环变量中。您可以使用可执行文件运行下一个示例 `load_image_2`。
 
-![load_image_2.cpp</code></code> 文件中的代码](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2002_Autonomous%20Vehicles%20and%20Computer%20Vision/img/draggedimage-3.png)
+![load_image_2.cpp</code></code></code></code></code></code></code></code> 文件中的代码](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2002_Autonomous%20Vehicles%20and%20Computer%20Vision/img/draggedimage-3.png)
 
 load_image_2.cpp文件中的代码
-
 
 在课程的后面，我们将一个接一个地加载和处理多张图像。以巧妙的方式处理大量数据非常重要，这样图像和其他结构就不会被不必要地复制。此外，我们希望灵活地重新排列数据以及定期删除和添加元素。在 C++ 中，这可以通过使用向量轻松实现。在下面的代码中，一组图像像以前一样从文件中加载并推送到类型为 的动态列表中 `vector<cv::Mat>`。然后，使用迭代器遍历列表并一张一张地显示加载的图像。
 
 您可以使用可执行文件运行下面的代码 `load_image_3`。
 
-![load_image_3.cpp</code></code> 文件中的代码](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2002_Autonomous%20Vehicles%20and%20Computer%20Vision/img/draggedimage-4.png)
+![load_image_3.cpp</code></code></code></code></code></code></code></code> 文件中的代码](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2002_Autonomous%20Vehicles%20and%20Computer%20Vision/img/draggedimage-4.png)
 
 load_image_3.cpp文件中的代码
-
 
 关键字 `auto`只是要求编译器从初始化中推导出变量的类型，这比 `vector<cv::Mat>::iterator it`直接写要方便得多。可以使用表达式访问循环内的当前图像 `*it`。
 
  **这是给你的最后一个练习** ：在 的循环中 `load_image_3.cpp`，防止显示编号为 7 的图像。
+
+#### 第 03 课：设计碰撞检测系统
+
+##### 碰撞检测基础
+
+碰撞检测问题
+
+ *防撞系统* ( CAS) 是一种主动安全功能，可在即将与行驶路径中的物体发生碰撞时警告驾驶员甚至触发制动。如果前方车辆存在，CAS 会持续估算碰撞时间 (TTC)。当 TTC 低于较低的阈值时，CAS 可以决定警告驾驶员即将发生的危险，或者 - 根据系统 - 自动应用车辆制动器。对于您将在本课程中完成的工程任务，这意味着您需要找到一种方法来计算前方车辆的 TTC。
+
+让我们看看下面的场景：
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2003_Engineering%20a%20Collision%20Detection%20System/img/draggedimage.png)
+
+在这种交通场景中，绿色车辆开始减速吨0吨0的，这是装有碰撞传感器的黄色车辆进行距离测量时�0d0的. 片刻之后，时间吨1个吨1个的，绿色车辆相当接近，第二次测量�1个d1个的被采取。现在的目标是计算剩余的 TTC，以便系统可以警告黄色车辆的驾驶员，甚至自动触发刹车。
+
+然而，在我们这样做之前，我们需要找到一种方法来用数学模型来描述车辆的相对运动。
+
+##### 恒定速度与恒定加速度
+
+为了计算 TTC，我们需要对前车的物理行为做出假设。一种假设是上图中黄色和绿色车辆之间的相对速度是恒定的。这将导致所谓的 *恒速模型* （CVM），由等式表示。1 在下图中。
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2003_Engineering%20a%20Collision%20Detection%20System/img/draggedimage-1.png)
+
+如您所见，瞬间到车辆的距离吨+△吨吨+Δt _比当时小吨吨，因为我们减去恒定相对速度的乘积�0v0的和时间△吨Δt _. 从工程的角度来看，我们需要一个传感器能够精确地测量与前面车辆的距离，并且测量之间的 dt 是恒定的。这可以很好地通过例如激光雷达传感器来实现。
+
+尤其是在车辆急刹车的动态交通情况下，CVM 不够准确，因为两辆车之间的相对速度在测量之间会发生变化。在下图中，接近的车辆在三个时刻以增加的速度显示。
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2003_Engineering%20a%20Collision%20Detection%20System/img/draggedimage-2.png)
+
+因此，我们可以通过假设速度是时间的函数并减去等式中的第二项来扩展我们的 CVM。2 是恒定加速度与两次测量之间的平方时间 dt 的乘积。当量。图 3 将速度显示为时间的函数，这也取决于我们在方程式中使用的恒定加速度。2. 该模型被称为 *恒定加速度模型* (CAM)，通常用于商用碰撞检测系统。附带说明一下，如果我们使用雷达传感器而不是激光雷达，则可以通过利用多普勒效应引起的返回电磁波中的频移来直接测量速度。与激光雷达等传感器相比，这是一个显着优势，后者只能根据（嘈杂的）距离测量来计算速度。
+
+在本课程中，我们将使用 CVM 而不是 CAM，因为它在涉及的数学方面以及您面前的编程任务的复杂性方面处理起来要简单得多。对于 dt 的小实例，我们将假设 CVM 模型足够准确，并且它将为我们提供对 TTC 的合理估计。但是，如果您在职业生涯的后期参与构建此类系统的商业版本，请记住您应该改用恒定加速模型。
+
+![1681996490334](image/LearningNotes/1681996490334.png)
+
+##### 02. 用激光雷达估算TTC
+
+碰撞时间 (TTC) 背后的数学原理
+
+在下文中，让我们假设配备 CAS 的车辆正在使用激光雷达传感器对前方车辆进行距离测量。此场景中的传感器将为我们提供到驾驶路径中最近的 3D 点的距离。在下图中，最近点由 CAS 车辆顶部的激光雷达传感器发出的红线表示。
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2003_Engineering%20a%20Collision%20Detection%20System/img/draggedimage.png)
+
+基于我们在上一节中讨论的恒速模型，速度�0v0的可以从两个连续的激光雷达测量值计算如下：
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2003_Engineering%20a%20Collision%20Detection%20System/img/draggedimage-1.png)
+
+一旦相对速度�0v0的已知，碰撞时间可以很容易地通过将两辆车之间的剩余距离除以�0v0的. 因此，如果激光雷达传感器能够进行精确的距离测量，则可以基于 CVM 和上述方程组开发 TTC 估计系统。但是请注意，雷达传感器将是 TTC 计算的最佳解决方案，因为它可以直接测量相对速度，而对于激光雷达传感器，我们需要计算�0v0的来自两个（嘈杂的）距离测量。
+
+准备激光雷达点云
+
+下图显示激光雷达点云叠加在高速公路场景中拍摄的相机图像上，前面的车辆直接在行驶路径上。到传感器的距离用颜色编码（绿色代表远，红色代表近）。在左侧，还显示了激光雷达点的鸟瞰图。
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2003_Engineering%20a%20Collision%20Detection%20System/img/ebene.jpg)
+
+可以很容易地看出，激光雷达传感器提供对车辆和路面的测量。此外，与周围的邻居相比，相机图像中的某些 3D 点似乎并不准确。特别是前车车顶附近的点与尾门上的点颜色不同。
+
+由于测量精度与从物体反射的光量相关，因此除了 x、y 和 z 坐标外，还需要考虑我们可以访问的每个激光雷达点的反射率 r。下图以绿色突出显示高反射率，而低反射率区域显示为红色。对点云相关反射率的分析表明，这种偏差通常发生在反射率降低的区域。
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2003_Engineering%20a%20Collision%20Detection%20System/img/draggedimage-2.png)
+
+为了从给定的点云中导出稳定的 TTC 测量值，必须执行两个主要步骤：
+
+1. 删除路面上的测量值
+2. 去除低反射率的测量
+
+在下图中，激光雷达点以俯视图显示，并在应用过滤后显示为图像叠加层。以这种方式移除激光雷达点后，现在可以更容易地推导出与前车的距离 d(t)。
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2003_Engineering%20a%20Collision%20Detection%20System/img/pfeile.jpg)
+
+在后面的课程中，您将学习如何将激光雷达点投影到相机图像中，以及如何执行上述示例中所示的移除过程。现在，让我们假设对于每个时间步长 dt，激光雷达传感器将返回与前车的距离 d(t+dt)。
+
+从距离测量计算 TTC
+
+在本课程的代码示例中，激光雷达点被打包到一个名为 LidarPoints 的数据结构中。如下图所示，该结构由公制坐标中的点坐标 x（向前）、y（左）和 z（向上）以及 0 到 1 之间的点反射率 r（高反射率）组成。
+
+```cpp
+struct LidarPoint { // single lidar point in space
+    double x, y, z; // point position in m
+    double r; // point reflectivity in the range 0-1
+};
+```
+
+为了计算 TTC，我们需要找到到行驶路径中最近的激光雷达点的距离。在下图中，位于前车尾门的激光雷达测量值有时会被测量到吨0吨0的（绿色）和吨1个吨1个的（红色的）。可以看出，到车辆的距离在两个时刻之间略微减小。
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2003_Engineering%20a%20Collision%20Detection%20System/img/new-group.jpg)
+
+下面的代码在与关联的点云中搜索最近的点吨0吨0的( `lidarPointsPrev`) 并且在与关联的点云中吨1个吨1个的( `lidarPointsCurr`). 在分别找到到最近点的距离后，TTC 是根据我们在本节开头推导出的公式计算出来的。
+
+```cpp
+oid computeTTCLidar(std::vector<LidarPoint> &lidarPointsPrev, 
+                     std::vector<LidarPoint> &lidarPointsCurr, double &TTC)
+{
+    // auxiliary variables
+    double dT = 0.1; // time between two measurements in seconds
+
+    // find closest distance to Lidar points 
+    double minXPrev = 1e9, minXCurr = 1e9;
+    for(auto it=lidarPointsPrev.begin(); it!=lidarPointsPrev.end(); ++it) {
+        minXPrev = minXPrev>it->x ? it->x : minXPrev;
+    }
+
+    for(auto it=lidarPointsCurr.begin(); it!=lidarPointsCurr.end(); ++it) {
+        minXCurr = minXCurr>it->x ? it->x : minXCurr;
+    }
+
+    // compute TTC from both measurements
+    TTC = minXCurr * dT / (minXPrev-minXCurr);
+}
+```
+
+尽管激光雷达是一种可靠的传感器，但仍可能发生错误测量。如上图所示，少量点位于尾门后方，看似与车辆无关。在搜索最近点时，此类测量会带来问题，因为估计的距离太小。有一些方法可以通过对点云进行后处理来避免此类错误，但不能保证在实践中永远不会出现此类问题。因此，对 minXCurr 和 minXPrev 执行更稳健的计算是一个好主意，它能够处理一定数量的异常值（在最终项目中，您将这样做）并且还可以查看第二个能够计算的传感器TTC，例如相机。
+
+在下面的工作区中，扩展上面显示的函数 `computeTTCLidar`，以便在最小搜索期间仅考虑宽度由变量 laneWidth 定义的狭窄走廊内的激光雷达点。走廊的宽度应设置为 4 米。
+
+您可以通过 `build`在 `TTC_lidar`. 然后从目录中使用以下步骤 `build`：
+
+1. `cmake ..`
+2. `make`
+3. `./compute_ttc_lidar`
+
+##### 03.用相机估算TTC
+
+无距离测量TTC
+
+单目相机无法测量公制距离。它们是无源传感器，依赖于从物体反射到相机镜头的环境光。因此无法像激光雷达技术那样测量光的运行时间。
+
+要测量距离，需要第二个摄像头。给定两个仔细对齐的相机（也称为 *立体设置* ）同时拍摄的两张图像，我们必须在两张图像中找到共同的兴趣点（例如前车的尾灯），然后使用三角测量它们的距离相机几何和透视投影。多年来，汽车研究人员开发了用于 ADAS 产品的立体摄像头，其中一些产品已经上市。特别是梅赛德斯-奔驰开创了这项技术，可以在这里找到大量信息：[http ://www.6d-vision.com/](http://www.6d-vision.com/). 然而，随着更先进的 ADAS 产品和自动驾驶汽车的出现，立体相机因其封装尺寸、高价格和寻找相应特征的高计算负荷而开始从市场上消失。
+
+尽管单摄像头存在这些限制，但让我们看看是否有一种无需测量距离即可计算 TTC 的方法。让我们考虑一下我们在本课程的前一节中介绍的恒速运动模型，并考虑一种方法来用相机可以可靠测量的东西代替度量距离 d，例如直接在图像平面上的像素距离。在下图中，您可以看到高度�H可以使用透视投影将前车的位置映射到图像位置。我们可以看到同样的高度�H映射到不同的高度�0H0的和�1个H1个的在图像平面中，取决于距离�0d0的和�1个d1个的车辆的。很明显，两者之间存在几何关系�H,�H,�d和焦距�F针孔相机——这就是我们接下来要利用的。
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2003_Engineering%20a%20Collision%20Detection%20System/img/draggedimage%20(2).png)
+
+让我们看一下下面的一组方程：
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2003_Engineering%20a%20Collision%20Detection%20System/img/draggedimage-1%20(2).png)
+
+在 (1) 中，我们使用相机的焦距和距离测量�0d0的在时间执行吨0吨0的投影高度�H车辆在图像平面上，从而达到一个高度�0H0的以像素为单位。时间也是一样吨1个吨1个的, 导致预计高度�1个H1个的.
+
+在（2）中，我们计算相对高度的比率�0H0的和�1个H1个的. 既�H和�F被抵消了，我们可以观察到相对高度之间的直接关系�H和绝对公制距离�d. 因此我们可以表达到车辆的距离�0d0的作为产品�1个d1个的以及图像平面上的相对高度比。
+
+在（3）中，我们代入�0d0的在等速方程中求解�1个d1个的，现在取决于恒定的相对速度�0v0的, 在测量之间的时间�0d0的和�1个d1个的以及图像平面上的相对高度比。
+
+在 (4) 中，TTC 计算为剩余距离与撞击的比率，即�1个d1个的, 和恒定速度�0v0的. 我们可以很容易地看到，TTC 现在只包含△吨Δt _,�0H0的和�1个H1个的. 因此，可以通过观察图像传感器上的相对高度变化来测量碰撞时间。不需要距离测量，因此我们可以使用单相机通过直接观察图像中相对高度的变化（也称为 *比例变化* ）来估计碰撞时间。
+
+边界框检测的问题
+
+在下图中，神经网络已用于在单目相机的连续图像中定位车辆。对于每辆车，网络返回一个边界框，其宽度和/或高度原则上可用于计算我们在上一节中导出的 TTC 方程中的高度比。
+
+然而，当仔细观察时，可以看出边界框并不总是反映真实的车辆尺寸，并且图像之间的纵横比不同。因此，使用边界框高度或宽度进行 TTC 计算会导致显着的估计误差。
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2003_Engineering%20a%20Collision%20Detection%20System/img/new-group%20(2).jpg)
+
+在大多数工程任务中，依靠单一的测量或属性是不够可靠的。对于与安全相关的产品尤其如此。因此，我们要考虑我们是否可以在图像中观察到车辆和物体的其他属性。
+
+改用纹理关键点
+
+现在，我们不再依赖于对车辆的整体检测，而是希望在更小的范围内分析其结构。如果有可能找到可以从一帧到下一帧跟踪的唯一可识别关键点，我们可以使用车辆上所有关键点之间的相对距离来计算 TTC 方程中高度比的稳健估计。下图说明了这个概念。
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2003_Engineering%20a%20Collision%20Detection%20System/img/new-group-1.jpg)
+
+在 (a) 中，检测到一组关键点，并计算出关键点 1-7 之间的相对距离。*在 (b) 中，使用称为描述符*的高维相似性度量（下一课将详细介绍）在连续图像之间匹配了 4 个关键点（关键点 3 不匹配） 。通过替换高度比，可以使用彼此之间所有相对距离的比率来计算可靠的 TTC 估计�1个/�0H1个的/小时0的与所有距离比的平均值或中值��/��‘dk的/天k‘的.
+
+下图显示了几个关键点之间的相对距离示例，作为高速公路驾驶场景的叠加层（仅突出显示了前面的车辆）。
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2003_Engineering%20a%20Collision%20Detection%20System/img/draggedimage-2%20(2).png)
+
+从相对关键点距离计算 TTC
+
+在本课程的代码示例中，图像之间的匹配关键点被打包到一个名为 `cv::DMatch`. 我们将在本课程中使用的结构元素是 `queryIdx`，它是当前帧中关键点的索引，以及 `trainIdx`，它是前一帧中匹配关键点的索引。
+
+所有匹配的关键点都存储在一个动态列表中，然后将其传递给一个名为 的函数 `computeTTCCamera`，该函数返回场景中每个对象的碰撞时间。下面让我们来看看这个函数。
+
+想象一下包含大量不匹配的两个连续帧之间的一组关联关键点。在我们刚才讨论的函数中计算平均距离比可能会导致 TTC 计算错误。计算具有离群值的数据集的平均值的更稳健的方法是使用中位数代替。在下面的代码中，替换 `meanDistRatio`为一个变量 `medianDistRatio`，并且不要忘记考虑 vector 中的偶数和奇数个值 `distRatios`。
+
+##### 04.课程结构
+
+TTC
+
+![1681997733134](image/LearningNotes/1681997733134.png)
+
+![1681997899435](image/LearningNotes/1681997899435.png)
+
+![1681997988467](image/LearningNotes/1681997988467.png)
+
+![1681998257289](image/LearningNotes/1681998257289.png)
+
+##### 05.早期融合与晚期融合
+
+- 融合算法和访问相机，雷达，激光雷达的原始数据，并将所有的内容一起处理以及产生一个最后的输出
+- 在后融合中，每一个传感器基本上都先自己尽力而为
+- 
+
+#### 第 04 课_跟踪图像特征
+
+##### 01.强度梯度和过滤
+
+定位图像中的关键点
+
+正如上一课所讨论的，相机无法直接测量到物体的距离。然而，对于我们的防撞系统，我们可以根据图像传感器上的相对距离比来计算碰撞时间。为此，我们需要图像平面上的一组位置，这些位置可以作为稳定的锚点来计算它们之间的相对距离。本节讨论如何定位此类锚点位置 - 或图像中的*关键点。*
+
+看看下图中的三个补丁，它们是从高速公路驾驶场景的图像中提取的。网格显示各个像素的边界。您将如何描述那些可以用作关键点的补丁中有意义的位置？
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2004_Tracking%20Image%20Features/img/new-group.jpg)
+
+在最左边的补丁中，亮像素和暗像素之间存在明显的对比，类似于从左下角到右上角的一条线。中间的补丁类似于由左上角的一组非常暗的像素形成的角。最右边的补丁看起来像一个明亮的斑点，可以近似为一个椭圆。
+
+为了精确定位图像中的关键点，我们需要一种方法在 x 和 y 中为它们分配一个唯一的坐标。并非所有上述补丁都有助于实现这一目标。角和椭圆都可以在 x 和 y 中准确定位，最左边图像中的线不能。
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2004_Tracking%20Image%20Features/img/new-group-kopieren.jpg)
+
+因此，在下文中，我们将专注于检测图像中的角点。在后面的部分中，我们还将研究针对类似 blob 的结构进行优化的检测器，例如***SIFT*检测器**。
+
+强度梯度
+
+在上面的示例中，相邻像素之间的对比度包含我们需要的信息：为了精确定位例如中间块中的角，我们不需要知道它的颜色但我们需要形成像素之间的颜色差异角尽可能高。一个理想的角落将只包含黑色和白色像素。
+
+下图显示了图像中沿红线的所有像素的强度分布以及强度梯度，它是图像强度的导数。
+![改编自 https://cs.brown.edu/courses/cs143/lectures_Fall2017/07_Fall2017_EdgeDetection.pdf](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2004_Tracking%20Image%20Features/img/intensity-and-derivative.jpg)
+
+改编自https://cs.brown.edu/courses/cs143/lectures_Fall2017/07_Fall2017_EdgeDetection.pdf
+
+可以看出，在相邻像素之间的对比度显着变化的位置处，强度分布迅速增加。左侧路灯下部和暗门与光墙呈现出明显的强度差异。如果我们想为发生变化的像素分配唯一坐标，我们可以通过查看强度的导数来实现，这是您可以在红线下方看到的蓝色渐变曲线。图像强度的突然变化在梯度剖面中清晰可见，表现为明显的峰谷。如果我们不仅要从左到右而且要从上到下寻找这样的峰，我们可以寻找在水平和垂直方向上都显示梯度峰的点，并选择它们作为具有 x 和 y 坐标的关键点。
+
+基于上述观察，关键点检测的第一步是计算梯度图像。在数学上，梯度是图像强度在 x 和 y 方向上的偏导数。下图显示了三个示例补丁的强度梯度。梯度方向由箭头表示。
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2004_Tracking%20Image%20Features/img/draggedimage.png)
+
+在等式 (1) 和 (2) 中，强度梯度近似为相邻像素之间的强度差异除以 x 和 y 方向上这些像素之间的距离。接下来，基于强度梯度向量，我们可以计算方向和幅度，如下式所示：
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2004_Tracking%20Image%20Features/img/draggedimage-1.png)
+
+有多种计算强度梯度的方法。最直接的方法是简单地计算相邻像素之间的强度差异。然而，这种方法对噪声极其敏感，在实践中应避免使用。在本节的后面，我们将研究一种经过充分验证的标准方法，即 **Sobel** 算子。
+
+图像滤波器和高斯平滑
+
+在我们进一步讨论梯度计算之前，我们需要考虑噪声，它存在于所有图像中（人工图像除外）并且随着光强度的增加而降低。为了抵消噪声，尤其是在低光条件下，必须在梯度计算之前对图像应用平滑算子。通常，高斯滤波器用于此目的，它在图像上移动并与其下方的强度值组合。为了正确地参数化滤波器，必须调整两个参数：
+
+1. 标准偏差，它控制图像平面中滤波器的空间扩展。标准偏差越大，过滤器覆盖的区域越广。
+2. 内核大小，它定义了中心位置周围有多少像素将有助于平滑操作。
+
+下图显示了具有不同标准偏差的三个高斯滤波器内核。
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2004_Tracking%20Image%20Features/img/jcuj2.png)
+
+高斯平滑的工作原理是根据每个点的高斯曲线高度为每个像素分配周围像素的加权和。最大的贡献将来自中心像素本身，而来自周围像素的贡献将根据高斯曲线的高度及其标准偏差而减少。可以很容易地看出，当标准差较大时，中心位置周围像素的贡献会增加（左图）。
+
+应用高斯滤波器（或任何其他滤波器）分四个连续步骤进行，如下图所示：
+
+1. 创建具有所需属性的滤波器内核（例如高斯平滑或边缘检测）
+2. 在内核中定义锚点（通常是中心位置）并将其放置在图像的第一个像素之上。
+3. 计算内核系数与下方相应图像像素值的乘积之和。
+4. 将结果放置到输入图像中内核锚点的位置。
+5. 对整个图像上的所有像素重复该过程。
+
+下图说明了逐行在图像上移动（黄色）滤波器核并将二维和的结果赋值的过程�(�,是)H ( x ,是）到每个像素位置。
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2004_Tracking%20Image%20Features/img/draggedimage-2.png)
+
+下图显示了用于高斯平滑的滤波器核。在 (a) 中，显示了 3D 高斯曲线，在 (b) 中，可以看到相应的离散滤波器内核具有与高斯曲线的最大值对应的中心锚点 (41)，并且值朝向边缘递减（大约）圆形。
+
+![https://homepages.inf.ed.ac.uk/rbf/HIPR2/gsmooth.htm](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2004_Tracking%20Image%20Features/img/b-corresponding-discrete-filter-kernel.jpg)
+
+https://homepages.inf.ed.ac.uk/rbf/HIPR2/gsmooth.htm
+
+以下代码使用该函数 `cv::filter2D`将上述滤镜应用于图像。运行代码并弄清楚为什么在应用平滑过滤器后输出图像看起来不像预期的那样。知道原因后，进行必要的更改并再次运行代码，直到看到稍微模糊的图像。您可以像以前一样使用 `cmake`和进行编译 `make`，并使用生成的可执行文件运行代码 `gaussian_smoothing`。
+
+上面的代码是为了说明过滤器和高斯模糊的原理。然而，在您的项目中，您可以（并且应该）使用函数 cv::GaussianBlur，它可以让您轻松更改标准差而无需调整滤波器内核。
+
+计算强度梯度
+
+在稍微平滑图像以减少噪声的影响之后，我们现在可以计算图像在 x 和 y 方向上的强度梯度。在文献中，可以找到几种梯度计算方法。其中最著名的是 `Sobel`算子（1968 年提出），但还有其他几个，例如 `Scharr`针对旋转对称优化的算子。
+
+Sobel 算子基于在水平和垂直方向上应用小的整数值滤波器。运算符是 3x3 内核，一个用于 x 方向的梯度，一个用于 y 方向的梯度。两个内核如下所示。
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2004_Tracking%20Image%20Features/img/draggedimage-4.png)
+
+在下面的代码中，Sobel 算子的一个内核应用于图像。请注意，它已转换为灰度以避免在每个颜色通道上计算运算符。`gradient_sobel.cpp`可以在上面桌面工作区的文件中找到此代码。您可以使用 `gradient_sobel`可执行文件运行代码。
+
+```cpp
+// load image from file
+    cv::Mat img;
+    img = cv::imread("./img1.png");
+
+    // convert image to grayscale
+    cv::Mat imgGray;
+    cv::cvtColor(img, imgGray, cv::COLOR_BGR2GRAY);
+
+    // create filter kernel
+    float sobel_x[9] = {-1, 0, +1,
+                        -2, 0, +2, 
+                        -1, 0, +1};
+    cv::Mat kernel_x = cv::Mat(3, 3, CV_32F, sobel_x);
+
+    // apply filter
+    cv::Mat result_x;
+    cv::filter2D(imgGray, result_x, -1, kernel_x, cv::Point(-1, -1), 0, cv::BORDER_DEFAULT);
+
+    // show result
+    string windowName = "Sobel operator (x-direction)";
+    cv::namedWindow( windowName, 1 ); // create window 
+    cv::imshow(windowName, result_x);
+    cv::waitKey(0); // wait for keyboard input before continuing
+```
+
+生成的渐变图像如下所示。可以看出，局部对比度强的区域（例如前车的投射阴影）会导致过滤后的图像中出现高值。
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2004_Tracking%20Image%20Features/img/draggedimage-6.png)
+
+请注意，在上面的代码中，只有小号�小号X的现在已经应用了滤镜内核，这就是投射阴影只在 x 方向上显示的原因。正在申请小号是小号是的图像产生以下结果：
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2004_Tracking%20Image%20Features/img/draggedimage-7.png)
+
+基于 x 和 y 中的图像梯度，根据本节开头的方程为每个像素位置计算包含梯度大小的图像。此外，在应用 Sobel 运算符之前应用不同级别的高斯模糊并比较结果。
+
+您可以将 `magnitude_sobel.cpp`上面桌面工作区中的文件用于您的解决方案，然后 `make`，您可以使用可执行文件运行代码 `magnitude_sobel`。
+
+结果应该看起来像这样，由于平滑，路面上的噪音几乎消失了：
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2004_Tracking%20Image%20Features/img/draggedimage-9.png)
+
+##### 02. Haris Corner Detection
+
+当地的独特性措施
+
+关键点检测的思想是检测图像中可以在两个坐标方向上精确定位的独特结构。如前一节所述，角落非常适合此目的。为了说明这一点，下图显示了一个图像块，它由颜色均匀的背景上的线条结构组成。红色箭头表示在这个方向上找不到唯一的位置。绿色箭头表示相反。可以看出，角是唯一可以在 x 和 y 中分配唯一坐标的局部结构。
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2004_Tracking%20Image%20Features/img/draggedimage%20(2).png)
+
+为了定位一个角，我们考虑当窗口的内容稍微移动时会发生怎样的变化。对于上图中的情况(a)，在红色窗口W的当前位置在任何坐标方向上都没有可测量的变化，而对于(b)，在垂直于边缘的方向上会有明显的变化，当向边缘的方向移动。在（c）的情况下，窗口内容将在任何坐标方向上发生变化。
+
+通过算法定位角点的想法是找到一种方法来根据局部窗口W的位移来检测图像结构中具有显着变化的区域。通常，用于描述变化的数学上合适的度量是平方和differences (SSD)，它查看执行坐标偏移前后局部邻域中所有像素的偏差。下面的等式说明了这个概念。
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2004_Tracking%20Image%20Features/img/draggedimage-1%20(2).png)
+
+在将窗口 W 在 x 方向移动 u 并在 y 方向移动 v 后，该方程将 W 内所有像素在旧窗口位置和新窗口位置的平方差相加。在下文中，我们将使用一些数学变换从 SSD 的一般定义中推导出像素周围局部环境变化的度量。
+
+第一步，根据定义乙(你,�)E (你,五）上面，我们首先做一个泰勒级数展开我(�+你,是+你)我（×+你，是+你）. 对于较小的 u 和 v 值，一阶近似就足够了，这导致以下表达式。
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2004_Tracking%20Image%20Features/img/taylorseries.png)
+
+图像强度的推导我我在 x 和 y 方向上，你已经在上一节中学到了一些东西——这只是强度梯度。从这一点开始，我们将使用上面显示的速记符号来表示梯度。
+
+在第二步中，我们现在将插入近似表达式我(�+你,是+�)我（×+你，是+五）进入上面的SSD等式，它简化为以下形式：
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2004_Tracking%20Image%20Features/img/draggedimage-3.png)
+
+我们的数学变换的结果是一个矩阵�H, 现在可以方便地对其进行分析以定位局部窗口中的结构变化�W围绕每个像素位置你,�你，v在图像中。在文献中，矩阵�H通常称为协方差矩阵。
+
+为此，它有助于可视化矩阵�H作为一个椭圆，其轴长和方向由其特征值和特征向量给出。从下图中可以看出，较大的特征向量指向最大强度变化的方向，而较小的特征向量指向最小变化的方向。所以为了识别角点，我们需要在图像中找到具有两个非常大的特征值的位置�H.
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2004_Tracking%20Image%20Features/img/draggedimage-4%20(2).png)
+
+在本课程中，我们将不深入讨论特征值的细节，而是通过一个简单的公式来计算它们�H:
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2004_Tracking%20Image%20Features/img/draggedimage-5.png)
+
+除了在梯度计算之前对图像进行平滑之外，Harris 检测器还使用了高斯窗口�(�,是)w ( x ,是）计算局部邻域周围强度梯度的加权和。这个邻域的大小在特征检测的上下文中称为尺度，它由高斯分布的标准差控制。
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2004_Tracking%20Image%20Features/img/draggedimage-6%20(2).png)
+
+可以看出，高斯窗口的尺度越大，下方对梯度和贡献的特征就越大。通过调整比例，我们可以控制我们能够检测到的关键点。
+
+哈里斯角探测器
+
+基于的特征值�H，最著名的角点检测器之一是哈里斯检测器。该方法计算以下表达式以得出每个像素位置的角响应度量，其中系数 k 是经验常数，通常在 k = 0.04 - 0.06 的范围内。
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2004_Tracking%20Image%20Features/img/draggedimage-7%20(2).png)
+
+根据本节介绍的概念，以下代码计算给定图像的角点响应并显示结果。
+
+```cpp
+    // load image from file
+    cv::Mat img;
+    img = cv::imread("./img1.png");
+
+    // convert image to grayscale
+    cv::Mat imgGray; 
+    cv::cvtColor(img, imgGray, cv::COLOR_BGR2GRAY);
+
+    // Detector parameters
+    int blockSize = 2; // for every pixel, a blockSize × blockSize neighborhood is considered
+    int apertureSize = 3; // aperture parameter for Sobel operator (must be odd)
+    int minResponse = 100; // minimum value for a corner in the 8bit scaled response matrix
+    double k = 0.04; // Harris parameter (see equation for details)
+
+    // Detect Harris corners and normalize output
+    cv::Mat dst, dst_norm, dst_norm_scaled;
+    dst = cv::Mat::zeros(imgGray.size(), CV_32FC1 );
+    cv::cornerHarris( imgGray, dst, blockSize, apertureSize, k, cv::BORDER_DEFAULT ); 
+    cv::normalize( dst, dst_norm, 0, 255, cv::NORM_MINMAX, CV_32FC1, cv::Mat() );
+    cv::convertScaleAbs( dst_norm, dst_norm_scaled );
+
+    // visualize results
+    string windowName = "Harris Corner Detector Response Matrix";
+    cv::namedWindow( windowName, 4 );
+    cv::imshow( windowName, dst_norm_scaled );
+    cv::waitKey(0);
+```
+
+结果如下所示：像素越亮，哈里斯角点响应越高。
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2004_Tracking%20Image%20Features/img/draggedimage-9%20(2).png)
+
+为了定位角点，我们现在必须执行非极大值抑制以 (a) 确保我们在局部邻域中获得具有最大角点的像素，以及 (b) 防止角点彼此靠得太近整个图像的角落均匀分布。
+
+您的任务是在 Harris 响应矩阵中定位局部最大值，并在每个最大值周围的局部邻域中执行**非最大值抑制 (NMS)**。结果坐标应存储在类型的关键点列表中 `vector<cv::KeyPoint>`。结果应如下所示，每个圆圈表示 Harris 角的位置。
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2004_Tracking%20Image%20Features/img/draggedimage-10.png)
+
+`cornerness_harris.cpp`您可以在下面桌面工作区的文件中编写代码。构建后，您可以使用生成的可执行文件运行代码 `cornerness_harris`。
+
+##### 03. Overview of Popular Keypoint Detectors
+
+光度和几何变化的不变性
+
+在文献中（以及OpenCV库中），有大量的特征检测器（包括Harris检测器），我们可以选择。根据应检测的关键点类型和图像的属性，需要考虑相应检测器在光度和几何变换方面的鲁棒性。
+
+在选择合适的关键点检测器时，我们需要考虑四种基本的变换类型：
+
+1. 回转
+2. 规模变化
+3. 强度变化
+4. 仿射变换
+
+下图显示了视频序列 (a) 的帧 i 中的两个图像，它们在帧 i + n (b) 中经过了多次变换。
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2004_Tracking%20Image%20Features/img/frame-transformations.jpg)
+
+对于计算机视觉中使用的标准图像集之一的涂鸦序列（另见[http://www.robots.ox.ac.uk/~vgg/research/affine/）](http://www.robots.ox.ac.uk/~vgg/research/affine/))，我们可以观察到所有的变换上面列出的而对于高速公路序列，当关注前面的车辆时，帧 i 和 i+n 之间只有尺度变化和强度变化。
+
+下面根据上述标准对Harris角点检测器进行简要评价。
+
+旋转 R :
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2004_Tracking%20Image%20Features/img/draggedimage%20(3).png)
+
+强度变化：
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2004_Tracking%20Image%20Features/img/draggedimage-1%20(3).png)
+
+规模变化：
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2004_Tracking%20Image%20Features/img/draggedimage-2%20(2).png)
+
+总之，Harris 检测器在旋转和加性强度偏移下是稳健的，但对尺度变化、乘性强度偏移（即对比度变化）和仿射变换敏感。然而，如果有可能以某种方式修改哈里斯检测器，使其能够考虑物体比例的变化，例如，当前面的车辆接近时，它可能（尽管它的年龄），一个适合我们目的的检测器.
+
+自动比例选择
+
+为了以理想的比例检测关键点，我们必须知道（或找到）它们在图像中的各自尺寸并调整高斯窗口的大小�(�,是)w ( x ,是）如本节前面介绍的。如果关键点尺度未知或者图像中存在大小不等的关键点，则必须在多个尺度级别上连续执行检测。
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2004_Tracking%20Image%20Features/img/draggedimage-3%20(2).png)
+
+基于两个相邻级别之间标准偏差的增量，可能会多次检测到相同的关键点。这就提出了选择最能代表关键点的“正确”尺度的问题。
+
+在 1998 年的一篇具有里程碑意义的论文中，Tony Lindeberg 发表了一种“使用自动尺度选择进行特征检测”的方法。在这篇论文中，他提出了一个函数�(�,是,秒��升电子)F ( x ,, _比例尺）_ _ _ _，可用于选择那些显示稳定最大值的关键点�F超过规模。规模�F最大化被称为各自关键点的“特征尺度”。
+
+下图显示了这样的功能�F已经针对多个比例级别进行了评估，并显示出一个明显的最大值，可以将其视为圆形区域内图像内容的特征比例。
+
+![改编自 具有自动尺度选择的特征检测。](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2004_Tracking%20Image%20Features/img/scale-space-sunflower.jpg)
+
+改编自具有自动比例选择的特征检测。
+
+如何正确设计合适功能的细节�F然而，这不是本课程的重点。主要的收获是一个好的检测器能够根据其局部邻域的结构特性自动选择关键点的特征尺度。现代关键点检测器通常具有这种能力，因此在图像尺度的变化下具有鲁棒性
+
+##### 流行的关键点检测器概述
+
+Overview of Popular Keypoint Detectors
+
+Keypoint detectors are a very popular research area and thus a large number of powerful algorithms have been developed over the years. Applications of keypoint detection include such things as object recognition and tracking, image matching and panoramic stitching as well as robotic mapping and 3D modeling. In addition to invariance under the transformations mentioned above, detectors can be compared for their detection performance and their processing speed.
+
+The Harris detector along with several other "classics" belongs to a group of traditional detectors, which aim at maximizing detection accuracy. In this group, computational complexity is not a primary concern. The following list shows a number of popular classic detectors :
+
+* 1988 Harris Corner Detector (Harris, Stephens)
+* 1996 Good Features to Track (Shi, Tomasi)
+* 1999 Scale Invariant Feature Transform (Lowe)
+* 2006 Speeded Up Robust Features (Bay, Tuytelaars, Van Gool)
+
+In recent years, a number of faster detectors has been developed which aims at real-time applications on smartphones and other portable devices. The following list shows the most popular detectors belonging to this group:
+
+* 2006 Features from Accelerated Segment Test (FAST) (Rosten, Drummond)
+* 2010 Binary Robust Independent Elementary Features (BRIEF) (Calonder, et al.)
+* 2011 Oriented FAST and Rotated BRIEF (ORB) (Rublee et al.)
+* 2011 Binary Robust Invariant Scalable Keypoints (BRISK) (Leutenegger, Chli, Siegwart)
+* 2012 Fast Retina Keypoint (FREAK) (Alahi, Ortiz, Vandergheynst)
+* 2012 KAZE (Alcantarilla, Bartoli, Davidson)
+
+In this course, we will be using the Harris detector as well as the Shi-Tomasi detector (which is very similar to Harris) as representatives from the first group of "classic“ detectors. From the second group, we will be leveraging the OpenCV to implement the entire list of detectors.
+
+![1682000560384](image/LearningNotes/1682000560384.png)
+
+![1682000668103](image/LearningNotes/1682000668103.png)
+
+锻炼
+
+在我们在下一节详细介绍上述检测器之前，使用 OpenCV 库在已经实现的 Shi-Tomasi 检测器之外添加 FAST 检测器，并比较两种算法的（a）关键点数量，（ b) 关键点在图像上的分布和 (c) 处理速度。描述您的观察结果，特别关注前面的车辆。
+
+
+##### 04. Gradient-based vs. Binary Descriptors
+
+
+探测器和描述符
+
+在我们详细介绍上一节中讨论的一些关键点检测器如何工作之前，让我们先看看我们面前的问题。我们的任务是在一系列图像中找到相应的关键点，我们可以使用这些关键点来计算前面物体（例如车辆）的 TTC。因此，我们需要一种基于某种相似性度量来稳健地将关键点分配给彼此的方法。在文献中，已经提出了各种各样的相似性度量（称为*描述符），并且在许多情况下，作者已经发布了一种用于关键点检测的新方法以及针对其关键点类型进行了优化的相似性度量。*
+
+让我们在这一点上完善我们的术语：
+
+* *关键点* （有时也称为兴趣点或显着点）检测器是一种算法，它根据函数的局部最大值从图像中选择点，例如我们在 Harris 检测器中看到的“角点”度量。
+* *描述符*是一个值向量，它描述了关键点周围的图像块。有多种技术，从比较原始像素值到更复杂的方法，例如梯度方向的直方图。
+
+描述符帮助我们将不同图像中的相似关键点分配给彼此。如下图所示，一帧中的一组关键点被分配给另一帧中的关键点，使得它们各自描述符的相似性最大化，并且（理想情况下）这些关键点代表图像中的同一对象。除了最大化相似性之外，一个好的描述符还应该能够最小化不匹配的数量，即避免将不对应于同一对象的关键点分配给彼此。
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2004_Tracking%20Image%20Features/img/new-group%20(2).jpg)
+
+在我们详细介绍一类强大的检测器/描述符组合（即 BRISK 等二进制描述符）之前，让我们简要回顾一下有史以来最著名的描述符之一——尺度不变特征变换。我们这样做的原因有两个：首先，这种方法仍然适用，并在大量应用中使用。其次，我们需要打下一些基础，以便您能够更好地理解和欣赏二进制描述符的贡献。
+
+
+##### HOG 描述符和 SIFT
+
+
+在下文中，我们将简要介绍基于定向梯度直方图 (HOG) 的描述符族。HOG 背后的基本思想是通过在局部邻域中的强度梯度分布来描述对象的结构。为实现这一点，将图像划分为多个单元格，在这些单元格中计算梯度并将其收集在直方图中。然后将来自所有单元格的直方图集用作相似性度量，以唯一地标识图像块或对象。
+
+HOG 家族最著名的例子之一是尺度不变特征变换 (SIFT)，由 David Lowe 于 1999 年引入。SIFT 方法包括关键点检测器和描述符，它遵循一个五步过程，下面简要概述。
+
+1. 首先，使用一种称为“高斯拉普拉斯算子 (LoG)”的方法检测图像中的关键点，该方法基于二阶强度导数。LoG 应用于图像的各种比例级别，并且倾向于检测斑点而不是角点。除了独特的比例级别外，关键点还根据关键点周围局部邻域的强度梯度分配方向。
+2. 其次，对于每个关键点，其周围区域通过移除方向进行转换，从而确保 *规范方向* 。此外，该区域的大小被调整为 16 x 16 像素，提供了一个标准化的补丁。
+
+   山景图像材料取自 D. Lowe 的原始出版物。
+
+   ![山景图像材料取自 D. Lowe 的原始出版物。](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2004_Tracking%20Image%20Features/img/sift-1.jpg)
+3. 第三，根据强度梯度 Ix 和 Iy 计算归一化块内每个像素的方向和大小。
+4. 第四，规范化的补丁被分成 4 x 4 单元格的网格。在每个单元格中，超过幅度阈值的像素的方向被收集在由 8 个 bin 组成的直方图中。
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2004_Tracking%20Image%20Features/img/sift-2.jpg)
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2004_Tracking%20Image%20Features/img/sift-3.jpg)
+
+
+5. 最后，将所有 16 个单元格的 8-bin 直方图连接成一个 128 维向量（描述符），用于唯一表示关键点。
+
+SIFT 检测器/描述符即使在杂乱和部分遮挡的情况下也能够稳健地识别对象。它对比例的均匀变化、旋转、亮度和对比度的变化都是不变的，甚至对仿射失真也是部分不变的。
+
+SIFT 的缺点是它的低速度，这阻止了它在智能手机等实时应用程序中的使用。HOG 家族的其他成员（例如 SURF 和 GLOH）已针对速度进行了优化。然而，它们的计算成本仍然太高，不应该用于实时应用程序。此外，SIFT 和 SURF 拥有大量专利，因此不能在商业环境中自由使用。为了在 OpenCV 中使用 SIFT，您必须 `#include <opencv2/xfeatures2d/nonfree.hpp>`，这进一步强调了这个问题。
+
+一种比基于 HOG 的方法更快（且免费）的替代方法是二进制描述符系列，它提供了一种快速替代方法，但准确性和性能略差。让我们看看下一节中的内容。
+
+
+二进制描述符和 BRISK
+
+基于 HOG 的描述符的问题在于它们基于计算强度梯度，这是一个非常昂贵的操作。尽管有一些改进，例如 SURF，它使用积分图像代替，但这些方法不适合在处理能力有限的设备（例如智能手机）上进行实时应用。
+
+二进制描述符的中心思想是仅依靠强度信息（即图像本身）并将关键点周围的信息编码为一串二进制数，当相应的关键点是搜索。目前，最流行的二进制描述符是 BRIEF、BRISK、ORB、FREAK 和 KAZE（都在 OpenCV 库中可用）。
+
+从高层次的角度来看，二进制描述符由三个主要部分组成：
+
+1. 一种 **采样模式** ，描述采样点在关键点位置周围的位置。
+2. **一种方向补偿**方法，消除图像块围绕关键点位置旋转的影响。
+3. **一种样本**对选择方法，它生成样本点对，这些样本点在强度值方面相互比较。如果第一个值大于第二个，我们将“1”写入二进制字符串，否则写入“0”。在对采样模式中的所有点对执行此操作后，将创建一个长二进制链（或“字符串”）（因此是该描述符类的系列名称）。
+
+在下文中，“Binary Robust Invariant Scalable Keypoints (BRISK)”关键点检测器/描述符被用作二进制描述符族的代表。BRISK 由 Stefan Leutenegger 等人于 2011 年提出，是一种基于 FAST 的检测器，结合了二进制描述符，该描述符是通过对每个关键点邻域的专用采样检索到的强度比较创建的。
+
+BRISK 的采样模式由多个采样点（蓝色）组成，其中每个采样点周围的同心环（红色）表示应用高斯平滑的区域。与 ORB 或 BRIEF 等其他一些二进制描述符相反，BRISK 采样模式是固定的。平滑对于避免混叠很重要（一种导致不同信号变得无法区分的效果 - 或者彼此混叠 - 在采样时）。
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2004_Tracking%20Image%20Features/img/brisk-1.png)
+
+在样本对选择过程中，BRISK 算法区分长距离和短距离对。长距离对（即样本模式上彼此之间距离最小的样本点）用于根据强度梯度估计图像块的方向，而短距离对用于强度比较，从中描述符字符串被组装。在数学上，这些对表示如下：
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2004_Tracking%20Image%20Features/img/draggedimage%20(4).png)
+
+
+首先，我们定义了样本点所有可能配对的集合 A。然后，我们从 A 中提取欧几里得距离高于预定义上阈值的子集 L。该集合是用于方向估计的长距离对。最后，我们从 A 中提取欧几里得距离低于下限阈值的那些对。该集合 S 包含用于组装二进制描述符字符串的短距离对。
+
+下图显示了短对（左）和长对（右）采样模式上的两种距离对
+
+![<span data-type=](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2004_Tracking%20Image%20Features/img/new-group-1.jpg)\[基于此 [来源]（基于 https://www.cse.unr.edu/~bebis/CS491Y/Lectures/BRISK.pptx）\]" />
+
+[基于此 [来源]（基于https://www.cse.unr.edu/~bebis/CS491Y/Lectures/BRISK.pptx）]
+
+从长对中，关键点方向向量�⃗G的计算如下：
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2004_Tracking%20Image%20Features/img/draggedimage-1%20(4).png)
+
+
+首先，基于归一化的单位向量计算两个样本点之间的梯度强度，该单位向量给出了两个点之间的方向乘以两个点在各自尺度上的强度差。在（2）中，关键点方向向量�⃗G的然后根据所有梯度强度的总和计算。
+
+基于�⃗G的，我们可以使用样本模式的方向来重新排列短距离配对，从而确保旋转不变性。基于旋转不变的短距离配对，最终的二进制描述符可以构造如下：
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2004_Tracking%20Image%20Features/img/draggedimage-2%20(3).png)
+
+从 g 计算出关键点的方向角后，我们用它来使短距离配对对旋转不变。然后，所有对之间的强度小号小号比较并用于组装我们可以用于匹配的二进制描述符。
+
+![1682001768152](image/LearningNotes/1682001768152.png)
+
+HOG 与二进制练习
+
+在本节末尾的代码中，关键点和描述符是使用 BRISK 方法计算的。关键点检测和描述符计算的时间都打印到控制台。对于 BRISK 检测器，关键点如下图所示，圆心表示其位置，圆的大小反映特征尺度。
+
+![img](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2004_Tracking%20Image%20Features/img/draggedimage%20(1).png)
+
+给定下面工作区中的代码 `describe_keypoints.cpp`，添加 SIFT 检测器/描述符，计算两个步骤的时间，并比较 BRISK 和 SIFT 的处理速度以及关键点的数量和视觉外观。
+
+`cmake`使用和构建代码后 `make`，您可以使用可执行文件从虚拟桌面运行代码 `describe_keypoints`。
+
+在下一节中，我们将详细了解 BRISK 的描述符部分。
+
+
+##### 05.描述符匹配
+
+
+描述符之间的距离
+
+在上一节中，您了解到可以通过将关键点的局部邻域转换为捕获梯度或强度分布的独特特征的高维向量来描述关键点。在本节中，我们想看看几种计算两个描述符之间距离的方法，以便将它们之间的差异转换为一个数字，我们可以将其用作简单的相似性度量。
+
+第一个距离函数是“绝对差之和 (SAD)”。正如您在下面的等式中看到的，SAD 将两个描述符向量作为输入��dA的和��db的. SAD 是通过从中的每个分量中减去来计算的��dA的中相同位置的相应组件��db的. 然后，将各个结果的绝对值相加。SAD 范数在文献中也称为 L1-范数。
+
+第二个距离函数是“差平方和 (SSD)”，在计算两个描述符向量的各个分量之间的差异的意义上，它类似于 SAD。然而，SAD 和 SSD 之间的关键区别在于后者对平方差求和而不是对绝对差求和。在文献中，SSD范数也被称为L2范数。下图给出了这两种规范。
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2004_Tracking%20Image%20Features/img/draggedimage%20(5).png)
+
+有多种方法可以解释 SAD 和 SSD 之间的差异。一个有用的方法，因为我们希望保持这一方面的简短，是从几何角度看这两个规范。在下图中，考虑了一个二维特征空间。其中，有两个特征向量d1和d2，每个特征向量由一个(a,b)坐标对组成。
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2004_Tracking%20Image%20Features/img/draggedimage-1%20(5).png)
+
+
+两者之间的最短距离是一条直线。给定每个向量的两个分量，SAD 计算长度差之和，这是一个一维过程。另一方面，SSD 计算平方和，它遵循毕达哥拉斯定律。该定律说，在直角三角形中，直角的平方和等于斜边的平方。因此，就两个向量之间的几何距离而言，L2 范数是更准确的度量。请注意，相同的原理以相同的方式适用于高维描述符。
+
+对于仅由 1 和 0 组成的二进制描述符，最好（也是最快）的度量是汉明距离，它通过使用异或函数计算两个向量之间的差异，如果两个位相同则返回零如果两位不同则为一。因此，所有 XOR 运算的总和就是两个描述符之间的不同位数。
+
+这里的关键要点是您必须使距离度量适应您使用的描述符类型。在基于梯度的方法（如 SIFT）的情况下，L2 范数将是最合适的。在所有二进制描述符的情况下，应使用汉明距离。
+
+
+查找匹配项
+
+假设我们在一幅图像中有 N 个关键点及其相关描述符，在另一幅图像中有 M 个关键点。寻找对应对的最明显方法是将所有特征相互比较，即执行 N x M 比较。对于第一幅图像中的给定关键点，它获取第二幅图像中的每个关键点并计算距离。距离最小的关键点将被视为其对。这种方法称为蛮力匹配或最近邻匹配，在 OpenCV 中以名称 BFMatcher 提供。OpenCV 中的强力匹配的输出是一个关键点对列表，这些关键点对在所选距离函数下按其描述符的距离排序。
+
+2014 年，David Lowe（SIFT 之父）和 Marius Muja 发布了一个名为“Fast library for approximate nearest neighbors”（FLANN）的开源库。FLANN 训练一个索引结构，用于遍历使用机器学习概念创建的潜在匹配候选对象。该库构建了一个非常有效的数据结构（KD 树）来搜索匹配对，避免了穷举法的穷举搜索。因此，它更快，同时结果仍然非常好，具体取决于匹配参数。由于基于 FLANN 的匹配需要一个全新的知识体系，其中几个概念与本课程的相关性有限，因此此处没有详细描述该方法。基于 FLANN 的匹配在 OpenCV 中可用，您将在下面的代码示例中再次看到它。在撰写本文时（2019 年 5 月），OpenCV 的当前实现中存在一个潜在的错误，需要将二进制描述符转换为浮点向量，效率低下。然而，速度仍然有所提高，尽管没有可能达到的那么大。
+
+BFMatching 和 FLANN 都接受描述符距离阈值 T，该阈值用于将匹配的数量限制为“好”的匹配，并丢弃相应对不对应的匹配。相应的“好”对称为“真阳性 (TP)”，而不匹配称为“假阳性 (FP)”。为T选择合适的值的任务是允许尽可能多的TP匹配，而应尽可能避免FP匹配。根据图像内容和相应的检测器/描述符组合，必须找到 TP 和 FP 之间的权衡，以合理地平衡 TP 和 FP 之间的比率。下图显示了 TP 和 FP 在 SSD 上的两种分布，以说明阈值选择。
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2004_Tracking%20Image%20Features/img/draggedimage-2%20(4).png)
+
+第一个阈值 T1 被设置为两个特征之间的最大允许 SSD，其方式是选择一些真阳性匹配，同时几乎完全避免假阳性匹配。但是，大多数 TP 匹配项也会被此设置丢弃。通过将匹配阈值提高到 T2，选择了更多的 TP 匹配，但 FP 匹配的数量也显着增加。在实践中，几乎从未发现 TP 和 FP 的清晰简洁的分离，因此，设置匹配阈值始终是平衡“好”与“坏”匹配之间的折衷。虽然在大多数情况下无法避免 FP 匹配，但我们的目标始终是尽可能降低它们的数量。下面介绍实现此目的的两种策略。
+
+
+选择匹配项
+
+只要不超过选定的阈值 T，蛮力匹配将始终返回与第一幅图像中的关键点的匹配，即使第二幅图像中不存在该关键点。这不可避免地导致许多错误匹配。一种抵消这种情况的策略称为交叉检查匹配，它通过在两个方向上应用匹配过程并仅保留那些在一个方向上的最佳匹配等于另一个方向上的最佳匹配的匹配来工作。交叉检查方法的步骤是：
+
+1. 对于源图像中的每个描述符，在参考图像中找到一个或多个最佳匹配。
+2. 切换源图像和参考图像的顺序。
+3. 从步骤 1 开始重复源图像和参考图像之间的匹配过程。
+4. 选择那些描述符在两个方向上最匹配的关键点对。
+
+尽管交叉检查匹配会增加处理时间，但它通常会删除大量错误匹配，因此在准确性高于速度时应始终执行。
+
+降低误报数量的一种非常有效的方法是计算每个关键点的 *最近邻距离比* 。这种方法最初是由 D. Lowe 在 1999 年关于 SIFT 的论文中提出的。主要思想是不直接在 SSD 上应用阈值。相反，对于源图像中的每个关键点，两个最佳匹配位于参考图像中，并计算描述符距离之间的比率。然后，将阈值应用于该比率以筛选出不明确的匹配项。下图说明了原理。
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2004_Tracking%20Image%20Features/img/draggedimage-3%20(3).png)
+
+
+在示例中，将具有关联描述符 da 的图像块与其他两个具有描述符的图像块进行比较��1个db1个的的和��2个db2个的的. 可以看出，这些补丁看起来非常相似，会导致模棱两可，从而导致不可靠的匹配。通过计算最佳和次佳匹配之间的 SSD 比率，可以过滤掉这种较弱的候选者。
+
+在实践中，0.8 的阈值已被证明可以在 TP 和 FP 之间提供良好的平衡。在原始 SIFT 论文中检查的图像序列中，使用此设置消除了 90% 的错误匹配，同时丢失了不到 5% 的正确匹配。
+
+
+##### 练习：描述符之间的距离
+
+
+在下面的代码示例中，一组二进制 BRISK 描述符被预加载并使用本节前面描述的强力方法进行匹配。请注意，出于教育目的，匹配的数量仅限于 100 个最佳候选，因为在将减少数量的关键点对绘制为叠加层时，更容易从视觉上发现不匹配。请注意，一旦计算出匹配，该函数就可以设置为最近邻（仅保留最佳匹配）或 k 最近邻选择（保留每个关键点的最佳 k 匹配）。
+
+在我们进一步了解如何在本节下方进一步估计关键点和描述符的性能之前，请使用下面的桌面工作区完成以下任务：
+
+1. 加载“BRISK_small”数据集，首先关闭交叉检查，然后再打开。查看可视化的关键点匹配和匹配对的数量并描述您的结果。
+2. 添加 k = 2 的 k 最近邻匹配（使用 `cv::knnMatch`）并实现上述描述符距离比以过滤掉阈值设置为 0.8 的模糊匹配。可视化结果，计算丢弃匹配项的百分比（对于“BRISK_small”和“BRISK_large”数据集）并描述您的观察结果。
+3. 在“BRISK_large”数据集和 SIFT 数据集上同时使用 BF 匹配和 FLANN 匹配，并描述您的观察结果。
+
+本练习的代码在文件中 `descriptor_matching.cpp`，在使用 `cmake`和构建后 `make`，您可以使用可执行文件运行代码 `descriptor_matching`。
+
+
+评估匹配性能
+
+存在大量的检测器和描述符类型，基于要解决的问题，必须根据关键点的准确性或匹配对的数量等要求选择合适的算法对。下面概述了最常见的措施。
+
+真 *阳性率 (TPR)* 是已正确匹配的关键点（真阳性 - TP）与所有潜在匹配的总和之间的比率，包括检测器/描述符遗漏的关键点（假阴性 - FN）。完美匹配器的 TPR 为 1.0，因为不会有错误匹配。在文献中，TPR 也称为 *召回率* ，可用于量化实际找到的可能正确匹配项的数量。
+
+ *误报率 (FPR)* 是错误匹配的关键点（误报 - FP）与本应没有匹配的所有特征的总和之间的比率。完美匹配器的 FPR 为 0.0。FPR 也称为 *误报率* ，描述了检测器/描述符选择错误关键点对的可能性。
+
+匹配器的精度是正确匹配的关键点 (TP) 的数量除以所有匹配的数量 *。* 此度量也称为 *异常率* 。
+
+下表概述了刚刚推出的一些措施。
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2004_Tracking%20Image%20Features/img/draggedimage-4%20(3).png)
+
+
+为了判断匹配或不匹配是否正确，需要用于评估的图像材料的地面真实信息。在许多出版物中，已使用图像序列，其中所有关键点都位于平面上。在这种情况下，可以使用基于模型的估计来区分 TP/TN 和 FP/FN。对于我们在本课程中使用的图像序列，这种方法不能使用，因为“我们的”关键点分布在复杂的三维场景中，其中对象动态移动，运动参数未知。但是，我们可以使用文献中的大量可用比较并将结果迁移到我们的应用场景中。在本节末尾，将显示一小部分此类结果。
+
+接收 *器操作特性 (ROC)* 是一个图形图，显示检测器/描述符在其辨别阈值变化时能够区分真假匹配的能力。ROC 可用于直观地比较不同的检测器/描述符，并为每个检测器/描述符选择合适的区分阈值。ROC 的名称可以追溯到第二次世界大战，当时雷达操作员在识别敌方目标的背景下引入了该方法。
+
+下图显示了如何通过改变 SSD 上的辨别阈值，根据真阳性和假阳性的分布构建 ROC。理想的检测器/描述符的 TPR 为 1.0，而 FPR 将同时接近 0.0。
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2004_Tracking%20Image%20Features/img/draggedimage-5%20(2).png)
+
+在下图中，显示了好坏检测器/描述符的两个示例。在第一个示例中，无法安全地区分 TP 和 FP，因为两条曲线都匹配，并且区分阈值的变化会以相同的方式影响它们。在第二个示例中，TP 和 FP 曲线没有明显重叠，因此可以选择合适的鉴别器阈值。
+
+![](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2004_Tracking%20Image%20Features/img/draggedimage-6%20(3).png)
+
+
+还有其他几种评估检测器和描述符的方法，例如我们不会在本课程中讨论的 *Precision-Recall 曲线，* 以便专注于未来的任务 - 这是我们的防撞系统的开发。
+
+作为本节的总结，给出了结果的概述，其中对几个描述符进行了相互比较，当必须为应用程序选择检测器/描述符时，可以使用这些描述符来促进选择过程。在图中，您可以看到不同描述符（例如 SIFT、BRISK 和其他几个描述符）的 ROC 曲线，并直观地将它们相互比较。请注意，这些结果仅对实际用于比较的图像序列有效——对于不同的图像集，例如交通场景，结果可能会有很大差异。
+
+![<span data-type=](http://127.0.0.1:8887/Part%2004-Module%2001-Lesson%2004_Tracking%20Image%20Features/img/results1.png)\[来源\]" />
+
+- 关键点
+- 描述符
+- 匹配方法
+- 评估匹配结果方法
+
+
+##### 06.跨图像跟踪对象
+
+
+
+### 基于摄像头的 2D 特征跟踪
