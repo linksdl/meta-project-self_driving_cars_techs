@@ -513,7 +513,6 @@ int main()
 
 ```
 
-
 按照常用的使用用途，智能指针有三类:
 
 * **unique_ptr** ：独享所有权的智能指针，资源只能被一个指针占有，该指针不能拷贝构造和赋值。但可以进行移动构造和移动赋值构造（调用 `move()` 函数），即一个 `unique_ptr` 对象赋值给另一个 `unique_ptr` 对象，可以通过该方法进行赋值。
@@ -795,3 +794,257 @@ B destructed!
 * [what-is-a-smart-pointer-and-when-should-i-use-one](https://leetcode.cn/link/?target=https://stackoverflow.com/questions/106508/what-is-a-smart-pointer-and-when-should-i-use-one)
 * [当我们谈论shared_ptr的线程安全性时，我们在谈论什么](https://leetcode.cn/link/?target=https://zhuanlan.zhihu.com/p/416289479)
 * [循环引用中的shared_ptr和weak_ptr](https://leetcode.cn/link/?target=https://zhuanlan.zhihu.com/p/355812360)
+
+#### 06. 智能指针的创建 5
+
+面试高频指数：★★★★★
+
+1. `make_unique` 与 `make_share`:
+   `make_unique` 在 `C++ 14` 以后才被加入到标准的 `C++` 中，`make_shared` 则是 `C++ 11` 中加入的。在 「`《Effective Modern C++》`」 学习笔记之条款二十一：优先选用 `std::make_unique` 和 `std::make_shared`,而非直接 `new`。
+
+* `make_unique`：减少代码量，能够加快编译速度，定义两遍类型时，编译器需要进行类型推导会降低编译速度，某些意外意外情况下可能会导致内存泄漏。但是 `make_unique` 不允许自定析构器，不接受 `std::initializer_list` 对象。
+
+```
+auto upw1(std::make_unique<Widget>());
+//重复写了两次Widget型别
+std::unique_ptr<Widget> upw2(new Widget);
+
+```
+
+`make_shared`：这个主要是可以减少对堆中申请内存的次数，只需要申请一次即可。我们知道 `share_ptr` 的内存模型如下:
+
+![1_9_3.png](https://pic.leetcode-cn.com/1661412915-YtfoXu-1_9_3.png)
+
+当我们使用 `new` 时，我们将 `new` 出的资源指针赋给 `share_ptr` 的 `ptr`, 然后 `share_ptr` 本身还需要再次在堆上申请一块单独的内存作为它的管理区，存放引用计数、用户自定的函数等，因此创建 `shared_ptr` 时需要在堆上申请两次。
+`C++ [] std::shared_ptr<Widget>(new Widget);`
+当我们使用 `make_share` 时，我们只需要申请一块大的内存，一半用来存储资源，另一半作为管理区, 存放引用计数、用户自定的函数等，此时需要在堆上申请一次即可。
+`C++ auto upw1(std::make_unique<Widget>());`
+以下为两种方式的对比:
+
+![1_10_1.png](https://pic.leetcode-cn.com/1661515496-tSvOZF-1_10_1.png)
+
+`make_share` 虽然效率高，但是同样不能自定义析构器，同时 `share_ptr` 的对象资源可能会延迟释放，因为此时对象资源与管理区域在同一块内存中，必须要同时释放。
+
+参考资料：
+
+* [why using make_unique rather than unique_ptr](https://leetcode.cn/link/?target=https://zhuanlan.zhihu.com/p/528139040)
+* [Differences between std::make_unique and std::unique_ptr with new](https://leetcode.cn/link/?target=https://stackoverflow.com/questions/22571202/differences-between-stdmake-unique-and-stdunique-ptr-with-new)
+* [which one is better between make_unique and new](https://leetcode.cn/link/?target=https://www.sololearn.com/Discuss/2595135/which-one-is-better-between-make_unique-and-new)
+
+#### 07. 编译与链接 4
+
+面试高频指数：★★★★☆
+
+1. 为什么需要编译：
+
+* 我们常见的 C/C++**C/C++** 语言，CPU**CPU** 是无法理解的，这就需要将我们编写好的代码最终翻译为机器可执行的二进制指令，编译的过程本质上也即是翻译的过程，当然中间涉及的细节非常复杂。
+
+2. 编译的处理过程：
+   编译器读取源文件 `cpp`，并将其翻译为可执行文件「[ELF**ELF**](https://leetcode.cn/link/?target=https://baike.baidu.com/item/ELF/7120560?fr=aladdin)」，ELF**ELF** 文件可以经过操作系统进行加载执行。常见的编译过程分为四个过程：编译预处理、编译、汇编、链接。
+
+![image.png](https://pic.leetcode.cn/1681266191-yBTggP-image.png)
+
+* **编译预处理** ：在预编译过程中主要处理源代码中的预处理指令，比如引入头文件（`#include`），去除注释，处理所有的条件编译指令（`#ifdef, #ifndef, #else, #elif, #endif`），宏的替换（`#define`），添加行号，保留所有的编译器指令；
+* **编译** ：针对预处理后的文件进行词法分析、语法分析、语义分析、符号汇总、汇编代码生成，并针对程序的结构或者特定的 CPU**CPU** 平台进行优化，其中涉及的过程较为复杂。简单来说编译的过程即为将 `.cpp` 源文件翻译成 `.s` 的汇编代码；
+* **汇编** ：将汇编代码 `.s` 翻译成机器指令 `.o` 文件，一个 `.cpp` 文件只会生成一个 `.o` 文件；
+* **链接** ：汇编程序生成的目标文件即为 `.o` 文件，单独的 `.o` 文件可能无法执行。因为一个程序可能由多个源文件组成，此时就存在多个 `.o` 文件。文件 `A` 中的函数引用了另一个文件 `B` 中定义的符号或者调用了某个库文件中的函数，这就需要链接处理。那链接的目的就是将这些文件对应的目标文件连接成一个整体，从而生成一个可被操作系统加载执行的 ELF**ELF** 程序文件。链接的过程较为复杂，如有兴趣可以参考：「[Computer Systems: A Programmer&#39;s Perspective](https://leetcode.cn/link/?target=http://csapp.cs.cmu.edu/3e/pieces/preface3e.pdf)」。
+
+3. 静态链接与动态链接:
+
+* **静态链接** ：代码在生成可执行文件时，将该程序所需要的全部外部调用函数全部拷贝到最终的可执行程序文件中，在该程序被执行时，该程序运行时所需要的全部代码都会被装入到该进程的虚拟地址空间中。在 Linux**Linux** 系统下，静态链接库一般以 `.a` 文件，我们可以将多个 `.o` 文件链接成一个静态链接库。静态链接演示如下：
+* 定义 `a.cpp` 与 `b.cpp` 如下:
+
+```
+// a.cpp
+#include <iostream>
+#include <vector>
+
+extern int test_static();
+
+int main() {
+    test_static();
+}
+
+// b.cpp
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int test_static() {
+    cout<<"this is test static program!"<<endl;
+    return 0;
+}
+
+```
+
+
+* 采用静态链接方式进行编译，并查看编译后的函数:
+
+```shell
+$ g++ a.cpp b.cpp -o test
+$ objdump -d test
+```
+
+* 可以看到里面包含 `main` 函数的调用过程以及 `test_static` 函数的详细定义：
+* asm
+
+```
+00000000000008b5 <main>:
+8b5:   55                      push   %rbp
+8b6:   48 89 e5                mov    %rsp,%rbp
+8b9:   e8 65 00 00 00          callq  923 <_Z11test_staticv>
+8be:   b8 00 00 00 00          mov    $0x0,%eax
+8c3:   5d                      pop    %rbp
+8c4:   c3                      retq
+
+0000000000000923 <_Z11test_staticv>:
+923:   55                      push   %rbp
+924:   48 89 e5                mov    %rsp,%rbp
+927:   48 8d 35 18 01 00 00    lea    0x118(%rip),%rsi        # a46 <_ZStL19piecewise_construct+0x1>
+92e:   48 8d 3d 0b 07 20 00    lea    0x20070b(%rip),%rdi        # 201040 <_ZSt4cout@@GLIBCXX_3.4>
+935:   e8 56 fe ff ff          callq  790 <_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc@plt>
+93a:   48 89 c2                mov    %rax,%rdx
+93d:   48 8b 05 8c 06 20 00    mov    0x20068c(%rip),%rax        # 200fd0 <_ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_@GLIBCXX_3.4>
+944:   48 89 c6                mov    %rax,%rsi
+947:   48 89 d7                mov    %rdx,%rdi
+94a:   e8 51 fe ff ff          callq  7a0 <_ZNSolsEPFRSoS_E@plt>
+94f:   b8 00 00 00 00          mov    $0x0,%eax
+954:   5d                      pop    %rbp
+955:   c3                      retq
+
+```
+
+**动态链接** ：代码在生成可执行文件时，该程序所调用的部分程序被放到动态链接库或共享对象的某个目标文件中，链接程序只是在最终的可执行程序中记录了共享对象的名字等一些信息，最终生成的 ELF**ELF** 文件中并不包含这些调用程序二进制指令。在程序执行时，当需要调用这部分程序时，操作系统会从将这些动态链或者共享对象进行加载，并将全部内容会被映射到该进行运行的虚拟地址的空间。在 `Linux` 系统下，动态链接库一般以 `.so` 文件，我们可以将多个 `.o` 文件链接成一个动态链接库。动态链接演示如下：
+
+定义 `a.cpp` 与 `c.cpp` 如下:
+
+```
+// a.cpp
+#include <iostream>
+#include <vector>
+
+extern int test_dynamic();
+
+int main() {
+    test_dynamic();
+}
+ 
+// c.cpp
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int test_dynamic() {
+    cout<<"this is test dynamic program!"<<endl;
+    return 0;
+}
+
+```
+
+
+* 采用动态态链接方式进行编译，并查看编译后的函数:
+* shell
+
+```
+$ g++ -fPIC -shared -o lib.so c.cpp
+$ g++ -o test a.cpp ./lib.so
+$ objdump -d test
+
+```
+
+* 通过 `-fPIC` 和 `-shared` 可以生成一个动态链接库，再链接到可执行程序就可以正常运行。生成的 `elf` 文件中可以查看 `main` 函数的详细定义，但并未找到 `test_dynamic` 函数的定义：
+
+```
+0000000000000835 <main>:
+835:   55                      push   %rbp
+836:   48 89 e5                mov    %rsp,%rbp
+839:   e8 e2 fe ff ff          callq  720 <_Z12test_dynamicv@plt>
+83e:   b8 00 00 00 00          mov    $0x0,%eax
+843:   5d                      pop    %rbp
+844:   c3                      retq
+
+```
+
+* 我们查看生成的动态链接库中可以查看到 `test_dynamic` 的详细定义：
+
+  ```
+  0000000000000865 <_Z12test_dynamicv>:
+  865:   55                      push   %rbp
+  866:   48 89 e5                mov    %rsp,%rbp
+  869:   48 8d 35 96 00 00 00    lea    0x96(%rip),%rsi        # 906 <_ZStL19piecewise_construct+0x1>
+  870:   48 8b 05 61 07 20 00    mov    0x200761(%rip),%rax        # 200fd8 <_ZSt4cout@GLIBCXX_3.4>
+  877:   48 89 c7                mov    %rax,%rdi
+  87a:   e8 f1 fe ff ff          callq  770 <_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc@plt>
+  87f:   48 89 c2                mov    %rax,%rdx
+  882:   48 8b 05 47 07 20 00    mov    0x200747(%rip),%rax        # 200fd0 <_ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_@GLIBCXX_3.4>
+  889:   48 89 c6                mov    %rax,%rsi
+  88c:   48 89 d7                mov    %rdx,%rdi
+  88f:   e8 ec fe ff ff          callq  780 <_ZNSolsEPFRSoS_E@plt>
+  894:   b8 00 00 00 00          mov    $0x0,%eax
+  899:   5d                      pop    %rbp
+  89a:   c3                      retq
+
+  ```
+* 实际上使用 `PLT` 延迟绑定技术，当然动态链接中使用的技巧和技术较为复杂，参考资料中会讲述的更加详细和深入。
+* **二者的优缺点** ：静态链接浪费空间，每个可执行程序都会有目标文件的一个副本，这样如果目标文件进行了更新操作，就需要重新进行编译链接生成可执行程序（更新困难），优点就是执行的时候运行速度快，因为可执行程序具备了程序运行的所有内容；动态链接节省内存、更新方便，但是动态链接是在程序运行时，每次执行都需要链接，相比静态链接会有一定的性能损失。静态链接是由连接器完成的，动态链接最终是由操作系统来完成链接的功能，动态链接在不同的操作系统下可能由不同的实现原理，比如在 Linux**Linux** 系统下，动态链接库通常以 `.so` 文件存在，在 windows**windows** 下同下，动态链接库一般以 `.dll` 文件存在。
+
+参考资料：
+
+* [Computer Systems: A Programmer&#39;s Perspective](https://leetcode.cn/link/?target=http://csapp.cs.cmu.edu/3e/pieces/preface3e.pdf)
+* [Static and Dynamic Linking in Operating Systems](https://leetcode.cn/link/?target=https://www.geeksforgeeks.org/static-and-dynamic-linking-in-operating-systems/)
+
+#### 08. 大端与小端 4
+
+面试高频指数：★★★★☆
+
+1. 字节序
+   字节顺序又称端序或尾序（`Endianness`），在计算机科学领域中，指电脑内存中或在数字通信链路中，组成多字节的字的字节的排列顺序。在几乎所有的机器上，多字节对象都被存储为连续的字节序列。例如在 `C` 语言中，一个类型为 `int` 的变量 `x` 地址为 `0x100`，那么其对应地址表达式 `&x` 的值为 `0x100`，`x` 的四个字节将被存储在电脑内存的 `0x100`，`0x101`，`0x102`，`0x103` 位置。字节的排列方式常见的方式有两种：将一个多位数的低位放在较小的地址处，高位放在较大的地址处，则称小端序（`Little-Endian`）；反之则称大端序（`Big-Endian`）。为什么需要字节序这个规定，主要是因为在网络应用中字节序是一个必须被考虑的因素，对于不同 `CPU` 可能采用不同标准的字节序，所以均按照网络标准转化成相应的字节序。
+
+**Little-Endian** ：将低序字节存储在起始地址（低位编址），在变量指针转换的时候地址保持不变，比如 `int64*` 转到 `int32*`，对于机器计算来说更友好和自然。
+
+![1684718001586](image/C++面试突破/1684718001586.png)
+
+**Big-Endian** ：将高序字节存储在起始地址（高位编址），内存顺序和数字的书写顺序是一致的，对于人的直观思维比较容易理解，网络字节序统一规定采用 `Big-Endian`。
+
+![1_6_2.png](https://pic.leetcode-cn.com/1661173365-PPzbSl-1_6_2.png)
+
+检测字节序:
+一般情况下我们直接调用宏定义 `__BYTE_ORDER` 即可，可以通过引用 `<bits/endian.h>` 即可。或者我们也可以编写程序来判断当前的字节序。
+
+```
+bool byteorder_check() {
+    int a = 1;
+    return (*(char *)&a); /* 1 为小端机，0 为大端机 */
+}
+
+```
+
+
+* 字节序转换:
+  在程序中字节序转换时，我们将高位与低位依次进行交换即可完成，以下为整数的字节序转换。
+
+```
+#define ORDER_TRANS(i) ((i & 0xff000000) >> 24 ) |  ( (i & 0x00ff0000) >> 8 ) | ( (i & 0x0000ff00) << 8 )  | ( (i & 0x000000ff) << 24 )
+
+
+```
+
+
+常用的网络字节序转换函数:
+
+```
+ntohl(uint32 x)       // uint32 类型 网络序转主机序
+htonl(uint32 x)       // uint32 类型 主机序转网络序
+ntohs(uint16 x)       // uint16 类型 网络序转主机序
+htons(uint16 x)       // uint16 类型 主机序转网络序
+
+```
+
+参考资料:
+
+* [Endianness](https://leetcode.cn/link/?target=https://en.wikipedia.org/wiki/Endianness#Middle-endian)
+* [Understanding Big and Little Endian Byte Order](https://leetcode.cn/link/?target=https://betterexplained.com/articles/understanding-big-and-little-endian-byte-order/)
+* [What Is Little-Endian And Big-Endian Byte Ordering?](https://leetcode.cn/link/?target=https://www.section.io/engineering-education/what-is-little-endian-and-big-endian/)
+* [Big Endian and Little Endian](https://leetcode.cn/link/?target=https://chortle.ccsu.edu/assemblytutorial/Chapter-15/ass15_3.html)
