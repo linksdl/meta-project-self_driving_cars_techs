@@ -878,7 +878,6 @@ int test_static() {
 
 ```
 
-
 * 采用静态链接方式进行编译，并查看编译后的函数:
 
 ```shell
@@ -942,7 +941,6 @@ int test_dynamic() {
 }
 
 ```
-
 
 * 采用动态态链接方式进行编译，并查看编译后的函数:
 * shell
@@ -1021,7 +1019,6 @@ bool byteorder_check() {
 
 ```
 
-
 * 字节序转换:
   在程序中字节序转换时，我们将高位与低位依次进行交换即可完成，以下为整数的字节序转换。
 
@@ -1030,7 +1027,6 @@ bool byteorder_check() {
 
 
 ```
-
 
 常用的网络字节序转换函数:
 
@@ -1048,3 +1044,1107 @@ htons(uint16 x)       // uint16 类型 主机序转网络序
 * [Understanding Big and Little Endian Byte Order](https://leetcode.cn/link/?target=https://betterexplained.com/articles/understanding-big-and-little-endian-byte-order/)
 * [What Is Little-Endian And Big-Endian Byte Ordering?](https://leetcode.cn/link/?target=https://www.section.io/engineering-education/what-is-little-endian-and-big-endian/)
 * [Big Endian and Little Endian](https://leetcode.cn/link/?target=https://chortle.ccsu.edu/assemblytutorial/Chapter-15/ass15_3.html)
+
+
+#### 09. 内存泄漏 4
+
+面试高频指数：★★★★☆
+
+1. 内存泄漏
+   程序在堆中申请的动态内存，在程序使用完成时没有得到及时的释放。当这些变量的生命周期已结束时，该变量在堆中所占用的内存未能得到释放，从而就导致了堆中可使用的内存越来越少，最终可能产生系统运行较慢或者系统因内存不足而崩溃的问题。
+
+* 内存泄漏并非指内存从物理上消失，而是指程序在运行过程中，由于疏忽或错误而失去了对该内存的控制，从而造成了内存的浪费。
+* 内存泄漏主要指堆上分配的变量，因为栈中分配的变量，随着函数退出时会自动回收。而堆是动态分配的，一旦用户申请了内存分配而为及时释放，那么该部分内存在整个程序运行周期内都是被占用的，其他程序无法再使用这部分内存。
+* 对于实际的程序来说，我们在调用过程中使用 `malloc`、`calloc`、`realloc`、`new` 等分配内存时，使用完后要调用相应的 `free` 或 `delete` 释放内存，否则这块内存就会造成内存泄漏。当然在实际应用中，我们可能在使用系统资源或者在堆中创建对象时，没有及时将这些资源或者对象进行释放时，也会造成内存泄漏，这些资源或者对象的创建实际也占用了堆中的内存，在使用完成时应及时将其进行释放。
+* 代码示例:
+
+```
+// Program with memory leak
+#include <bits/stdc++.h>
+using namespace std;
+
+void func_to_show_mem_leak()
+{
+	int* ptr = new int(5);
+    // 返回时未释放内存
+	return;
+}
+int main()
+{
+	func_to_show_mem_leak();
+	return 0;
+}
+
+```
+
+2. 内存泄漏导致的问题：
+   由于内存未得到及时释放，从而可能导致可使用的动态内存空间会越来越少，一旦内存空间全部使用完，则程序可能会导致因为内存不够中止运行。由于内存泄漏导致的问题比较严重，现在许多语言都带有 `GC` 程序会自动对不使用的内存进行回收，从而避免内存泄漏。
+
+* [Memory leak in C++ and How to avoid it?](https://leetcode.cn/link/?target=https://www.***.org/memory-leak-in-c-and-how-to-avoid-it/?ref=lbp)
+* [Memory leak](https://leetcode.cn/link/?target=https://en.wikipedia.org/wiki/Memory_leak)
+* [Memory leak detection - How to find, eliminate, and avoid](https://leetcode.cn/link/?target=https://raygun.com/blog/memory-leak-detection/)
+
+
+#### 10. 内存泄漏检测与预防 3
+
+面试高频指数：★★★☆☆
+
+1. 内存泄漏检测与预防
+   对于 `C/C++` 没有 `GC` 程序的语言来说因为内存造成的问题较多，当然一般情况下如果存在严重的内存泄漏，我们通过查看内存使用统计即可检测到内存泄漏，但是细小的内存泄漏很难通过统计观察到，目前一般都是利用各种内存检测工具来检测内存泄漏，当然关键还是在于统计和分析申请和释放的相关日志。内存检测工具有很多，这里重点介绍下 `valgrind` 。
+
+![1_8_1.png](https://pic.leetcode-cn.com/1661173460-cqRhcI-1_8_1.png)
+
+
+1. `valgrind` 是一套 `Linux` 下，开放源代码（`GPL V2`）的仿真调试工具的集合，包括以下工具：
+
+* `Memcheck`：内存检查器（`valgrind` 应用最广泛的工具），能够发现开发中绝大多数内存错误的使用情况，比如：使用未初始化的内存，使用已经释放了的内存，内存访问越界等。
+* `Callgrind`：检查程序中函数调用过程中出现的问题。
+* `Cachegrind`：检查程序中缓存使用出现的问题。
+* `Helgrind`：检查多线程程序中出现的竞争问题。
+* `Massif`：检查程序中堆栈使用中出现的问题。
+* `Extension`：可以利用 `core` 提供的功能，自己编写特定的内存调试工具。
+* `Memcheck` 能够检测出内存问题，关键在于其建立了两个全局表：
+* `Valid-Value` 表：对于进程的整个地址空间中的每一个字节（`byte`），都有与之对应的 `8` 个 `bits` ；对于 `CPU` 的每个寄存器，也有一个与之对应的 `bit` 向量。这些 `bits` 负责记录该字节或者寄存器值是否具有有效的、已初始化的值。
+* `Valid-Address` 表：对于进程整个地址空间中的每一个字节（`byte`），还有与之对应的 `1` 个 `bit`，负责记录该地址是否能够被读写。
+* 检测原理：
+  当要读写内存中某个字节时，首先检查这个字节对应的 `Valid-Address` 表中对应的 `bit`。如果该 `bit` 显示该位置是无效位置，`Memcheck` 则报告读写错误。
+  内核（`core`）类似于一个虚拟的 `CPU` 环境，这样当内存中的某个字节被加载到真实的 `CPU` 中时，该字节在 `Valid-Value` 表对应的 `bits` 也被加载到虚拟的 `CPU` 环境中。一旦寄存器中的值，被用来产生内存地址，或者该值能够影响程序输出，则 `Memcheck` 会检查 `Valid-Value` 表对应的 `bits`，如果该值尚未初始化，则会报告使用未初始化内存错误。
+
+程序实例:
+
+```
+#include <stdio.h>
+#include <stdlib.h> 
+
+int main(void)
+{
+    char *p = (char *)malloc(1);
+    *p = 'a'; 
+
+    char c = *p; 
+
+    printf("\n [%c]\n",c); 
+
+    return 0;
+}
+
+```
+
+我们运行 `memcheck`工具时即可检测出未释放的内存:
+
+```
+$ valgrind --tool=memcheck --leak-check=full ./2
+==437== Memcheck, a memory error detector
+==437== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==437== Using Valgrind-3.13.0 and LibVEX; rerun with -h for copyright info
+==437== Command: ./2
+==437==
+==437== error calling PR_SET_PTRACER, vgdb might block
+
+[a]
+==437==
+==437== HEAP SUMMARY:
+==437==     in use at exit: 1 bytes in 1 blocks
+==437==   total heap usage: 2 allocs, 1 frees, 513 bytes allocated
+==437==
+==437== 1 bytes in 1 blocks are definitely lost in loss record 1 of 1
+==437==    at 0x4C2FB0F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==437==    by 0x108676: main (in /mnt/c/work/leetcode/2)
+==437==
+==437== LEAK SUMMARY:
+==437==    definitely lost: 1 bytes in 1 blocks
+==437==    indirectly lost: 0 bytes in 0 blocks
+==437==      possibly lost: 0 bytes in 0 blocks
+==437==    still reachable: 0 bytes in 0 blocks
+==437==         suppressed: 0 bytes in 0 blocks
+==437==
+==437== For counts of detected and suppressed errors, rerun with: -v
+==437== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+
+```
+
+2. 如何防止内存泄漏:
+
+* 内部封装：将内存的分配和释放封装到类中，在构造的时候申请内存，析构的时候释放内存。
+
+```
+#include <iostream>
+#include <cstring>
+
+using namespace std;
+
+class A
+{
+private:
+    char *p;
+    unsigned int p_size;
+
+public:
+    A(unsigned int n = 1) // 构造函数中分配内存空间
+    {
+        p = new char[n];
+        p_size = n;
+    };
+    ~A() // 析构函数中释放内存空间
+    {
+        if (p != NULL)
+        {
+            delete[] p; // 删除字符数组
+            p = NULL;   // 防止出现野指针
+        }
+    };
+    char *GetPointer()
+    {
+        return p;
+    };
+};
+void fun()
+{
+    A ex(100);
+    char *p = ex.GetPointer();
+    strcpy(p, "Test");
+    cout << p << endl;
+}
+int main()
+{
+    fun();
+    return 0;
+}
+
+```
+
+说明：但这样做并不是最佳的做法，在类的对象复制时，程序会出现同一块内存空间释放两次的情况，请看如下程序：
+
+```
+void fun1()
+{
+    A ex(100);
+    A ex1 = ex; 
+    char *p = ex.GetPointer();
+    strcpy(p, "Test");
+    cout << p << endl;
+}
+
+```
+
+简单解释：对于 `fun1` 这个函数中定义的两个类的对象而言，在离开该函数的作用域时，会两次调用析构函数来释放空间。但是这两个对象指向的是同一块内存空间，所以导致同一块内存空间被释放两次，可以通过增加计数机制来避免这种情况。示例程序：
+
+```
+#include <iostream>
+#include <cstring>
+using namespace std;
+class A
+{
+private:
+    char *p;
+    unsigned int p_size;
+    int *p_count; // 计数变量
+public:
+    A(unsigned int n = 1) // 在构造函数中申请内存
+    {
+        p = new char[n];
+        p_size = n;
+        p_count = new int;
+        *p_count = 1;
+        cout << "count is : " << *p_count << endl;
+    };
+    // reference count
+    A(const A &temp)
+    {
+        p = temp.p;
+        p_size = temp.p_size;
+        p_count = temp.p_count;
+        (*p_count)++; // 复制时，计数变量 +1
+        cout << "count is : " << *p_count << endl;
+    }
+
+    // deep copy
+    A(const A &temp)
+    {
+        p = new char[temp.p_size];
+        p_size = p_size;  
+    }
+
+    ~A()
+    {
+        (*p_count)--; // 析构时，计数变量 -1
+        cout << "count is : " << *p_count << endl; 
+
+        if (*p_count == 0) // 只有当计数变量为 0 的时候才会释放该块内存空间
+        {
+            cout << "buf is deleted" << endl;
+            if (p != NULL) 
+            {
+                delete[] p; // 删除字符数组
+                p = NULL;   // 防止出现野指针
+                if (p_count != NULL)
+                {
+                    delete p_count;
+                    p_count = NULL;
+                }
+            }
+        }
+    };
+    char *GetPointer()
+    {
+        return p;
+    };
+};
+void fun()
+{
+    A ex(100);
+    char *p = ex.GetPointer();
+    strcpy(p, "Test");
+    cout << p << endl;
+
+    A ex1 = ex; // 此时计数变量会 +1
+    cout << "ex1.p = " << ex1.GetPointer() << endl;
+}
+int main()
+{
+    fun();
+    return 0;
+}
+
+```
+
+程序运行结果：
+
+count is : 1
+Test
+count is : 2
+ex1.p = Test
+count is : 1
+count is : 0
+buf is deleted
+
+* 解释下：程序运行结果的倒数 `2、3` 行是调用两次析构函数时进行的操作，在第二次调用析构函数时，进行内存空间的释放，从而会有倒数第 `1` 行的输出结果。当然上述程序我们在定义类的拷贝构造函数时，直接定义为深拷贝也可以解决多次释放的问题。
+* 使用智能指针：智能指针是 `C++` 中已经对内存泄漏封装好了一个工具，智能指针对象会自动释放所申请的内存，将在下一个问题中对智能指针进行详细的解释。
+* 良好的编码习惯：良好的编码习惯可以有效的避免内存泄漏的问题，内存申请和释放要一一对应。
+  * 在 `C++` 中需要将基类的析构函数定义为虚函数；
+  * 遵循 `RAII`（`Resource acquisition is initialization`）原则：在对象构造时获取资源，在对象生命期控制对资源的访问使之始终保持有效，最后在对象析构的时候释放资源；
+  * 尽量使用智能指针；
+  * 有效引入内存检测工具；
+
+参考资料：
+
+* [General guidelines to avoid memory leaks in C++](https://leetcode.cn/link/?target=https://stackoverflow.com/questions/76796/general-guidelines-to-avoid-memory-leaks-in-c)
+* [Find memory leaks with the CRT library](https://leetcode.cn/link/?target=https://docs.microsoft.com/en-us/visualstudio/debugger/finding-memory-leaks-using-the-crt-library?view=vs-2022)
+* [Linux 性能分析valgrind（一）之memcheck使用](https://leetcode.cn/link/?target=https://zhuanlan.zhihu.com/p/92074597)
+* [The Valgrind Quick Start Guide](https://leetcode.cn/link/?target=https://valgrind.org/docs/manual/quick-start.html#quick-start.mcrun)
+* [Using Valgrind to Find Memory Leaks and Invalid Memory Use](https://leetcode.cn/link/?target=https://www.cprogramming.com/debugging/valgrind.html)
+* [How do I use valgrind to find memory leaks?](https://leetcode.cn/link/?target=https://stackoverflow.com/questions/5134891/how-do-i-use-valgrind-to-find-memory-leaks)
+* [Resource acquisition is initialization](https://leetcode.cn/link/?target=https://en.wikipedia.org/wiki/Resource_acquisition_is_initialization)
+
+
+#### 11. include " " 和 <> 的区别 4
+
+面试高频指数：★★★★☆
+
+1. `#include`:
+   `include` 关键字主要用来标识 `C/C++` 程序源代码编译时需要引用的头文件，编译器会自动去查找这些头文件中的变量、函数声明、结构体定义等相关信息，常见的有 `include <filename>` 和 `#include "filename"`，二者之间的区别:
+   查找文件的位置：`#include<filename>` 通常在编译器或者 `IDE` 中预先指定的搜索目录中进行搜索，通常会搜索 `/usr/include` 目录，此方法通常用于包括标准库头文件；`#include "filename"` 在当前源文件所在目录中进行查找，如果没有；再到当前已经添加的系统目录（编译时以 `-I` 指定的目录）中查找，最后会在 `/usr/include` 目录下查找 。
+   日常编写程序时，对于标准库中的头文件常用 `#include<filename>`，对于自己定义的头文件常用 `#include "filename"`。
+2. `__has_include`：
+   `C++ 17` 支持该特性，用来检查是否已经包含某个文件:
+
+```
+#include <iostream>
+
+int main()
+{
+#if __has_include(<cstdio>)
+    printf("c program");
+#endif
+
+#if __has_include("iostream")
+    std::cout << "c++ program" << std::endl;
+#endif
+
+    return 0;
+}
+
+```
+
+参考资料:
+
+* [Source file inclusion](https://leetcode.cn/link/?target=https://en.cppreference.com/w/cpp/preprocessor/include)
+* [C/C++ #include directive with Examples](https://leetcode.cn/link/?target=https://www.***.org/c-c-include-directive-with-examples/)
+
+### 2, C++ 语言对比
+
+本章将重点涉及以下高频知识点：
+
+* [C++ 11 新特性](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vwxfy1/)
+* [C++ 14, C++ 17 新特性](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vw5c17/)
+* [C 和 C++ 的对比](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vvb05s/)
+* [Java 和 C++ 的对比](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vvjvxd/)
+* [Python 和 C++ 的对比](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vvfahh/)
+* [Go 和 C++ 的对比](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vwhoj3/)
+* [Rust 和 C++ 的对比](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vwx5bm/)
+
+#### 01. C++ 11 新特性 5
+
+面试高频指数：★★★★★
+
+`C++ 11` 与 `C++ 98` 相比，引入新特性有很多，从面试的角度来讲，如果面试官问到该问题，常以该问题作为引子，对面试者提到的知识点进行深入展开提问。面试者尽可能的列举常用的并且熟悉的特性，尽可能的掌握相关原理，下文只是对相关知识点进行了简单的阐述，有关细节还需要结合相关知识点的相关问题。下面主要介绍 `C++ 11` 中的一些面试中经常遇到的特性。
+
+1. `auto` 类型推导:
+   `auto` 关键字：自动类型推导，编译器会在 **编译期间** 通过初始值或者函数返回值推导出变量的类型，通过 `auto` 定义的变量必须有初始值。
+   `auto` 关键字基本的使用语法如下：
+
+```
+auto var = val1 + val2; // 根据 val1 和 val2 相加的结果推断出 var 的类型
+auto ret = [](double x){return x*x;}; // 根据函数返回值推导出 ret 的类型
+auto al = { 10, 11, 12 }; //类型是std::initializer_list<int>
+
+```
+
+使用 `auto` 关键字做类型自动推导时，依次施加以下规则:
+首先，如果初始化表达式是引用，首先去除引用；
+上一步后，如果剩下的初始化表达式有顶层的 `const` 或 `volatile` 限定符，去除掉。使用 `auto` 关键字声明变量的类型，不能自动推导出顶层的 `const` 或者 `volatile`，也不能自动推导出引用类型，需要程序中显式声明，比如以下程序：
+
+```
+const int v1 = 101;
+auto v2 = v1;       // v2 类型是int，脱去初始化表达式的顶层const
+v2 = 102；            // 可赋值
+int a = 100;
+int &b = a; 
+auto c = b;          // c 类型为int，脱去初始化表达式的 &
+
+```
+
+初始化表达式为数组，`auto` 关键字推导的类型为指针。数组名在初始化表达式中自动隐式转换为首元素地址的右值。
+
+```
+int a[9]; 
+auto j = a; // 此时j 为指针为 int* 类型，而不是 int(*)[9] 类型
+std::cout << typeid(j).name() << " "<<sizeof(j)<<" "<<sizeof(a)<< std::endl;
+
+```
+
+
+2. `decltype` 类型推导:
+   `decltype` 关键字：`decltype` 是 `“declare type”` 的缩写，译为“声明类型”。和 `auto` 的功能一样，都用来在编译时期进行自动类型推导。如果希望从表达式中推断出要定义的变量的类型，但是不想用该表达式的值初始化变量，这时就不能再用 `auto`。`decltype` 作用是选择并返回操作数的数据类型。
+   区别：
+   ```
+   auto var = val1 + val2; 
+   decltype(val1 + val2) var1 = 0; 
+   ```
+
+`auto` 根据 = 右边的初始值 `val1 + val2` 推导出变量的类型，并将该初始值赋值给变量 `var`；`decltype` 根据 `val1 + val2` 表达式推导出变量的类型，变量的初始值和与表达式的值无关。`auto` 要求变量必须初始化，因为它是根据初始化的值推导出变量的类型，而 `decltype` 不要求，定义变量的时候可初始化也可以不初始化。
+类似于 `sizeof` 操作符，`decltype` 不对其操作数求值。`decltype(e)` 返回类型前，进行了如下推导:
+
+* 若表达式 `e` 为一个无括号的变量、函数参数、类成员访问，那么返回类型即为该变量或参数或类成员在源程序中的“声明类型”；
+* 否则的话，根据表达式的值分类（`value categories`），设 `T` 为 `e` 的类型：
+  * 若 `e` 是一个左值（`lvalue`，即“可寻址值”），则 `decltype(e)` 将返回 `T&`；
+  * 若 `e` 是一个临终值（`xvalue`），则返回值为 `T&&` ；
+  * 若 `e` 是一个纯右值（`prvalue`），则返回值为 `T`。
+
+```
+const int&& foo();
+const int bar();
+int i;
+struct A { double x; };
+const A* a = new A();
+decltype(foo()) x1; // 类型为const int&&
+decltype(bar()) x2; // 类型为int
+decltype(i) x3; // 类型为int
+decltype(a->x) x4; // 类型为double
+decltype((a->x)) x5; // 类型为const double&
+
+```
+
+3. `lambda` 表达式
+   `lambda` 表达式，又被称为 `lambda` 函数或者 `lambda` 匿名函数。
+   `lambda` 匿名函数的定义:
+
+```
+[capture list] (parameter list) -> return type
+{
+function body;
+};
+```
+
+其中：
+
+* `capture list`：捕获列表，指 `lambda` 所在函数中定义的局部变量的列表。定义在与 `lambda` 函数相同作用域的参数引用也可以被使用，一般被称作 `closure`（闭包），以下为闭包的常见用法。
+
+```
+[]      // 没有定义任何变量。使用未定义变量会引发错误。
+[x, &y] // x以传值方式传入（默认），y以引用方式传入。
+[&]     // 任何被使用到的外部变量都隐式地以引用方式加以引用。
+[=]     // 任何被使用到的外部变量都隐式地以传值方式加以引用。
+[&, x]  // x显式地以传值方式加以引用。其余变量以引用方式加以引用。
+[=, &z] // z显式地以引用方式加以引用。其余变量以传值方式加以引用。
+
+```
+
+比如下面以引用的方式调用 `a`：
+
+```
+int main()
+{
+    int a = 10;
+    auto f = [&a](int x)-> int {
+        a = 20;
+        return a + x;
+    };
+    cout<<a<<endl; // 10
+    cout<<f(10)<<endl; // 30
+    cout<<a<<endl; // 20
+    return 0;
+}
+
+```
+
+* `return type`、`parameter list`、`function body`：分别表示返回值类型、参数列表、函数体，和普通函数一样。
+  举例：
+
+```
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+int main()
+{
+    int arr[4] = {4, 2, 3, 1};
+    //对 a 数组中的元素进行升序排序
+    sort(arr, arr + 4, [=](int x, int y) -> bool{ return x < y; } );
+    auto f = [&](int x)-> int {
+        return arr[0] + x;
+    }
+
+    for(int n : arr){
+        cout << n << " ";
+    }
+    return 0;
+}
+
+```
+
+需要注意的是 `lambda` 函数按照值方式捕获的环境中的变量，在 `lambda` 函数内部是不能修改的。否则，编译器会报错。其值是 `lambda` 函数定义时捕获的值，不再改变。如果在 `lambda` 函数定义时加上 `mutable` 关键字，则该捕获的传值变量在 `lambda` 函数内部是可以修改的，对同一个 `lambda` 函数的随后调用也会累加影响该捕获的传值变量，但对外部被捕获的那个变量本身无影响。
+
+```
+#include <iostream> 
+using namespace std;
+int main()
+{
+	size_t t = 9;
+	auto f = [t]() mutable{
+		t++;
+		return t; 
+	};
+	cout << f() << endl; // 10
+	t = 100;
+	cout << f() << endl; // 11
+	cout << "t:" << t << endl; // t: 100
+	return 0;
+}
+
+```
+
+4. 范围 `for` 语句：
+   语法格式：
+
+```
+for (declaration : expression){
+    statement
+}
+```
+
+参数的含义：
+`expression`：必须是一个序列，例如用花括号括起来的初始值列表、数组、`vector`，`string` 等，这些类型的共同特点是拥有能返回迭代器的 `beign`、`end` 成员。
+`declaration`：此处定义一个变量，序列中的每一个元素都能转化成该变量的类型，常用 `auto` 类型说明符。
+实例：
+
+```
+#include <iostream>
+#include <vector>
+using namespace std;
+int main() {
+    char arr[] = "hello world!";
+    for (char c : arr) {
+        cout << c;
+    }  
+    return 0;
+}
+/*
+程序执行结果为：
+hello world!
+*/
+
+```
+
+
+5. 右值引用：
+   `C++` 表达式中的 “值分类”（`value categories`）属性为左值或右值。其中左值是对应（`refer to`）内存中有确定存储地址的对象的表达式的值，而右值是所有不是左值的表达式的值。因而，右值可以是字面量、临时对象等表达式。能否被赋值不是区分 `C++` 左值与右值的依据，`C++` 的 `const` 左值是不可赋值的；而作为临时对象的右值可能允许被赋值。左值与右值的根本区别在于是否允许取地址 `&` 运算符获得对应的内存地址。`C++` 标准定义了在表达式中左值到右值的三类隐式自动转换：
+
+* 左值转化为右值；如整数变量 `i` 在表达式 （`i+3`）；
+* 数组名是常量左值，在表达式中转化为数组首元素的地址值；
+* 函数名是常量左值，在表达式中转化为函数的地址值；
+  `C++ 03` 在用临时对象或函数返回值给左值对象赋值时的深度拷贝（`deep copy`），因此造成性能低下。考虑到临时对象的生命期仅在表达式中持续，如果把临时对象的内容直接移动（`move`）给被赋值的左值对象（右值参数所绑定的内部指针复制给新的对象，然后把该指针置为空），效率改善将是显著的。右值引用就是为了实现 `move` 与 `forward` 所需要而设计出来的新的数据类型。右值引用的实例对应于临时对象；右值引用并区别于左值引用，用作形参时能通过函数重载来区别对象是调用拷贝构造函数还是移动拷贝构造函数。实际上无论是左值引用还是右值引用，从编译后的反汇编层面上，都是对象的存储地址的引用。右值引用与左值引用的变量都不能悬空，也即定义时必须初始化从而绑定到一个对象上。
+  `C++` 右值引用即绑定到右值的引用，用 `&&` 来获得右值引用，右值引用只能绑定到要销毁的对象。为了和右值引用区分开，常规的引用称为左值引用。左值引用是绑定到左值对象上；右值引用是绑定到临时对象上。左值对象是指可以通过取地址 `&` 运算符得到该对象的内存地址；而临时对象是不能用取地址 `&` 运算符获取到对象的内存地址，具体的引用绑定规则如下:
+* 非常量左值引用（`X &`）：只能绑定到 `X` 类型的左值对象；
+* 常量左值引用（`const X &`）：可以绑定到 `X`、`const X` 类型的左值对象，或 `X`、`const X` 类型的右值；
+* 非常量右值引用（`X &&`）：只能绑定到 `X` 类型的右值；
+* 常量右值引用（`const X &&`）：可以绑定规定到 `X`、`const X` 类型的右值。
+
+```
+#include <iostream>
+#include <vector>
+using namespace std;
+int main()
+{
+    int var = 42;
+    int &l_var = var;
+    int &&r_var = var; // error: cannot bind rvalue reference of type 'int&&' to lvalue of type 'int' 错误：不能将右值引用绑定到左值上
+    int &&r_var2 = var + 40; // 正确：将 r_var2 绑定到求和结果上
+    int &&r_var3 = std::move(var) // 正确
+    return 0;
+}
+
+```
+
+6. 标准库 `move()` 函数
+   `move()` 函数：通过该函数可获得绑定到左值上的右值引用。通过 `move` 获取变量的右值引用，从而可以调用对象的移动拷贝构造函数和移动赋值构造函数。
+7. 智能指针:
+   `auto_ptr` 在 `C++ 11` 中被，取而代之的是 `unique_ptr`。智能指针在第一章中已经详细，可以参考第一章第 `9` 节。
+8. 使用或禁用对象的默认函数:
+   在旧版本的 `C++` 中，若用户没有提供，则编译器会自动为对象生成默认构造函数（`default constructor`)、复制构造函数（`copy constructor`），赋值运算符（`copy assignment operator operator=`）以及析构函数（`destructor`）。另外，`C++` 也为所有的类定义了数个全局运算符（如 `operator delete` 及 `operator new`）。当用户有需要时，也可以提供自定义的版本改写上述的函数。由于无法精确地控制这些默认函数的生成，要让类不能被拷贝，必须将复制构造函数与赋值运算符声明为 `private`，并不去定义它们，尝试使用这些未定义的函数会导致编译期或链接期的错误。此外，编译器产生的默认构造函数与用户定义的构造函数无法同时存在。若用户定义了任何构造函数，编译器便不会生成默认构造函数； 但有时同时部分场景下需要同时具有两者提供的构造函数。`C++ 11` 中允许显式地表明采用或拒用编译器提供的内置函数。
+
+* 允许编译器生成默认的构造函数:
+  `default` 函数：`= default` 表示编译器生成默认的函数，例如：生成默认的构造函数。
+* 禁止编译器使用类或者结构体中的某个函数:
+  `delete` 函数：`= delete` 修改某个函数则表示该函数不能被调用。与 `default` 不同的是，`= delete` 也能适用于非编译器内置函数，所有的成员函数都可以用 `=delete` 来进行修饰。
+
+```
+#include <iostream>
+using namespace std;
+
+class A
+{
+public:
+	A() = default; // 表示使用默认的构造函数
+	~A() = default;	// 表示使用默认的析构函数
+	A(const A &) = delete; // 表示类的对象禁止拷贝构造
+	A &operator=(const A &) = delete; // 表示类的对象禁止拷贝赋值
+};
+int main()
+{
+	A ex1;
+	A ex2 = ex1; // error: use of deleted function 'A::A(const A&)'
+	A ex3;
+	ex3 = ex1; // error: use of deleted function 'A& A::operator=(const A&)'
+	return 0;
+}
+
+```
+
+9. `constexpr`：
+   常量表示式对编译器来说是优化的机会，编译器时常在编译期执行它们并且将值存入程序中。同样地，在许多场合下，`C++` 标准要求使用常量表示式。例如在数组大小的定义上，以及枚举值（`enumerator values`）都要求必须是常量表示式。常量表示式不能含有函数调用或是对象构造函数。所以像是以下的例子是不合法的：
+
+```
+int g() {return 5;}
+int f[g() + 10]; // 不合法的C++ 写法
+```
+
+由于编译器无从得知函数 `g()` 的返回值为常量，因此表达式 `g() + 10` 就不能确定是常量。`C++ 11` 引进关键字 `constexpr` 允许用户保证函数或是对象构造函数是编译期常量，编译器在编译时将去验证函数返回常量。
+
+```
+constexpr int g() {return 5;}
+int f[g() + 10]; // 合法
+```
+
+用 `constexpr` 修饰函数将限制函数的行为。
+
+* 函数的回返值类型不能为void；
+* 函数体不能声明变量或定义新的类型；
+* 函数体只能包含声明、null语句或者一段return语句；
+* 函数的内容必须依照 `"return expr"` 的形式，在参数替换后，`expr` 必须是个常量表达式；
+* 这些常量表达式只能够调用其他被定义为 `constexpr` 的函数，或是其他常量形式的参数。
+  `constexpr` 修饰符的函数直到在该编译单元内被定义之前是不能够被调用的。声明为 `constexpr` 的函数也可以像其他函数一样用于常量表达式以外的调用。
+  `C++ 11` 中的常量表达式中的变量都必须是常量，可以使用 `constexpr` 关键字来定义表达式中的变量
+
+```
+constexpr double PI = 3.14;
+constexpr double Degree = PI * 2.0;
+```
+
+如果创建用户定义类型的常量表达式，则自定义类型的构造函数必须用 `constexpr` 声明，函数体仅包含声明或 `null` 语句，不能声明变量或定义类型。构造函数的实参值应该是常量表达式，直接初始化类的数据成员。同时该类型对象的拷贝构造函数应该也定义为 `constexpr`，以允许 `constexpr` 函数返回一个该类型的对象。`C++ 14` 以后的规则有所改动。
+
+10. 初始化列表 `initializer list`：
+    `C++ 11` 把初始化列表的定义为标准类型，称作 `std::initializer_list`。允许构造函数或其他函数像参数般地使用初始化列表，在对象中可以定义初始化列表构造函数。初始化列表是常量；一旦被创建，其成员均不能被改变，成员中的资料也不能够被变动。在 `C++ 11` 中初始化列表是标准类型，除了对象的构造函数之外还能够被用在其他地方，一般的函数能够使用初始化列表作为形参。
+11. `nullptr`:
+    在 `C` 语言中，常量 `0` 带有常量及空指针的双重身份。`C` 使用宏定义 `NULL` 表示空指针，让 `NULL` 及 `0` 分别代表空指针及常量 `0`。 `NULL` 可被定义为 `((void*)0)` 或是 `0`。这样容易引起语义歧义，比如 `char* c = NULL`，`NULL` 只能定义为 `0`，这样可能使得函数重调用错误，比如调用 `f(NULL)`，`NULL` 隐式被转换为 `0`，这样实际编译器可能会调用 `f(int)`，但实际上可能希望调用 `f(char *)`。
+
+```
+void f(char *);
+void f(int);
+```
+
+`C++ 11` 引入了新的关键字来代表空指针常量：`nullptr`，将空指针和整数 `0` 的概念拆开。`nullptr` 的类型为 `nullptr_t`，能隐式转换为任何指针或是成员指针的类型，也能和它们进行相等或不等的比较。
+
+`nullptr` 不能隐式转换为整数，也不能和整数做比较，因此就避免上述的语义歧义。值得注意的是的 `f(nullptr_t)` 被隐式转换为 `foo(char *)` 只会发生在该函数不存在其它的指针类型重载（比如 `f(int *), f(double *)` 等）时候，否则就会产生歧义错误（可以通过显示声明一个 `foo(nullptr_t)` 来消除该歧义），如果存在多个指针类型重载，此时需要 `f(nullptr)` 时，则需要显示声明一个函数来消除歧义。
+
+```
+void f(char *);
+void f(int *);
+void f(int);
+void f(nullptr_t);
+```
+
+12. 可扩展的随机数功能：
+    `C++ 11` 将会提供产生伪随机数的新方法。`C++ 11` 的随机数功能分为两部分：
+
+* 随机数生成引擎，其中包含该生成引擎的状态，用来产生随机数。
+* 随机数分布，这可以用来决定产生随机数的范围，也可以决定以何种分布方式产生随机数。
+  随机数生成对象即是由随机数生成引擎和分布所构成。
+  针对产生随机数的机制，`C++ 11` 将会提供三种算法，每一种算法都有其强项和弱项：
+* `linear_congruential`：可以产生整数，速度较慢，随机数质量较差；
+* `subtract_with_carry`: 可以产生整数和随机数，速度较快，随机数质量中等；
+* `mersenne_twister`：可以产生整数，速度较快，随机数质量较好；
+
+`C++ 11` 将会提供一些标准分布：`uniform_int_distribution`（离散型均匀分布），`bernoulli_distribution`（伯努利分布），`geometric_distribution`（几何分布），`poisson_distribution`（卜瓦松分布），`binomial_distribution`（二项分布），`uniform_real_distribution`（离散型均匀分布)，`exponential_distribution`（指数分布），`normal_distribution`（正态分布）和 `gamma_distribution`（伽玛分布）。
+
+```
+std::uniform_int_distribution<int> distribution(0, 99); // 离散型均匀分布
+std::mt19937 engine; // 随机数生成引擎
+auto generator = std::bind(distribution, engine); // 将随机数生成引擎和分布绑定生成函数
+int random = generator();  // 产生随机数
+
+```
+
+参考资料：
+
+* [auto (C++)](https://leetcode.cn/link/?target=https://zh.m.wikipedia.org/zh-sg/Auto_(C%2B%2B))
+* [decltype](https://leetcode.cn/link/?target=https://zh.m.wikipedia.org/wiki/Decltype)
+* [右值引用](https://leetcode.cn/link/?target=https://zh.m.wikipedia.org/zh-sg/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8)
+* [C++的左值和右值](https://leetcode.cn/link/?target=https://www.cnblogs.com/relaxease/p/16027916.html)
+* [C++11](https://leetcode.cn/link/?target=https://zh.m.wikipedia.org/wiki/C%2B%2B11)
+* [如何评价 C++11 的右值引用（Rvalue reference）特性？](https://leetcode.cn/link/?target=https://www.zhihu.com/question/22111546/answer/30801982)
+* [Deleted functions (C++11)](https://leetcode.cn/link/?target=https://www.ibm.com/docs/en/zos/2.4.0?topic=definitions-deleted-functions-c11)
+* [What is std::move(), and when should it be used?](https://leetcode.cn/link/?target=https://stackoverflow.com/questions/3413470/what-is-stdmove-and-when-should-it-be-used)
+* [constexpr](https://leetcode.cn/link/?target=https://zh.wikipedia.org/wiki/Constexpr)
+
+
+
+#### 02. C++ 14, C++ 17 新特性 4
+
+面试高频指数：★★★★☆
+
+1. 函数返回值类型推导:
+   函数返回类性也可以用 `auto` 类型，编译时会有编译器进行类型推导。
+
+<pre><div class="md-btns"><button class="md-btn-copy" title="undefined"><i></i></button></div><code>auto func(int i) {
+    return i;
+}
+</code></pre>
+
+需要注意：
+
+* 函数内如果有多个 `return` 语句，它们必须返回相同的类型，否则编译失败。
+* 如果 `return` 语句返回初始化列表，返回值类型推导也会失败。
+* 如果函数是虚函数，不能使用返回值类型推导。
+* 返回类型推导可以用在递归函数中，但是递归调用必须以至少一个返回语句作为先导，以便编译器推导出返回类型。
+* 在 `C++ 14` 中，`lambda` 函数的形式参数允许泛型。
+* C++
+
+<pre><div class="md-btns"><button class="md-btn-copy" title="undefined"><i></i></button></div><code>auto lambda = [](auto x, auto y) {return x + y;}
+lambda(1, 2);
+lambda(1.0, 2.0);
+</code></pre>
+
+* `Lambda` 初始化捕获:
+  允许在 `lambda` 捕获列表中对变量进行表达式赋值，并且支持定义新的变量并进行初始化。
+* C++
+
+<pre><div class="md-btns"><button class="md-btn-copy" title="undefined"><i></i></button></div><code>auto lambda = [value = 1] {return value;}
+</code></pre>
+
+* `constexpr` 函数限制变动:
+  `C++ 11` 中 `constexpr` 函数只含有一个将被返回的表达式，`C++ 14` 放松了这些限制：
+
+  * 除了 `static` 或 `thread_local` 变量 以外，可以声明新的变量，且声明的变量必须初始化。
+  * 可以包含条件分支语句 `if` 和 `switch`。
+  * 可以包含所有的循环语句，包括基于范围的for循环。
+  * 表达式可以改变一个对象的值，只需该对象的生命期在声明为 `constexpr` 的函数内部开始。
+* `变量模板`：
+* C++
+
+<pre><div class="md-btns"><button class="md-btn-copy" title="undefined"><i></i></button></div><code>template<class T>
+constexpr T pi = T(3.1415926535897932385L);
+
+int main() {
+    cout << pi<int> << endl; // 3
+    cout << pi<double> << endl; // 3.14159
+    return 0;
+}
+</code></pre>
+
+* `deprecated` 属性
+  `deprecated` 属性允许标记不推荐使用的实体，该实体仍然能合法使用，但会让用户注意到使用它是不受欢迎的，并且可能会导致在编译期间输出警告消息。`deprecated` 可以使用字符串文字作为参数，以解释弃用的原因和/或建议替代者。
+* C++
+
+<pre><div class="md-btns"><button class="md-btn-copy" title="undefined"><i></i></button></div><code>[[deprecated]] int f();
+
+[[deprecated("g() is thread-unsafe. Use h() instead")]]
+void g( int& x );
+
+void h( int& x );
+
+void test() {
+  int a = f(); // 警告：'f'已弃用
+  g(a); // 警告：'g'已弃用：g() is thread-unsafe. Use h() instead
+}
+</code></pre>
+
+* `std::make_unique`:
+  `C++ 11` 中有 `std::make_shared`，却没有 `std::make_unique`，在 `C++ 14` 增加 `std::make_unique`。
+* C++
+
+<pre><div class="md-btns"><button class="md-btn-copy" title="undefined"><i></i></button></div><code>struct A {};
+std::unique_ptr<A> ptr = std::make_unique<A>();
+</code></pre>
+
+* 共享的互斥体和锁
+  `C++ 14` 增加了一类共享的互斥体和相应的共享锁，通过使用 `std::shared_timed_mutex` 和 `std::shared_lock` 来进行线程同步。
+
+C++ 17 新特性
+
+* 结构化绑定
+  利用该特性可以把以 `C++` 中的 `pair`，`tuple`，`array`，`struct` 的成员赋值给多个变量。
+* C++
+
+<pre><div class="md-btns"><button class="md-btn-copy" title="undefined"><i></i></button></div><code>#include <iostream>
+#include <tuple>
+
+struct Point {
+    int x;
+    int y;
+    Point(int x, int y) {
+        this->x = x;
+        this->y = y;
+    }
+};
+
+int main() {
+    auto [x, y, z] = std::make_tuple(1, 2.3, "456");
+    auto [a, b] = std::make_pair(1, 2);
+    int arr[3] = {1, 2, 3};
+    auto [c, d, e] = arr;
+    auto [f, g] = Point(5, 6);
+    return 0;
+}
+</code></pre>
+
+* `if-switch` 语句初始化:
+  `if` 语句可以支持 `if (init; condition)` 写法，即在判断条件中对变量进行初始化。
+* C++
+
+<pre><div class="md-btns"><button class="md-btn-copy" title="undefined"><i></i></button></div><code>if (int a = 10; a < 101) {
+    cout << a;
+}
+</code></pre>
+
+* `constexpr lambda` 表达式:
+  `C++ 17` 前 `lambda` 表达式只能在运行时使用，`C++ 17` 引入了 `constexpr lambda` 表达式，可以用于在编译期进行计算。
+* C++
+
+<pre><div class="md-btns"><button class="md-btn-copy" title="undefined"><i></i></button></div><code>int main() {
+    constexpr auto lamb = [] (int n) { return n * n; };
+    static_assert(lamb(3) == 9, "a");
+}
+</code></pre>
+
+* `namespace` 嵌套:
+  `C++ 17` 支持命名空间嵌套，比如如下写法:
+* C++
+
+<pre><div class="md-btns"><button class="md-btn-copy" title="undefined"><i></i></button></div><code>#include <iostream>
+namespace A {
+    void func(){
+        std::cout<<"A func"<<std::endl;
+    }
+    namespace B {
+        namespace C {
+            void func(){
+                std::cout<<"C func"<<std::endl;
+            }
+        }
+    }
+}
+
+int main(int argc, char * argv[])
+{
+    A::func(); // A func 
+    A::B::C::func(); // C func
+    return 0;
+}
+</code></pre>
+
+* `std::any`：
+  增加了 `any` 可以存储任何类型，可以将其转化为任意类型。
+* C++
+
+<pre><div class="md-btns"><button class="md-btn-copy" title="undefined"><i></i></button></div><code>std::any t = 100;
+cout << std::any_cast<int>(t) << endl;
+t.reset();
+t = std::string("1111111");
+cout << std::any_cast<string>(t) << endl;
+</code></pre>
+
+* `std::basic_string_view`:
+  字符串视图实际为对外部字符串或字符串片断（`string-slice`）的引用。通过 `string view` 可以访问字符串，但不允许修改字符串。它并不真正持有这个字符串的拷贝，而是与相对应的字符串共享同一段空间。`string view` 的创建与修改不影响原始字符串。`string_view` 支持迭代器，也同样支持 `for` 语句获取元素等操作，标准库也为它编写了相关的 `istream` 和 `ostream` 的运算符重载形式，同时也支持字符串查找操作。
+* C++
+
+<pre><div class="md-btns"><button class="md-btn-copy" title="undefined"><i></i></button></div><code>string s = "123456789";
+std::string_view sv(s.c_str());
+cout<<sv<<endl;
+for (auto & ch : sv) {
+    cout << ch << ' ';
+}
+for (auto it = sv.crbegin(); it != sv.crend(); ++it) {
+    cout << *it << ' ';
+}
+cout<<sv.find("345")<<endl; // 2
+</code></pre>
+
+`string_view` 并不真正的持有字符串，所以若视图所引用的字符串区域已经被销毁，那么对应的，视图也会相应的失效。
+
+* C++
+
+<pre><div class="md-btns"><button class="md-btn-copy" title="undefined"><i></i></button></div><code>std::string_view test() {
+    char str[] = "1111111";
+    return {str};
+}
+
+int main() {
+    cout<< test() << endl; // error
+    return 0;
+}
+</code></pre>
+
+* `std::filesystem`：
+  `C++ 17` 正式将 `filesystem` 纳入标准中，提供了关于文件的大多数功能。
+
+参考资料：
+
+* [C++14](https://leetcode.cn/link/?target=https://zh.m.wikipedia.org/zh-sg/C%2B%2B14)
+* [C++ 11 vs C++ 14 vs C++ 17](https://leetcode.cn/link/?target=https://www.***.org/c-11-vs-c-14-vs-c-17/)
+* [“Difference between C++11 and C++14 and C++17 ”](https://leetcode.cn/link/?target=https://medium.com/@ramprasad.s1973/difference-between-c-11-c-14-c-17-c73288193e17)
+* [C++17 new feature : If Else and Switch Statements with initializers](https://leetcode.cn/link/?target=https://www.***.org/c17-new-feature-else-switch-statements-initializers/)
+* [Changes between C++11 and C++14](https://leetcode.cn/link/?target=https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2018/p1319r0.html)
+* [What’s New in C++11 and C++14?](https://leetcode.cn/link/?target=https://www.opensourceforu.com/2018/11/whats-new-in-c11-and-c14/)
+* [C++11\14\17\20 特性介绍](https://leetcode.cn/link/?target=https://blog.csdn.net/bodybo/article/details/124901297)
+* [C++11、C++14、C++17、C++20新特性总结](https://leetcode.cn/link/?target=https://blog.csdn.net/qq_41854911/article/details/119657617)
+* [3.1 Lambda 表达式](https://leetcode.cn/link/?target=https://changkun.de/modern-cpp/zh-cn/03-runtime/#3-1-Lambda-%E8%A1%A8%E8%BE%BE%E5%BC%8F)
+* [【C++】C++ 17简单上手（2）——string_view](https://leetcode.cn/link/?target=https://blog.csdn.net/hepangda/article/details/80821567)
+* [10分钟速览 C++20 新增特性](https://leetcode.cn/link/?target=https://zhuanlan.zhihu.com/p/137646370)
+* [C++14的新特性简介](https://leetcode.cn/link/?target=https://cloud.tencent.com/developer/article/1670712)
+
+
+#### 03. C 和 C++ 的对比 4
+
+面试高频指数：★★★★☆
+
+`C` 语言是典型面向过程（`Procedure Oriented`）的编程语言，`C++` 则是典型面向对象（`Object Oriented`）的编程语言，当然 `C++` 也支持面向过程编程。
+
+* 面向过程（`Procedure Oriented`）：一种以过程为中心的编程思想，侧重于分析解决问题所需的步骤，使用函数把这些步骤依次实现。
+* 面向对象（`Object Oriented`）：侧重于把构成问题的事务分解为各个对象。建立对象的目的不是完成其中的一个步骤，而是描述某个事务在解决整个具体问题步骤中的行为。面向对象语言的显著特征就是支持封装、继承、类的抽象。
+
+1. `C` 语言:
+   `C` 语言诞生于 `1969` 年在贝尔实验室诞生，`C` 语言是面向过程的编程，它最重要的特点是函数，通过 `main` 函数来调用各个子函数。程序运行的顺序都是程序员事先决定好的。截至本书完书时，当前 `C` 语言的最新稳定版本为 `C18`，目前力扣已经支持 `C11`。
+2. `C++` 语言:
+   `C++` 诞生于 `1979` 年，设计者为 `Bjarne Stroustrup`.
+   `C++` 是面向对象的编程，类是它的主要特点，在程序执行过程中，先由主 `main` 函数进入，定义一些类，根据需要执行类的成员函数，过程的概念被淡化了（实际上过程还是有的，就是主函数的那些语句）。以类驱动程序运行，类就是对象，所以我们称之为面向对象程序设计。面向对象在分析和解决问题的时候，将涉及到的数据和数据的操作封装在类中，通过类可以创建对象，以事件或消息来驱动对象执行处理。最新的 `C++` 语言标准为 `C++ 20`，目前力扣已经支持 `C++ 17`。
+3. 两者之间的比较:
+   `C++` 既继承了 `C` 强大的底层操作特性，又被赋予了面向对象机制。它特性繁多，支持面向对象语言的多继承、对值传递与引用传递的区分以及 `const` 关键字，现代 `C++` 编译器完全兼容 `C` 语言语法。
+
+* **二者的相同之处** :
+  `C++` 能够大部分兼容 `C` 的语法，且二者之间相同的关键字和运算符功能和作用也几乎相同；二者之间的内存模型与硬件比较接近，几乎都可以直接操纵硬件。栈、堆、静态变量这些概念在两种语言都存在。
+* **二者的不同之处** ：
+* `C` 为面向过程的编程语言，不支持面向对象，不支持继承、多态、封装。
+* 类型检查更为严格，`C` 语言中的类型转换几乎是任意的，但是 `C++` 编译器对于类型转换进行非常严格检查，部分强制类型转换在 `C` 语言编译器下可以通过，但在 `C++` 编译器下无法通过。
+* `C` 和 `C++` 中都有结构的概念，但是在 `C` 语言中结构只有成员变量，而没成员方法，`C` 的成员变量没有权限控制，该结构体的变量对所有调用全部可见；而在 `C++` 中结构中，它可以有自己的成员变量和成员函数，`C++` 对类的成员变量具有访问权限控制。
+* 增加了面向对象的机制、泛型编程的机制（`Template`）、异常处理、引用、运算符重载、标准模板库（`STL`）、命名空间（避免全局命名冲突）。
+* 应用领域：对于 `C` 语言程序员来说，程序的底层实现和内存分布基本上都可见，所以一般常用于直接控制硬件，特别是 `C` 语言在嵌入式领域应用很广，比如常见的驱动开发等与硬件直接打交道的领域，`C++` 可以用于应用层开发，用户界面开发等与操作系统打交道的领域，特别是图形图像编程领域，几乎所有的高性能图形图像库都是用 `C++` 实现的。
+
+参考资料：
+
+* [C11 (C语言标准)](https://leetcode.cn/link/?target=https://zh.m.wikipedia.org/zh-sg/C11_(C%E8%AF%AD%E8%A8%80%E6%A0%87%E5%87%86))
+* [Difference between C and C++](https://leetcode.cn/link/?target=https://www.***.org/difference-between-c-and-c/)
+* [Difference between C and C++.](https://leetcode.cn/link/?target=https://www.tutorialspoint.com/difference-between-c-and-cplusplus)
+
+
+#### 04. Java 和 C++ 的对比 4
+
+面试高频指数：★★★★☆
+
+`Java` 和 `C++` 都是典型的面向对象（`Object Oriented`）的编程语言。
+
+1. `Java` 语言:
+
+   `Java` 是一种广泛使用的计算机编程语言，拥有跨平台、面向对象、泛型编程的特性，广泛应用于企业级 `Web` 应用开发和移动应用开发。`Java` 语言由 `Sun` 微系统（`Sun MicroSystems`）公司在 `1995` 年正式发布。`Java` 伴随着互联网的迅猛发展而发展，逐渐成为重要的网络编程语言。
+
+   `Java` 编程语言的风格十分接近 `C++` 语言。继承了 `C++` 语言面向对象技术的核心，舍弃了容易引起错误的指针，以引用取代；移除了 `C++` 中的运算符重载和多重继承特性，用接口取代；增加垃圾回收器功能。引入了泛型编程、类型安全的枚举、不定长参数和自动装/拆箱特性。`Java` 不同于一般的编译语言或解释型语言。它首先将原始码编译成字节码，再依赖各种不同平台上的虚拟机 （`JVM`）来解释执行字节码，从而具有 “一次编写，到处运行”的跨平台特性。
+2. 两者之间的比较:
+
+* **二者的相同之处** :
+  `C++` 与 `Java` 均支持面对对象（`Object Oriented`），支持类、继承、封装等常见的概念。
+* **二者的不同之处** ：
+* `Java` 被编译成字节码，并运行在虚拟机 `JVM` 上，和开发平台无关，具有跨平台的特性；`C++` 直接编译成可执行文件，是否跨平台在于用到的编译器的特性是否有多平台的支持。
+* `Java` 是完全面向对象的语言，所有函数和变量部必须是类的一部分。除了基本数据类型之外，其余的都作为类对象，包括数组。对象将数据和方法结合起来，把它们封装在类中，这样每个对象都可实现自己的特点和行为。而 `C++` 允许将函数和变量定义为全局的。
+* 由于 `Java` 被编译为字节码，只要安装能够运行 `Java` 的虚拟机即可运行 `Java` 程序，因此 `Java` 程序具有很强的可移植性，具有 “一次编写，到处运行” 的跨平台特性；而 `C++` 跨平台后，必须需要重新编译；
+* `Java` 语言具有垃圾回收机制，由系统进行分配和回收内存，编程人员无需考虑内存管理的问题，可以有效的防止内存泄漏，有效的使用空闲的内存。`Java` 所有的对象都是用 `new` 操作符建立在内存堆栈上，类似于 `C++` 中的 `new` 操作符，但是当要释放该申请的内存空间时，`Java` 自动进行内存回收操作，`Java` 中的内存回收是以线程的方式在后台运行的，利用空闲时间。`C++` 则需要程序员进行内存管理，当资源释放时需要程序员进行手动释放内存空间。
+* `C++` 支持多重继承，允许多个父类派生一个类，虽然功能很强大，但是如果使用的不当会造成很多问题，例如：菱形继承；`Java` 不支持多重继承，但允许一个类可以继承多个接口，可以实现 `C++` 多重继承的功能，但又避免了多重继承带来的许多不便。
+* `C++` 支持方法与操作符的重载；但 `Java` 只支持方法重载，不支持操作符重载。
+* `C++` 用 `virtual` 关键字标记的方法可以被覆盖；`Java` 中非 `static` 方法均可被覆盖，`Java` 中的方法默认均可以被覆盖。
+* `C++` 可以直接操作指针，容易产生内存泄漏以及非法指针引用的问题；`Java` 并不是没有指针，虚拟机（`JVM`）内部还是使用了指针，只是编程人员不能直接使用指针，不能通过指针来直接访问内存，并且 `Java` 增加了内存管理机制。
+* `C++` 标准库不提供 `thread` 相关接口；`Java` 的标准 `SDK` 提供 `thread` 类。
+* `C++` 支持结构体（`structure`）与联合体（`union`），`Java` 不支持结构体（`structure`）与联合体（`union`）。
+* 从应用场景来说， `C++` 可以直接编译成可执行文件，运行效率比 `Java` 高。`Java` 目前主要用来开发 Web 应用。`C++` 主要用在嵌入式开发、网络、并发编程、图形图像处理、系统编程的方面。
+
+参考资料：
+
+* [C++ Vs Java: Top 30 Differences Between C++ And Java With Examples](https://leetcode.cn/link/?target=https://www.softwaretestinghelp.com/cpp-vs-java/)
+* [C++ vs Java](https://leetcode.cn/link/?target=https://www.javatpoint.com/cpp-vs-java)
+* [Difference between C and C++.](https://leetcode.cn/link/?target=https://www.tutorialspoint.com/difference-between-c-and-cplusplus)
+
+
+#### 05. Python 和 C++ 的对比 3
+
+面试高频指数：★★★☆☆
+
+1. `Python` 语言:
+   `Python` 是一种广泛使用的解释型、高级和通用的编程语言。`Python` 支持多种编程范型，包括函数式、指令式、反射式、结构化和面向对象编程。它拥有动态类型系统和垃圾回收功能，能够自动管理内存使用，并且其本身拥有一个巨大而广泛的标准库。它的语言结构以及面向对象的方法旨在帮助程序员为小型的和大型的项目编写清晰的、合乎逻辑的代码。吉多·范罗苏姆于 `1991` 年首次发布 `Python 0.9.0`。`Python 2.0` 于 `2000` 年发布并引入了新功能。`Python 3.0` 于 `2008` 年发布，是该语言的主要修订版，并非完全向后兼容。`Python 2` 于 `2020` 年随 `2.7.18` 版停止支持。`Python` 的设计哲学强调代码的可读性和简洁的语法，尤其是使用空格缩进划分代码块。相比于 `C` 或 `Java`，`Python` 让开发者能够用更少的代码表达想法。`Python` 解释器本身几乎可以在所有的操作系统中运行。`Python` 的官方解释器 `CPython` 是用 `C` 语言编写的，它是一个由社群驱动的自由软件，目前由 `Python` 软件基金会管理。`Python` 是最受欢迎的编程语言之一。
+
+   `Python` 是多泛型编程语言。它完全支持结构化编程和面向对象编程，还有很多特征支持函数式编程和元编程比如元对象协议（元类和魔术方法）。通过扩展还可以支持很多范型，包括面向切面编程、契约式设计和逻辑编程。
+
+   `Python` 使用动态类型，在内存管理上采用引用计数和环检测相结合的垃圾收集器。它的特征还有动态名字解析（后期绑定（英语：`late binding`）），即在程序执行期间绑定方法和变量的名字。
+
+   `Python` 对遵循 `LISP` 传统的函数式编程提供了有限的支持，它提供了 `map`、`filter` 和 `reduce` 函数；列表推导式、字典、集合（英语：`Set (abstract data type)`）和生成器表达式。标准库中的模块 `functools` 和 `itertools`，实现了从 `Haskell` 和 `Standard ML` 借鉴来的函数式工具。
+
+   `Python` 的设计哲学是“优雅”、“明确”、“简单”。它的重要准则被称为 “`Python` 之禅”。在 `Python` 解释器内运行 `import this` 可以获得完整的列表。`Python` 遵循的设计理念:
+
+* 优美优于丑陋。明了优于隐晦。
+* 简单优于复杂。复杂优于凌乱。
+* 扁平优于嵌套。稀疏优于稠密。
+* 可读性很重要。
+
+2. 两者之间的比较:
+
+* **二者的相同之处** :
+  `C++` 与 `Python` 均支持面向对象，二者均可用来编写大型应用程序。
+* **二者的不同之处** ：
+* 从语言自身来说，`Python` 为脚本语言，解释执行，不需要经过编译，所有的 `python` 源代码都是经过 `Python` 解释器；`C++` 是一种需要编译后才能运行的语言，在特定的机器上编译后运行。
+* `Python` 变量的作用域不仅局限于（`while，for`）循环内，在循环外还可以继续访问在循环内定义的变量；`C++` 则不允许循环外访问循环内定义的变量。
+* `Python` 没有严格限定函数的参数类型和返回值类型；`C++` 则严格限定函数参数和返回值的类型。
+* 从运行效率来说，`C++` 运行效率高，安全稳定。`Python` 代码和 `C++` 最终都会变成 `CPU` 指令来跑，但一般情况下，比如反转和合并两个字符串，`Python` 最终转换出来的 `CPU` 指令会比 C++ 多很多。首先，`Python` 中涉及的内容比 `C++` 多，经过了更多层，`Python` 中甚至连数字都是 `object`；其次，`Python` 是边解释边执行，和物理机 `CPU` 之间多了解释器这层，而 `C++` 是编译执行的，直接就是机器码，编译的时候编译器又可以进行一些优化。
+* 从开发效率来说，`Python` 开发效率高。`Python` 一两句代码就能实现的功能，`C++` 往往需要更多的代码才能实现。
+* 书写格式和语法不同，`Python` 的语法格式不同于其 `C++` 定义声明才能使用，而且极其灵活，完全面向更上层的开发者，`C++` 是严格静态类型声明语言，编译器在进行编译时必须经过严格的静态类型检查，如果发现类型检查错误，则中止编译；`Python` 为动态类型语言，我们在编写代码时不用指定变量的类型，只在执行时才会进行变量类型推导，确定变量类型。
+* `C++` 可以直接用来操纵硬件，适合用来作为系统编程；`Python` 作为一门脚本语言，功能小巧而精湛，非常适合做工具开发和运维开发。
+
+参考资料：
+
+* [Python vs. C++ Differences: Difficulty, Popularity, and Career Options](https://leetcode.cn/link/?target=https://hackr.io/blog/python-vs-cpp)
+* [Python Vs C++ | Top 16 Differences Between C++ And Python](https://leetcode.cn/link/?target=https://www.softwaretestinghelp.com/python-vs-cpp/)
+* [Differences Between Python vs C++](https://leetcode.cn/link/?target=https://www.educba.com/python-vs-c-plus-plus/)
+* [Python vs C++: What’s the Difference?](https://leetcode.cn/link/?target=https://www.guru99.com/python-vs-c-plus-plus.html)
+* [Python vs C++: Know what are the differences](https://leetcode.cn/link/?target=https://www.edureka.co/blog/python-vs-cpp/)
+* [Difference between Python and C++](https://leetcode.cn/link/?target=https://www.***.org/difference-between-python-and-c/)
+
+
+#### 06. Go 和 C++ 的对比 3
+
+面试高频指数：★★★☆☆
+
+1. `Go` 语言:
+
+`Go`（又称 `Golang`）是 `Google` 开发的一种静态强类型、编译型、并发型，并具有垃圾回收功能的编程语言。`Google` 的罗伯特·格瑞史莫（英语：`Robert Griesemer`）、罗勃·派克及肯·汤普逊于 `2007` 年 `9` 月开始设计 `Go`，稍后伊恩·兰斯·泰勒（`Ian Lance Taylor`）、拉斯·考克斯（`Russ Cox`）加入项目。`Go` 的语法接近 `C` 语言，但对于变量的声明（`type declaration`）有所不同。`Go` 支持垃圾回收功能。`Go` 的并行计算模型是以东尼·霍尔的通信顺序进程（`CSP`）为基础，采取类似模型的其他语言包括 `Occam` 和 `Limbo`，`Go` 也具有这个模型的特征，比如通道传输。通过 `goroutine` 和通道等并行构造可以建造线程池和管道等。在 `1.8` 版本中开放插件（`Plugin`）的支持，这意味着现在能从 `Go` 中动态加载部分函数。与 `C++` 相比，`Go` 并不包括如枚举、异常处理、继承、泛型、断言、虚函数等功能，但增加了切片（`Slice`）型、并发、管道、垃圾回收功能、接口等特性的语言级支持。`Go 2.0` 版本将支持泛型。不同于 `Java`，`Go` 原生提供了关联数组（也称为哈希表（`Hashes`）或字典（`Dictionaries`））。
+
+1. 两者之间的比较:
+
+* **二者的相同之处** :
+  二者都为静态类型编程语言，二者都为编译性语言，都具有高性能的特点。
+* **二者的不同之处** ：
+* `Go` 的许多越语法和逻辑跟 `C` 非常类似，`Go` 的运行效率很高，`Go` 主要是面向过程，对于面向对象支持较弱，不支持继承、多态这些概念，`Go` 通过结构体中含有方法来支持面向对象，但不支持多重继续，`Go` 没有类的概念，同时也不支持构造函数与析构函数；`C++` 则是面向对象（`Object Oriented`），支持继承、多重继承、多态、重载这些特性。
+* `Go` 语言自带垃圾回收（`garbage collection`）；`C++` 不支持内存垃圾自动回收，需要程序手动管理动态申请的内存。
+* `Go` 语言也支持指针，但是 `Go` 语言不支持指针的运算；`C++` 支持指针，同时也支持指针运算。
+* `C++` 编译器提供 `SIMD` 指令生成，但是 `Go` 编译器不支持 `SIMD` 指令的生成。
+* `C++` 遵循的许可为 `open source project 2.0`，而 `Go` 遵循的许可为 `BSD`。
+* `C++` 与 `Go` 都属于静态类型编程语言，但是 `Go` 语言需要遵循强类型语言规则，`Go` 不支持隐式类型转换。
+* `Go` 编译时如果需要引用外部函数则使用 `import` 关键字，引入 `packages`，而 `C++` 则使用 `#include` 关键字，引入头文件。
+* `Go` 不支持函数重载和操作符重载，而 `C++` 支持函数重载与操作符重载。
+* `Go` 中的空指针用 `nil` 表示，而 `C++` 中空指针可以用 `nullptr` 或者 `0` 表示。
+* `C++` 支持异常处理，可以捕获异常，`Go` 使用 `panic` 并保存所有的错误信息。
+* `Go` 可以利用 `goroutines` 与 `channel` 来进行并发与多线程，`C++` 只能使用线程。
+
+参考资料：
+
+* [Go vs C++ Compared and Contrasted](https://leetcode.cn/link/?target=https://careerkarma.com/blog/go-vs-c-plus-plus/)
+* [Go 语言教程](https://leetcode.cn/link/?target=https://www.runoob.com/go/go-tutorial.html)
+* [C++ vs Go](https://leetcode.cn/link/?target=https://www.educba.com/c-plus-plus-vs-go/)
+* [Go vs C++](https://leetcode.cn/link/?target=https://www.***.org/go-vs-c-plus-plus/)
+* [Go](https://leetcode.cn/link/?target=https://zh.m.wikipedia.org/wiki/Go)
+
+
+#### 07. Rust 和 C++ 的对比 3
+
+面试高频指数：★★★☆☆
+
+1.  `Rust` 语言:
+
+`Rust` 是由 `Mozilla` 主导开发的通用、编译型编程语言。设计准则为“安全、并发、实用”，支持函数式、并发式、过程式以及面向对象的程序设计风格。`Rust` 语言原本是 `Mozilla` 员工 `Graydon Hoare` 的私人计划，而 `Mozilla` 于 `2009` 年开始赞助这个计划，并且在 `2010` 年首次公开。也在同一年，其编译器源代码开始由原本的 `OCaml` 语言转移到用 `Rust` 语言，进行 `bootstrapping` 工作，编译器在架构上采用了 `LLVM` 做为它的后端。第一个有版本号的 `Rust` 编译器于2012年1月发布。`Rust 1.0` 是第一个稳定版本，于 `2015` 年 `5` 月 `15` 日发布。`Rust` 的设计目标之一，是要使设计大型的互联网客户端和服务器的任务变得更容易，因此更加强调安全性、存储器配置、以及并发处理等方面的特性。在性能上，具有额外安全保证的代码会比 `C++` 慢一些，例如对 `Rust` 的数组进行操作时默认会检查索引是否越界，而 `C++` 则不会，但是如果以 `C++` 也手工提供保证的情况下，则两者性能上是相似的。为了提供存储器安全，它的设计不允许空指针和悬空指针。 指针只能透过固定的初始化形态来建构，而所有这些形态都要求它们的输入已经分析过了。`Rust` 有一个检查指针生命期间和指针冻结的系统，可以用来预防在 `C++` 中许多的类型错误，甚至是用了智能指针功能之后会发生的类型错误。
+
+1. 两者之间的比较:
+
+* **二者的相同之处** :
+  二者都支持指针操作，都可以用来作为系统编程语言，二者都可以用来操作底层硬件，二者都都具有与 `C` 语言程序相当的性能。
+* **二者的不同之处** ：
+* `Rust` 不允许空指针和悬空指针，`C++` 则允许空指针；
+* `Rust` 只支持函数式编程，`C++` 支持的语言特性较多；
+* `Rust` 没有头文件，`C++` 有头文件；
+* `Rust` 语言自带有内存管理，保证内存使用安全，`Rust` 利用编译时的静态分析很大程度上保证了代码使用内存的安全性；而 `C++` 需要进行手动申请和释放内存；
+* `Rust` 利用静态分析，在编译时会分析代码由于并发引起的数据竞争，较好的做好的并发处理；`C++` 的使用多线程并发容易引起各种数据竞争的问题。
+
+参考资料：
+
+* [Rust vs. C++—the main differences between these popular programming languages](https://leetcode.cn/link/?target=https://codilime.com/blog/rust-vs-cpp-the-main-differences-between-these-popular-programming-languages/)
+* [Rust vs C++: an in-depth language comparison](https://leetcode.cn/link/?target=https://www.educative.io/blog/rust-vs-cpp)
+* [Rust vs C++ Comparison](https://leetcode.cn/link/?target=https://www.apriorit.com/dev-blog/520-rust-vs-c-comparison)
+* [Rust vs C++: Which Technology Should You Choose?](https://leetcode.cn/link/?target=https://www.ideamotive.co/blog/rust-vs-cpp-which-technology-should-you-choose)
+
+
+### 3, C++ 关键字与关键库函数
+
+本章将重点涉及以下高频知识点：
+
+* [sizeof 和 strlen 的区别](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vw9445/)
+* [C 和 C++ static 中的作用](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vwrt6c/)
+* [const 作用及用法](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vwplqi/)
+* [define 和 const 的区别](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vwmd3e/)
+* [inline 作用及使用方法](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vwnolj/)
+* [new 和 malloc 的区别](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vwd4vd/)
+* [delete 与 free 的区别](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vw0gnh/)
+* [volatile 的作用与使用场景](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vwudo7/)
+* [用宏实现比较大小，以及两个数中的最小值](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vw2muv/)
+* [宏定义（define）和内联函数（inline）的区别](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vwvf0r/)
+* [C 和 C++ struct 的区别](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vw7qa3/)
+* [struct 和 union 的区别](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vwltmm/)
+* [extern C 的作用](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vw8m56/)
+* [strcpy 函数的缺陷](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vwqjji/)
+* [lambda 表达式的应用](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vwegz6/)
+* [explicit 的作用](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vwoqg2/)
+* [define 和 typedef 的区别](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vwantg/)
+* [inline 函数工作原理](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vwv57t/)
+* [class 和 struct 的异同](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vwilr1/)
+* [返回函数中静态变量的地址会发生什么](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vwtne5/)
+* [sizeof(1==1) 在 C 和 C++ 中的结果](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vw3ox2/)
+* [memmove 函数的底层原理](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vwqxfc/)
+* [auto 类型推导的原理](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vw6ybe/)
+* [new 的作用](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vwwcws/)
+
+#### 01. sizeof 和 strlen 的区别 5
+
+面试高频指数：★★★★★
