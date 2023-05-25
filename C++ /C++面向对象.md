@@ -1,6 +1,5 @@
 ### 4, C++ 面向对象
 
-
 本章将重点涉及以下高频知识点：
 
 1. [面向对象及其三大特性](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vwksyg/)
@@ -46,7 +45,6 @@
 * [C++多态的实现原理](https://leetcode.cn/link/?target=https://zhuanlan.zhihu.com/p/65410057)
 * [C++ What is OOP?](https://leetcode.cn/link/?target=https://www.w3schools.com/cpp/cpp_oop.asp)
 * [Object Oriented Programming in C++](https://leetcode.cn/link/?target=https://www.***.org/object-oriented-programming-in-cpp/)
-
 
 #### 02. 重载、重写、隐藏的区别 5
 
@@ -145,7 +143,6 @@ int main()
 * [C++中的函数隐藏机制](https://leetcode.cn/link/?target=https://blog.csdn.net/niu91/article/details/109485455)
 * [Object Oriented Programming in C++](https://leetcode.cn/link/?target=https://www.***.org/object-oriented-programming-in-cpp/)
 
-
 #### 03. 多态及其实现方法 5
 
 面试高频指数：★★★★★
@@ -185,7 +182,6 @@ int main()
 
 ```
 
-
 2. 多态的实现原理:
    多态是通过虚函数实现的，虚函数的地址保存在虚函数表中，虚函数表的地址保存在含有虚函数的类的实例对象的内存空间中。
 
@@ -211,7 +207,6 @@ int main()
 * [C++ Programming: Method Overriding Vs. Method Hiding](https://leetcode.cn/link/?target=http://ixodoi.expertscolumn.com/article/c-programming-method-overriding-vs-method-hiding)
 * [C++中的函数隐藏机制](https://leetcode.cn/link/?target=https://blog.csdn.net/niu91/article/details/109485455)
 * [Object Oriented Programming in C++](https://leetcode.cn/link/?target=https://www.***.org/object-oriented-programming-in-cpp/)
-
 
 #### 04. 虚函数和纯虚函数详解 5
 
@@ -267,7 +262,6 @@ int main()
 * [C++胎教：虚函数，虚析构函数，纯虚函数](https://leetcode.cn/link/?target=https://zhuanlan.zhihu.com/p/202551705)
 * [Pure Virtual Destructor in C++](https://leetcode.cn/link/?target=https://www.***.org/pure-virtual-destructor-c/?ref=gcse)
 
-
 #### 05. 虚函数和纯虚函数的区别 5
 
 面试高频指数：★★★★★
@@ -283,3 +277,1646 @@ int main()
 
 * [C++ 虚函数和纯虚函数的区别](https://leetcode.cn/link/?target=https://www.runoob.com/w3cnote/cpp-virtual-functions.html)
 * [Pure Virtual Destructor in C++](https://leetcode.cn/link/?target=https://www.***.org/pure-virtual-destructor-c/?ref=gcse)
+
+#### 06. 虚函数的实现机制 5
+
+面试高频指数：★★★★★
+
+1. 虚函数的实现原理:
+   实现机制：虚函数通过虚函数表来实现。虚函数的地址保存在虚函数表中，在类的对象所在的内存空间中，保存了指向虚函数表的指针（称为“虚表指针”），通过虚表指针可以找到类对应的虚函数表。虚函数表解决了基类和派生类的继承问题和类中成员函数的覆盖问题，当用基类的指针来操作一个派生类的时候，这张虚函数表就指明了实际应该调用的函数。
+
+* 每个使用虚函数的类（或者从使用虚函数的类派生）都有自己的虚函数表。该表是编译器在编译时设置的静态数组，一般我们称为 `vtable`。虚函数表包含可由该类调用的虚函数，此表中的每个条目是一个函数指针，指向该类可访问的虚函数。
+* 每个对象在创建时，编译器会为对象生成一个指向该类的虚函数表的指针，我们称之为 `vptr`。`vptr` 在创建类实例时自动设置，以便指向该类的虚拟表。如果对象（或者父类）中含有虚函数，则编译器一定会为其分配一个 `vptr`；如果对象不包含（父类也不含有），此时编译器则不会为其分配 `vptr`。与 `this` 指针不同，`this` 指针实际上是编译器用来解析自引用的函数参数，`vptr` 是一个真正的指针。
+
+虚函数表相关知识点：
+
+* 虚函数表存放的内容：类的虚函数的地址。
+* 虚函数表建立的时间：编译阶段，即程序的编译过程中会将虚函数的地址放在虚函数表中。
+* 虚表指针保存的位置：虚表指针存放在对象的内存空间中最前面的位置，这是为了保证正确取到虚函数的偏移量。
+* 虚函数表和类绑定，虚表指针和对象绑定。即类的不同的对象的虚函数表是一样的，但是每个对象在创建时都有自己的虚表指针 `vptr`，来指向类的虚函数表 `vtable`。
+
+实例：
+无虚函数覆盖的情况：
+
+```
+#include <iostream>
+using namespace std;
+
+class Base
+{
+public:
+    virtual void B_fun1() { cout << "Base::B_fun1()" << endl; }
+    virtual void B_fun2() { cout << "Base::B_fun2()" << endl; }
+    virtual void B_fun3() { cout << "Base::B_fun3()" << endl; }
+};
+
+class Derive : public Base
+{
+public:
+    virtual void D_fun1() { cout << "Derive::D_fun1()" << endl; }
+    virtual void D_fun2() { cout << "Derive::D_fun2()" << endl; }
+    virtual void D_fun3() { cout << "Derive::D_fun3()" << endl; }
+};
+int main()
+{
+    Base *p = new Derive();
+    p->B_fun1(); // Base::B_fun1()
+    return 0;
+}
+
+```
+
+基类和派生类的继承关系：
+
+![4_8_1.png](https://pic.leetcode-cn.com/1661223939-pVNuOM-4_8_1.png)
+
+基类的虚函数表：
+
+![4_3_1.png](https://pic.leetcode-cn.com/1661223950-bjKjYx-4_3_1.png)
+
+派生类的虚函数表：
+
+![4_3_2.png](https://pic.leetcode-cn.com/1661223960-YGKHNe-4_3_2.png)
+
+2. 虚拟函数表指针 `vptr`:
+   带有虚函数的类，通过该类所隐含的虚函数表来实现多态机制，该类的每个对象均具有一个指向本类虚函数表的指针，这一点并非 `C++` 标准所要求的，而是编译器所采用的内部处理方式。实际应用场景下，不同平台、不同编译器厂商所生成的虚表指针在内存中的布局是不同的，有些将虚表指针置于对象内存中的开头处，有些则置于结尾处。如果涉及多重继承和虚继承，情况还将更加复杂。因此永远不要使用 `C` 语言的方式调用 `memcpy()` 之类的函数复制对象，而应该使用初始化（构造和拷构）或赋值的方式来复制对象。
+   程序示例，我们通过对象内存的开头处取出 `vptr`，并遍历对象虚函数表。
+
+```
+#include <iostream>
+#include <memory>
+using namespace std;
+ 
+ 
+typedef void (*func)(void);
+
+class A {
+public:
+	void f() { cout << "A::f" << endl; }
+	void g() { cout << "A::g" << endl; }
+	void h() { cout << "A::h" << endl; }
+};
+
+class Base {
+public:
+	virtual void f() { cout << "Base::f" << endl; }
+	virtual void g() { cout << "Base::g" << endl; }
+	virtual void h() { cout << "Base::h" << endl; }
+};
+
+class Derive: public Base {
+public:
+	void f() { cout << "Derive::f" << endl; }
+    void g() { cout << "Derive::g" << endl; }
+	void h() { cout << "Derive::h" << endl; }
+};
+ 
+int main() 
+{
+	Base base;
+    Derive derive;
+	//获取vptr的地址，运行在gcc  x64环境下，所以将指针按unsigned long *大小处理
+    //另外基于C++的编译器应该是保证虚函数表的指针存在于对象实例中最前面的位置
+	unsigned long* vPtr = (unsigned long*)(&base);
+	//获取vTable 首个函数的地址
+	func vTable_f = (func)*(unsigned long*)(*vPtr);
+	//获取vTable 第二个函数的地址
+	func vTable_g = (func)*((unsigned long*)(*vPtr) + 1);//加1 ，按步进计算
+	func vTable_h = (func)*((unsigned long*)(*vPtr) + 2);//同上
+	vTable_f();
+	vTable_g();
+	vTable_h();
+    vPtr = (unsigned long*)(&derive);
+	//获取vTable 首个函数的地址
+	vTable_f = (func)*(unsigned long*)(*vPtr);
+	//获取vTable 第二个函数的地址
+	vTable_g = (func)*((unsigned long*)(*vPtr) + 1);//加1 ，按步进计算
+	vTable_h = (func)*((unsigned long*)(*vPtr) + 2);//同上
+	vTable_f();
+	vTable_g();
+	vTable_h();
+    cout<<sizeof(A)<<endl;
+    cout<<sizeof(base)<<endl;
+    cout<<sizeof(derive)<<endl;
+	return 0;
+}
+/*
+Base::f
+Base::g
+Base::h
+Derive::f
+Derive::g
+Derive::h
+1
+8
+8
+*/
+
+```
+
+
+我们可以看到同样的函数实现，对象在分配空间时，编译器会为对象多分配一个 `vptr` 指针的空间。
+
+3. 虚函数的使用场景:
+
+* 构造函数不能为虚函数：构造函数不能定义为虚函数。构造函数是在实例化对象的时候进行调用，如果此时将构造函数定义成虚函数，需要通过访问该对象所在的内存空间才能进行虚函数的调用（因为需要通过指向虚函数表的指针调用虚函数表，虽然虚函数表在编译时就有了，但是没有虚函数的指针，虚函数的指针只有在创建了对象才有），但是此时该对象还未创建，便无法进行虚函数的调用。所以构造函数不能定义成虚函数。
+* 析构函数为虚函数：一般建议析构函数定义成虚函数，这样做可以有效是防止内存泄漏，实际应用时当基类的指针或者引用指向或绑定到派生类的对象时，如果未将基类的析构函数定义成虚函数，当我们对基类指针执行 `delete` 操作时，此时只会调用基类的析构函数，将基类的成员所占的空间释放掉，而派生类中特有的资源就会无法释放而导致内存泄漏。
+* `static` 函数不能定义为虚函数。
+
+参考资料：
+
+* [c++ vptr和vptr_table](https://leetcode.cn/link/?target=https://www.jianshu.com/p/3cccced44b58?u_atoken=e8ede029-5293-407a-9985-526c394f9b8a&u_asession=01bIPvXx9SY5_xBkApG0jxuFquU3CNI8UDsgCDSdHq2i2mjap72ElAso_66tm-TDNZX0KNBwm7Lovlpxjd_P_q4JsKWYrT3W_NKPr8w6oU7K-SQrcSpU2wKWEMjf4_ystnslvTX-jMTLEIhdGFg3rxgWBkFo3NEHBv0PZUm6pbxQU&u_asig=0571xFqT6ytNlYS2FmxKjAUdsqIiXpCEpA3oVT5M8VvEmArNbD__2GdaNqCpJhE6sKEWSbWvLurnKkQM8UDw9dpq1QaT-QMloEqiRNkDTkodMUEoCRvcqQemB454***DsuJ2oQa7hZhyN55PkQ5xaBoj0AhcSH1wl0eqC5j_MoEi39JS7q8ZD7Xtz2Ly-b0kmuyAKRFSVJkkdwVUnyHAIJzYB6zf84piLcxhHyLSCEfChSMikju3ElgVHUh31mnWFE6FPw117USKdEPc8n7HkzU-3h9VXwMyh6PgyDIVSG1W_16QxpFtJKKMbx9Ow-IaNKL6GwjCufiNkuwxPu3TW8Jdu-bki0QJggyafeAwVHEi-9BZd-asvIzjeFlQSnb_AWmWspDxyAEEo4kbsryBKb9Q&u_aref=D9qKzka2hg16cYfkVO8qiMiPKeU%3D)
+* [C++基础——虚指针（vptr）与虚基表（vtable）](https://leetcode.cn/link/?target=https://blog.csdn.net/qq_25065595/article/details/107372446)
+* [C++对象模型3——vptr的位置、手动调用虚函数、从汇编代码看普通调用和多态调用](https://leetcode.cn/link/?target=https://blog.csdn.net/Master_Cui/article/details/114983811)
+* [C++:对象模型：关于vptr（虚指针）和vtbl](https://leetcode.cn/link/?target=https://blog.csdn.net/weixin_43589450/article/details/107393198)
+* [Virtual Function in C++](https://leetcode.cn/link/?target=https://www.***.org/virtual-function-cpp/?ref=gcse)
+* [Polymorphism in C++](https://leetcode.cn/link/?target=https://www.***.org/polymorphism-in-c/)
+* [C++ 虚函数和纯虚函数的区别](https://leetcode.cn/link/?target=https://www.runoob.com/w3cnote/cpp-virtual-functions.html)
+
+#### 07. 构造函数、析构函数是否可以定义成虚函数 5
+
+面试高频指数：★★★★★
+
+1. 构造函数一般不定义为虚函数:
+
+* 从存储空间的角度考虑：构造函数是在实例化对象的时候进行调用，如果此时将构造函数定义成虚函数，需要通过访问该对象所在的内存空间才能进行虚函数的调用（因为需要通过指向虚函数表的指针调用虚函数表，虽然虚函数表在编译时就有了，但是没有虚函数的指针，虚函数的指针只有在创建了对象才有），但是此时该对象还未创建，便无法进行虚函数的调用。所以构造函数不能定义成虚函数。
+* 从使用的角度考虑：虚函数是基类的指针指向派生类的对象时，通过该指针实现对派生类的虚函数的调用，构造函数是在创建对象时自动调用的。
+* 从实现上考虑：虚函数表指针是在创建对象之后才有的，因此不能定义成虚函数。
+* 从类型上考虑：在创建对象时需要明确其类型。
+
+2. 析构函数一般定义成虚函数：
+   析构函数定义成虚函数是为了防止内存泄漏，因为当基类的指针或者引用指向或绑定到派生类的对象时，如果未将基类的析构函数定义成虚函数，会调用基类的析构函数，那么只能将基类的成员所占的空间释放掉，派生类中特有的就会无法释放内存空间导致内存泄漏。
+   比如以下程序示例:
+
+```
+#include <iostream>
+
+using namespace std;
+
+class A {
+private:
+    int val;
+public:
+    ~A() {
+        cout<<"A destroy!"<<endl;
+    }
+};
+
+class B: public  A {
+private:
+    int *arr;
+public:
+    B() {
+        arr = new int[10];
+    }
+    ~B() {
+        cout<<"B destroy!"<<endl;
+        delete arr;
+    }
+};
+
+int main() {
+    A *base = new B();
+    delete base;
+    return 0;
+}
+// A destroy!
+
+```
+
+
+我们可以看到如果析构函数不定义为虚函数，此时执行析构的只有基类，而派生类没有完成析构。我们将析构函数定义为虚函数，在执行析构时，则根据对象的类型来执行析构函数，此时派生类的资源得到释放。
+
+```
+#include <iostream>
+
+using namespace std;
+
+class A {
+private:
+    int val;
+public:
+    virtual ~A() {
+        cout<<"A destroy!"<<endl;
+    }
+};
+
+class B: public  A {
+private:
+    int *arr;
+public:
+    B() {
+        arr = new int[10];
+    }
+    virtual ~B() {
+        cout<<"B destroy!"<<endl;
+        delete arr;
+    }
+};
+
+int main() {
+    A *base = new B();
+    delete base;
+    return 0;
+}
+// B destroy!
+// A destroy!
+
+```
+
+
+参考资料：
+
+* [默认构造函数](https://leetcode.cn/link/?target=https://baike.baidu.com/item/%E9%BB%98%E8%AE%A4%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/10132851)
+* [Default Constructors in C++](https://leetcode.cn/link/?target=https://www.***.org/default-constructors-in-cpp/)
+* [Default constructors (C++ only)](https://leetcode.cn/link/?target=https://www.ibm.com/docs/en/zos/2.2.0?topic=only-default-constructors-c)
+* [Default constructors](https://leetcode.cn/link/?target=https://en.cppreference.com/w/cpp/language/default_constructor)
+
+#### 08. 多重继承的常见问题及避免方法 5
+
+面试高频指数：★★★★★
+
+多重继承（多继承）：是指从多个直接基类中产生派生类。多重继承容易出现命名冲突和数据冗余问题。
+程序示例如下:
+
+```
+#include <iostream>
+using namespace std;
+
+// 间接基类
+class Base1
+{
+public:
+    int var1;
+};
+
+// 直接基类
+class Base2 : public Base1
+{
+public:
+    int var2;
+};
+
+// 直接基类
+class Base3 : public Base1
+{
+public:
+    int var3;
+};
+
+// 派生类
+class Derive : public Base2, public Base3
+{
+public:
+    void set_var1(int tmp) { var1 = tmp; } // error: reference to 'var1' is ambiguous. 命名冲突
+    void set_var2(int tmp) { var2 = tmp; }
+    void set_var3(int tmp) { var3 = tmp; }
+    void set_var4(int tmp) { var4 = tmp; }
+
+private:
+    int var4;
+};
+
+int main()
+{
+    Derive d;
+    return 0;
+}
+
+```
+
+上述程序的继承关系如下：（菱形继承）
+
+![4_15_1.png](https://pic.leetcode-cn.com/1661310999-nOjItm-4_15_1.png)
+
+
+上述代码中存的问题：
+对于派生类 `Derive` 上述代码中存在直接继承关系和间接继承关系。
+
+* 直接继承：`Base2` 、`Base3`
+* 间接继承：`Base1`
+  对于派生类中继承的的成员变量 `var1` ，从继承关系来看，实际上保存了两份，一份是来自基类 `Base2`，一份来自基类 `Base3`。因此，出现了命名冲突。
+
+1. 解决方法：显式声明出现冲突的成员变量来源于哪个类。
+
+```
+#include <iostream>
+using namespace std;
+
+// 间接基类
+class Base1
+{
+public:
+    int var1;
+};
+
+// 直接基类
+class Base2 : public Base1
+{
+public:
+    int var2;
+};
+
+// 直接基类
+class Base3 : public Base1
+{
+public:
+    int var3;
+};
+
+// 派生类 
+class Derive : public Base2, public Base3
+{
+public:
+    void set_var1(int tmp) { Base2::var1 = tmp; } // 这里声明成员变量来源于类 Base2，当然也可以声明来源于类 Base3
+    void set_var2(int tmp) { var2 = tmp; }
+    void set_var3(int tmp) { var3 = tmp; }
+    void set_var4(int tmp) { var4 = tmp; }
+
+private:
+    int var4;
+};
+
+int main()
+{
+    Derive d;
+    return 0;
+}
+
+```
+
+
+2. 解决方法： 虚继承
+
+```
+#include <iostream>
+using namespace std;
+
+// 间接基类，即虚基类
+class Base1
+{
+public:
+    int var1;
+};
+
+// 直接基类 
+class Base2 : virtual public Base1 // 虚继承
+{
+public:
+    int var2;
+};
+
+// 直接基类 
+class Base3 : virtual public Base1 // 虚继承
+{
+public:
+    int var3;
+};
+
+// 派生类
+class Derive : public Base2, public Base3
+{
+public:
+    void set_var1(int tmp) { var1 = tmp; } 
+    void set_var2(int tmp) { var2 = tmp; }
+    void set_var3(int tmp) { var3 = tmp; }
+    void set_var4(int tmp) { var4 = tmp; }
+
+private:
+    int var4;
+};
+
+int main()
+{
+    Derive d;
+    return 0;
+}
+
+```
+
+类之间的继承关系：
+
+![4_15_2.png](https://pic.leetcode-cn.com/1661311024-kBHgoW-4_15_2.png)
+
+由于使用多重继承很容易出现二义性的问题，将使得程序调试和维护工作变得非常复杂，`C++` 之后的很多面向对象的编程语言，例如 `Java、C#、PHP` 等，都不支持多继承。
+
+参考资料：
+
+* [C++虚继承和虚基类详解](https://leetcode.cn/link/?target=http://c.biancheng.net/view/2280.html)
+* [C++虚继承详解](https://leetcode.cn/link/?target=https://blog.csdn.net/youaremyalllove/article/details/124324115)
+* [C++ Multiple, Multilevel and Hierarchical Inheritance](https://leetcode.cn/link/?target=https://www.programiz.com/cpp-programming/multilevel-multiple-inheritance)
+* [Multiple Inheritance in C++](https://leetcode.cn/link/?target=https://www.javatpoint.com/multiple-inheritance-in-cpp)
+* [Multiple Inheritance in C++](https://leetcode.cn/link/?target=https://www.***.org/multiple-inheritance-in-c/)
+
+
+#### 09. 深拷贝和浅拷贝的区别 5
+
+面试高频指数：★★★★★
+
+如果一个类拥有资源，该类的对象进行复制时，如果资源重新分配，就是深拷贝，否则就是浅拷贝。
+
+* 深拷贝：该对象和原对象占用不同的内存空间，既拷贝存储在栈空间中的内容，又拷贝存储在堆空间中的内容。
+* 浅拷贝：该对象和原对象占用同一块内存空间，仅拷贝类中位于栈空间中的内容。
+  ![4_25_1.png](https://pic.leetcode-cn.com/1661311283-TOfEBS-4_25_1.png)
+
+当类的成员变量中有指针变量时，最好使用深拷贝。因为当两个对象指向同一块内存空间，如果使用浅拷贝，当其中一个对象的删除后，该块内存空间就会被释放，另外一个对象指向的就是垃圾内存。
+
+* **浅拷贝实例** ：
+  ```
+  #include <iostream>
+
+  using namespace std;
+
+  class Test
+  {
+  private:
+  	int *p;
+
+  public:
+  	Test(int tmp)
+  	{
+  		this->p = new int(tmp);
+  		cout << "Test(int tmp)" << endl;
+  	}
+  	~Test()
+  	{
+  		if (p != NULL)
+  		{
+  			delete p;
+  		}
+  		cout << "~Test()" << endl;
+  	}
+  };
+
+  int main()
+  {
+  	Test ex1(10);
+  	Test ex2 = ex1; 
+  	return 0;
+  }
+  /*
+  运行结果：
+  Test(int tmp)
+  ~Test()
+  */
+
+  ```
+
+说明：上述代码中，类对象 `ex1、ex2` 实际上是指向同一块内存空间，对象析构时，`ex2` 先将内存释放了一次，之后析构对象 `ex1` 时又将这块已经被释放过的内存再释放一次。对同一块内存空间释放了两次，会导致程序崩溃。
+
+* 深拷贝实例：
+
+```
+#include <iostream>
+
+using namespace std;
+
+class Test
+{
+private:
+	int *p;
+
+public:
+	Test(int tmp)
+	{
+		p = new int(tmp);
+		cout << "Test(int tmp)" << endl;
+	}
+	~Test()
+	{
+		if (p != NULL)
+		{
+			delete p;
+		}
+		cout << "~Test()" << endl;
+	}
+	Test(const Test &tmp) // 定义拷贝构造函数
+	{
+		p = new int(*tmp.p);
+		cout << "Test(const Test &tmp)" << endl;
+	}
+
+};
+
+int main()
+{
+	Test ex1(10);
+	Test ex2 = ex1; 
+	return 0;
+}
+/*
+Test(int tmp)
+Test(const Test &tmp)
+~Test()
+~Test()
+*/
+
+```
+
+* 编译器生成的默认拷贝函数均大部分都是浅拷贝，所有在特定场景下需要禁止编译器生成默认拷贝构造函数。在遇到需要使用堆内存的构造函数中，我们需要特别注意浅拷贝和深拷贝的使用方式，防止两个不同的对象指向同一块内存区域。
+
+参考资料:
+
+* [Shallow Copy and Deep Copy in C++](https://leetcode.cn/link/?target=https://www.***.org/shallow-copy-and-deep-copy-in-c/)
+* [What is the difference between a deep copy and a shallow copy?](https://leetcode.cn/link/?target=https://stackoverflow.com/questions/184710/what-is-the-difference-between-a-deep-copy-and-a-shallow-copy)
+* [Deep Copy C++](https://leetcode.cn/link/?target=https://linuxhint.com/deep-copy-cpp/)
+
+
+#### 10. 单继承和多继承的虚函数表结构 4
+
+面试高频指数：★★★★☆
+
+* 编译器将虚函数表的指针放在类的实例对象的内存空间中，该对象调用该类的虚函数时，通过指针找到虚函数表，根据虚函数表中存放的虚函数的地址找到对应的虚函数。
+* 如果派生类没有重新定义基类的虚函数 `A`，则派生类的虚函数表中保存的是基类的虚函数 `A` 的地址，也就是说基类和派生类的虚函数 `A` 的地址是一样的。
+* 如果派生类重写了基类的某个虚函数 `B`，则派生的虚函数表中保存的是重写后的虚函数 `B` 的地址，也就是说虚函数 `B` 有两个版本，分别存放在基类和派生类的虚函数表中。
+* 如果派生类重新定义了新的虚函数 `C`，派生类的虚函数表保存新的虚函数 `C` 的地址。
+
+
+1. 单继承无虚函数覆盖的情况：
+
+```
+#include <iostream>
+#include <memory>
+using namespace std;
+ 
+ 
+typedef void (*func)(void);
+
+#include <iostream>
+using namespace std;
+
+class Base
+{
+public:
+    virtual void B_fun1() { cout << "Base::B_fun1()" << endl; }
+    virtual void B_fun2() { cout << "Base::B_fun2()" << endl; }
+    virtual void B_fun3() { cout << "Base::B_fun3()" << endl; }
+};
+
+class Derive : public Base
+{
+public:
+    virtual void D_fun1() { cout << "Derive::D_fun1()" << endl; }
+    virtual void D_fun2() { cout << "Derive::D_fun2()" << endl; }
+    virtual void D_fun3() { cout << "Derive::D_fun3()" << endl; }
+};
+
+void printVtable(unsigned long *vptr, int offset) {
+	func fn = (func)*((unsigned long*)(*vptr) + offset);
+	fn();
+}
+
+int main()
+{
+    Base *p = new Derive();
+    p->B_fun1(); // Base::B_fun1()
+	unsigned long* vPtr = (unsigned long*)(p);
+	printVtable(vPtr, 0);
+	printVtable(vPtr, 1);
+	printVtable(vPtr, 2);
+	printVtable(vPtr, 3);
+	printVtable(vPtr, 3);
+	printVtable(vPtr, 4);
+    cout<<sizeof(Base)<<endl; // 8
+    cout<<sizeof(Derive)<<endl; // 8
+    return 0;
+}
+/*
+Base::B_fun1()
+Base::B_fun1()
+Base::B_fun2()
+Base::B_fun3()
+Derive::D_fun1()
+Derive::D_fun2()
+Derive::D_fun3()
+8
+8
+*/
+
+```
+
+基类和派生类的继承关系：
+
+![4_8_1.png](https://pic.leetcode-cn.com/1661224138-RbKIMW-4_8_1.png)
+
+基类的虚函数表：
+
+![4_3_1.png](https://pic.leetcode-cn.com/1661224148-AzSusP-4_3_1.png)
+
+派生类的虚函数表：
+
+![4_3_2.png](https://pic.leetcode-cn.com/1661224158-oAsuQx-4_3_2.png)
+
+* 虚函数按照声明顺序放在虚函数表里面。
+* 父类的虚函数在子类的虚函数前面。
+
+2. 单继承有虚函数覆盖的情况：
+
+```
+#include <iostream>
+#include <memory>
+using namespace std;
+ 
+ 
+typedef void (*func)(void);
+
+class Base
+{
+public:
+    virtual void fun1() { cout << "Base::fun1()" << endl; }
+    virtual void B_fun2() { cout << "Base::B_fun2()" << endl; }
+    virtual void B_fun3() { cout << "Base::B_fun3()" << endl; }
+};
+
+class Derive : public Base
+{
+public:
+    virtual void fun1() { cout << "Derive::fun1()" << endl; }
+    virtual void D_fun2() { cout << "Derive::D_fun2()" << endl; }
+    virtual void D_fun3() { cout << "Derive::D_fun3()" << endl; }
+};
+
+void printVtable(unsigned long *vptr, int offset) {
+	func fn = (func)*((unsigned long*)(*vptr) + offset);
+	fn();
+}
+
+int main()
+{
+    Base *p = new Derive();
+	unsigned long* vPtr = (unsigned long*)(p);
+	printVtable(vPtr, 0);
+	printVtable(vPtr, 1);
+	printVtable(vPtr, 2);
+	printVtable(vPtr, 3);
+	printVtable(vPtr, 4);
+    cout<<sizeof(Base)<<endl; // 8
+    cout<<sizeof(Derive)<<endl; // 8
+    return 0;
+}
+
+/*
+Derive::fun1()
+Base::B_fun2()
+Base::B_fun3()
+Derive::D_fun2()
+Derive::D_fun3()
+8
+8
+*/
+
+```
+
+派生类的虚函数表：
+
+![4_9_1.png](https://pic.leetcode-cn.com/1663130295-EvbThl-4_9_1.png)
+
+3. 多继承无虚函数覆盖的情况：
+
+```
+#include <iostream>
+using namespace std;
+
+class Base1
+{
+public:
+    virtual void B1_fun1() { cout << "Base1::B1_fun1()" << endl; }
+    virtual void B1_fun2() { cout << "Base1::B1_fun2()" << endl; }
+    virtual void B1_fun3() { cout << "Base1::B1_fun3()" << endl; }
+};
+class Base2
+{
+public:
+    virtual void B2_fun1() { cout << "Base2::B2_fun1()" << endl; }
+    virtual void B2_fun2() { cout << "Base2::B2_fun2()" << endl; }
+    virtual void B2_fun3() { cout << "Base2::B2_fun3()" << endl; }
+};
+class Base3
+{
+public:
+    virtual void B3_fun1() { cout << "Base3::B3_fun1()" << endl; }
+    virtual void B3_fun2() { cout << "Base3::B3_fun2()" << endl; }
+    virtual void B3_fun3() { cout << "Base3::B3_fun3()" << endl; }
+};
+
+class Derive : public Base1, public Base2, public Base3
+{
+public:
+    virtual void D_fun1() { cout << "Derive::D_fun1()" << endl; }
+    virtual void D_fun2() { cout << "Derive::D_fun2()" << endl; }
+    virtual void D_fun3() { cout << "Derive::D_fun3()" << endl; }
+};
+
+typedef void (*func)(void);
+
+void printVtable(unsigned long *vptr, int offset) {
+	func fn = (func)*((unsigned long*)(*vptr) + offset);
+	fn();
+}
+
+int main(){
+    Base1 *p = new Derive();
+    unsigned long* vPtr = (unsigned long*)(p);
+	printVtable(vPtr, 0);
+	printVtable(vPtr, 1);
+	printVtable(vPtr, 2);
+	printVtable(vPtr, 3);
+	printVtable(vPtr, 4);
+	printVtable(vPtr, 5);
+	vPtr++;
+	printVtable(vPtr, 0);
+	printVtable(vPtr, 1);
+	printVtable(vPtr, 2);
+	vPtr++;
+	printVtable(vPtr, 0);
+	printVtable(vPtr, 1);
+	printVtable(vPtr, 2);
+    cout<<sizeof(Base1)<<endl; // 8
+	cout<<sizeof(Base2)<<endl; // 8
+	cout<<sizeof(Base3)<<endl; // 8
+    cout<<sizeof(Derive)<<endl; // 8
+    return 0;
+}
+
+/*
+Base1::B1_fun1()
+Base1::B1_fun2()
+Base1::B1_fun3()
+Derive::D_fun1()
+Derive::D_fun2()
+Derive::D_fun3()
+Base2::B2_fun1()
+Base2::B2_fun2()
+Base2::B2_fun3()
+Base3::B3_fun1()
+Base3::B3_fun2()
+Base3::B3_fun3()
+8
+8
+8
+24
+*/
+
+```
+
+派生类的虚函数表：（基类的顺序和声明的顺序一致）
+
+![4_9_2.png](https://pic.leetcode-cn.com/1661224203-PAsnVw-4_9_2.png)
+
+
+4. 多继承有虚函数覆盖的情况：
+
+```
+#include <iostream>
+using namespace std;
+
+class Base1
+{
+public:
+    virtual void fun1() { cout << "Base1::fun1()" << endl; }
+    virtual void B1_fun2() { cout << "Base1::B1_fun2()" << endl; }
+    virtual void B1_fun3() { cout << "Base1::B1_fun3()" << endl; }
+};
+class Base2
+{
+public:
+    virtual void fun1() { cout << "Base2::fun1()" << endl; }
+    virtual void B2_fun2() { cout << "Base2::B2_fun2()" << endl; }
+    virtual void B2_fun3() { cout << "Base2::B2_fun3()" << endl; }
+};
+class Base3
+{
+public:
+    virtual void fun1() { cout << "Base3::fun1()" << endl; }
+    virtual void B3_fun2() { cout << "Base3::B3_fun2()" << endl; }
+    virtual void B3_fun3() { cout << "Base3::B3_fun3()" << endl; }
+};
+
+class Derive : public Base1, public Base2, public Base3
+{
+public:
+    virtual void fun1() { cout << "Derive::fun1()" << endl; }
+    virtual void D_fun2() { cout << "Derive::D_fun2()" << endl; }
+    virtual void D_fun3() { cout << "Derive::D_fun3()" << endl; }
+};
+
+typedef void (*func)(void);
+
+void printVtable(unsigned long *vptr, int offset) {
+	func fn = (func)*((unsigned long*)(*vptr) + offset);
+	fn();
+}
+
+int main(){
+    Base1 *p1 = new Derive();
+    Base2 *p2 = new Derive();
+    Base3 *p3 = new Derive();
+    p1->fun1(); // Derive::fun1()
+    p2->fun1(); // Derive::fun1()
+    p3->fun1(); // Derive::fun1()
+    unsigned long* vPtr = (unsigned long*)(p1);
+	printVtable(vPtr, 0);
+	printVtable(vPtr, 1);
+	printVtable(vPtr, 2);
+	printVtable(vPtr, 3);
+	printVtable(vPtr, 4);
+	vPtr++;
+	printVtable(vPtr, 0);
+	printVtable(vPtr, 1);
+	printVtable(vPtr, 2);
+	vPtr++;
+	printVtable(vPtr, 0);
+	printVtable(vPtr, 1);
+	printVtable(vPtr, 2);
+    cout<<sizeof(Base1)<<endl; // 8
+	cout<<sizeof(Base2)<<endl; // 8
+	cout<<sizeof(Base3)<<endl; // 8
+    cout<<sizeof(Derive)<<endl; // 8
+    return 0;
+}
+
+/*
+Derive::fun1()
+Derive::fun1()
+Derive::fun1()
+Derive::fun1()
+Base1::B1_fun2()
+Base1::B1_fun3()
+Derive::D_fun2()
+Derive::D_fun3()
+Derive::fun1()
+Base2::B2_fun2()
+Base2::B2_fun3()
+Derive::fun1()
+Base3::B3_fun2()
+Base3::B3_fun3()
+8
+8
+8
+24
+*/
+
+```
+
+基类和派生类的关系：
+
+![4_9_3.png](https://pic.leetcode-cn.com/1661224230-yMQSbY-4_9_3.png)
+
+派生类的虚函数表：
+
+![1.png](https://pic.leetcode.cn/1678845281-gLMsXp-1.png)
+
+参考资料：
+
+* [C++虚函数表分析——参考陈皓版]
+
+
+#### 11. 如何禁止构造函数的使用 4
+
+面试高频指数：★★★★☆
+
+为类的构造函数增加 `= delete` 修饰符，可以达到虽然声明了构造函数但禁止使用的目的。
+
+```
+#include <iostream>
+
+using namespace std;
+
+class A {
+public:
+    int var1, var2;
+    A(){
+        var1 = 10;
+        var2 = 20;
+    }
+    A(int tmp1, int tmp2) = delete;
+};
+
+int main()
+{
+    A ex1;  
+    A ex2(12,13); // error: use of deleted function 'A::A(int, int)'
+    return 0;
+}
+```
+
+如果我们仅仅将构造函数设置为私有，类内部的成员和友元还可以访问，无法完全禁止。而在 `C++11` 以后，在成员函数声明后加 `"= delete"`则可以禁止该函数的使用，而需要保留的加 `"= default"`。
+
+参考资料：
+
+* [Meaning of = delete after function declaration](https://leetcode.cn/link/?target=https://stackoverflow.com/questions/5513881/meaning-of-delete-after-function-declaration)
+
+
+#### 12. 什么是类的默认构造函数 4
+
+面试高频指数：★★★★☆
+
+
+默认构造函数（`default constructor`）就是在没有显式提供初始化式时调用的构造函数。它由不带参数的构造函数，或者为所有的形参提供默认实参的构造函数定义。如果定义某个类的变量时没有提供初始化时就会使用默认构造函数。
+
+1. 用户定义的默认构造函数:
+
+* 用户自定义的不带参数的构造函数:
+
+```
+#include <iostream>
+
+using namespace std;
+
+class A
+{
+public:
+    A(){ // 类的默认构造函数
+        var = 10;
+        c = 'q';
+    }
+    A(int val = 10)
+    int var;
+    char c;
+};
+
+int main()
+{
+    A ex;
+    cout << ex.c << endl << ex.var << endl;
+    return 0;
+}
+/*
+运行结果：
+q
+10
+*/
+
+
+```
+
+
+说明：上述程序中定义变量 `ex` 时，未提供任何实参，程序运行时会调用默认的构造函数。
+
+* 用户自定义的构造函数，但为所有形参提供默认值的构造函数:
+
+```
+#include <iostream>
+
+using namespace std;
+
+class A
+{
+public:
+    A(int _var = 10, char _c = 'q'){ // 类的默认构造函数
+        var = _var;
+        c = _c;
+    }
+    int var;
+    char c;
+};
+
+int main()
+{
+    A ex;
+    cout << ex.c << endl << ex.var << endl;
+    return 0;
+}
+/*
+运行结果：
+q
+10
+*/
+
+```
+
+说明：上述程序中定义变量 `ex` 时，未提供任何实参，程序运行时会调用所有形参提供默认值的构造函数。
+
+2. 编译器自动分配的合成默认构造函数
+   如果用户定义的类中没有显式的定义任何构造函数，编译器就会自动为该类型生成默认构造函数，称为合成的默认构造函数。
+
+```
+#include <iostream>
+
+using namespace std;
+
+class A
+{
+public:
+    int var;
+    char c;
+};
+
+int main()
+{
+    A ex;
+    cout << ex.c << endl << ex.var << endl;
+    return 0;
+}
+/*
+运行结果：
+
+0
+*/
+
+```
+
+
+此时编译器会自动为 `A` 分配一个默认的构造函数，在上述示例中，类 `A` 中的变量 `c` 默认赋值为 `\0`，`var` 默认赋值为 `0`。
+一般情况下，如果类中包含内置或复合类型的成员，则该类就不应该依赖于合成的默认构造函数，它应该定义自己的构造函数来初始化这些成员。多数情况下，编译器为类生成一个公有的默认构造函数，只有下面两种情况例外:
+
+* 一个类显式地声明了任何构造函数，编译器不生成公有的默认构造函数。在这种情况下，如果程序需要一个默认构造函数，需要由类的设计者提供。
+* 一个类声明了一个非公有的默认构造函数，编译器不会生成公有的默认构造函数。
+  在大多数情况下，`C++` 编译器为未声明构造函数之 `class` 合成一个默认构造函数：
+* 如果该类没有任何构造函数，但是包含一个对象类型的成员变量，且该变量有一个显式的默认构造函数；
+* 如果该类没有任何构造函数，但是其父类含有显式的默认构造函数；
+* 如果该类没有任何构造函数，但是含有（或父类含有）虚函数；
+* 如果该类没有任何构造函数，但是带有一个虚基类；
+
+参考资料：
+
+* [默认构造函数](https://leetcode.cn/link/?target=https://baike.baidu.com/item/%E9%BB%98%E8%AE%A4%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/10132851)
+* [Default Constructors in C++](https://leetcode.cn/link/?target=https://www.***.org/default-constructors-in-cpp/)
+* [Default constructors (C++ only)](https://leetcode.cn/link/?target=https://www.ibm.com/docs/en/zos/2.2.0?topic=only-default-constructors-c)
+* [Default constructors](https://leetcode.cn/link/?target=https://en.cppreference.com/w/cpp/language/default_constructor)
+
+#### 13. 如何减少构造函数开销 4
+
+面试高频指数：★★★★☆
+
+在构造函数时尽量使用类初始化列表，会减少调用默认的构造函数产生的开销，具体原因可以参考本章《为什么用成员初始化列表会快一些？》这个问题。
+
+```
+class A
+{
+private:
+    int val;
+public:
+    A()
+    {
+        cout << "A()" << endl;
+    }
+    A(int tmp)
+    {
+        val = tmp;
+        cout << "A(int " << val << ")" << endl;
+    }
+};
+class Test1
+{
+private:
+    A ex;
+
+public:
+    Test1(): ex(1)  // 成员列表初始化方式
+    {
+  
+    }
+};
+
+
+```
+
+参考资料：
+
+* [When do we use Initializer List in C++?](https://leetcode.cn/link/?target=https://www.***.org/when-do-we-use-initializer-list-in-c/)
+* [Constructors and member initializer lists](https://leetcode.cn/link/?target=https://en.cppreference.com/w/cpp/language/constructor)
+* [What are initializer lists in C++?](https://leetcode.cn/link/?target=https://www.educative.io/answers/what-are-initializer-lists-in-cpp)
+
+
+#### 14. C++ 类对象的初始化顺序 4
+
+面试高频指数：★★★★☆
+
+
+1. 构造函数调用顺序：
+
+* 按照派生类继承基类的顺序，即派生列表中声明的继承顺序，依次调用基类的构造函数；
+* 在有虚继承和一般继承存在的情况下，优先虚继承。比如虚继承：`class C: public B, virtual public A`，此时应当先调用 `A` 的构造函数，再调用 `B` 的构造函数。
+* 按照派生类中成员变量的声明顺序，依次调用派生类中成员变量所属类的构造函数；
+* 执行派生类自身的构造函数。
+
+2. 类对象的初始化顺序：
+
+* 按照构造函数的调用顺序，调用基类的构造函数
+* 按照成员变量的声明顺序，调用成员变量的构造函数函数，成员变量的初始化顺序与声明顺序有关；
+* 调用该类自身的构造函数；
+* 析构顺序和类对象的初始化顺序相反。
+
+```
+#include <iostream>
+using namespace std;
+
+class A
+{
+public:
+    A() { cout << "A()" << endl; }
+    ~A() { cout << "~A()" << endl; }
+};
+
+class B
+{
+public:
+    B() { cout << "B()" << endl; }
+    ~B() { cout << "~B()" << endl; }
+};
+
+class Test : public A, public B // 派生列表
+{
+public:
+    Test() { cout << "Test()" << endl; }
+    ~Test() { cout << "~Test()" << endl; }
+
+private:
+    B ex1;
+    A ex2;
+};
+
+int main()
+{
+    Test ex;
+    return 0;
+}
+/*
+运行结果：
+A()
+B()
+B()
+A()
+Test()
+~Test()
+~A()
+~B()
+~B()
+~A()
+*/
+ß
+```
+
+
+程序运行结果分析：
+
+* 首先调用基类 `A` 和 `B` 的构造函数，按照派生列表 `public A`, `public B` 的顺序构造；
+* 然后调用派生类 `Test` 的成员变量 `ex1` 和 `ex2` 的构造函数，按照派生类中成员变量声明的顺序构造；
+* 最后调用派生类的构造函数；
+* 接下来调用析构函数，和构造函数调用的顺序相反。
+
+3. 类的成员初始化:
+   类中可能含有静态变量和全局变量，由于静态变量和全局变量都被放在静态存储区，他们的初始化在 `main` 函数执行之前已被初始化，且 `static` 变量必须在类外进行初始化。
+
+* 成员变量在使用初始化列表初始化时，与构造函数中初始化成员列表的顺序无关，只与定义成员变量的顺序有关。因为成员变量的初始化次序是根据变量在内存中次序有关，而内存中的排列顺序早在编译期就根据变量的定义次序决定了。
+* 如果类不使用初始化列表初始化，而在类的构造函数内部进行初始化时，此时成员变量的初始化顺序与构造函数中代码逻辑有关。
+* 类成员在定义时，是不能初始化的
+* 类中 `const` 成员常量必须在构造函数初始化列表中初始化。
+* 类中 `static` 成员变量，必须在类外初始化。
+
+参考资料
+
+* [C++成员变量的初始化顺序问题](https://leetcode.cn/link/?target=https://blog.csdn.net/zhaojinjia/article/details/8785912)
+
+
+#### 15. 成员初始化列表效率高的原因 4
+
+面试高频指数：★★★★☆
+
+对象的成员函数数据类型可分为语言内置类型和用户自定义类，对于用户自定义类型，利用成员初始化列表效率高。用户自定义类型如果使用类初始化列表，直接调用该成员变量对应的构造函数即完成初始化；如果在构造函数中初始化，由于 `C++` 规定对象的成员变量的初始化动作发生在进入自身的构造函数本体之前，那么在执行构造函数之前首先调用默认的构造函数为成员变量设初值，在进入函数体之后，再显式调用该成员变量对应的构造函数。因此使用列表初始化会减少调用默认的构造函数的过程，效率更高一些。
+
+```
+#include <iostream>
+using namespace std;
+class A
+{
+private:
+    int val;
+public:
+    A()
+    {
+        cout << "A()" << endl;
+    }
+    A(int tmp)
+    {
+        val = tmp;
+        cout << "A(int " << val << ")" << endl;
+    }
+};
+
+class Test1
+{
+private:
+    A ex;
+
+public:
+    Test1() : ex(1) // 成员列表初始化方式
+    {
+    }
+};
+
+class Test2
+{
+private:
+    A ex;
+
+public:
+    Test2() // 函数体中赋值的方式
+    {
+        ex = A(2);
+    }
+};
+int main()
+{
+    Test1 ex1;
+    cout << endl;
+    Test2 ex2;
+    return 0;
+}
+/*
+运行结果：
+A(int 1)
+
+A()
+A(int 2)
+*/
+
+
+```
+
+* 说明：从程序运行结果可以看出，使用成员列表初始化的方式会省去调用默认的构造函数的过程。如果自定义的类型没有默认构造函数，此时必须使用初始化列表提供初值对这些类型进行初始化。
+
+参考资料:
+
+* [When do we use Initializer List in C++?](https://leetcode.cn/link/?target=https://www.***.org/when-do-we-use-initializer-list-in-c/)
+* [Constructors and member initializer lists](https://leetcode.cn/link/?target=https://en.cppreference.com/w/cpp/language/constructor)
+* [What are initializer lists in C++?](https://leetcode.cn/link/?target=https://www.educative.io/answers/what-are-initializer-lists-in-cpp)
+
+
+#### 16. 友元函数的作用及使用场景 4
+
+面试高频指数：★★★★☆
+
+* 友元函数的作用：友元（`friend`）提供了不同类的成员函数之间、类的成员函数与一般函数之间进行数据共享的机制。通过友元，一个普通的函数或另一个类中的成员函数可以访问类中的私有成员和保护成员。
+
+ **使用场景** ：
+
+1. 普通函数定义为类的友元函数，使得普通函数能够访问该类的私有成员和保护成员。
+
+```
+#include <iostream>
+
+using namespace std;
+
+class A
+{
+    friend ostream &operator<<(ostream &_cout, const A &tmp); // 声明为类的友元函数
+
+public:
+    A(int tmp) : var(tmp)
+    {
+    }
+
+private:
+    int var;
+};
+
+ostream &operator<<(ostream &_cout, const A &tmp)
+{
+    _cout << tmp.var;
+    return _cout;
+}
+
+int main()
+{
+    A ex(4);
+    cout << ex << endl; // 4
+    return 0;
+}
+
+```
+
+2. 友元类：
+   由于类的 `private` 和 `protected` 成员变量只能由类的成员函数访问或者派生类访问，友元类则提供提供一种通用的方法，使得不同类之间可以访问其 `private` 和 `protected` 成员变量，用于不同类之间共享数据。
+
+```
+#include <iostream>
+
+using namespace std;
+
+class A
+{
+    friend class B;
+
+public:
+    A() : var(10){}
+    A(int tmp) : var(tmp) {}
+    void fun()
+    {
+        cout << "fun():" << var << endl;
+    }
+
+private:
+    int var;
+};
+
+class B
+{
+public:
+    B() {}
+    void fun()
+    {
+        cout << "fun():" << ex.var << endl; // 访问类 A 中的私有成员
+    }
+
+private:
+    A ex;
+};
+
+int main()
+{
+    B ex;
+    ex.fun(); // fun():10
+    return 0;
+}
+
+```
+
+
+参考资料:
+
+* [Friend class and function in C++](https://leetcode.cn/link/?target=https://www.***.org/friend-class-function-cpp/)
+* [Friendship and inheritance](https://leetcode.cn/link/?target=https://cplusplus.com/doc/tutorial/inheritance/)
+* [C++ friend Function and friend Classes](https://leetcode.cn/link/?target=https://www.programiz.com/cpp-programming/friend-function-class)
+* [Friend class](https://leetcode.cn/link/?target=https://en.wikipedia.org/wiki/Friend_class)
+* [Friend function](https://leetcode.cn/link/?target=https://en.wikipedia.org/wiki/Friend_function)
+* [Friend Functions and Friend Classes](https://leetcode.cn/link/?target=https://www.cprogramming.com/tutorial/friends.html)
+
+
+#### 17. 静态绑定和动态绑定的实现 4
+
+面试高频指数：★★★★☆
+
+静态类型和动态类型：
+
+* 静态类型：变量在声明时的类型，是在编译阶段确定的。静态类型不能更改。
+* 动态类型：目前所指对象的类型，是在运行阶段确定的。动态类型可以更改。
+  静态绑定和动态绑定：
+* 静态绑定是指程序在**编译阶段**确定对象的类型（静态类型）。
+* 动态绑定是指程序在**运行阶段**确定对象的类型（动态类型）。
+  静态绑定和动态绑定的区别：
+* 发生的时期不同：如上。
+* 对象的静态类型不能更改，动态类型可以更改。
+  注：对于类的成员函数，只有虚函数是动态绑定，其他都是静态绑定。
+
+```
+#include <iostream>
+
+using namespace std;
+
+class Base
+{
+public:
+	virtual void fun() { cout << "Base::fun()" << endl;
+     }
+};
+class Derive : public Base
+{
+public:
+	void fun() { cout << "Derive::fun()"; 
+    }
+};
+
+
+int main()
+{
+	Base *p = new Derive(); // p 的静态类型是 Base*，动态类型是 Derive*
+    p->fun(); // fun 是虚函数，运行阶段进行动态绑定
+	return 0;
+}
+/*
+运行结果：
+Derive::fun()
+*/
+
+
+```
+
+* 动态绑定的实现原理：
+  以下程序示例：
+
+```
+#include <iostream>
+using namespace std;
+
+class A{
+private:
+	int a1;
+	int a2;
+public:
+	virtual void display(){ cout<<"A::display()"<<endl;}
+	virtual void clone(){ cout<<"A::clone()"<<endl;}
+};
+
+class B: public A{
+private:
+    int b;
+public:
+    virtual void display(){ cout<<"B::display()"<<endl;} override
+    virtual void init(){ cout<<"B::init()"<<endl;}
+};
+
+class C: public B{
+private:
+    int c;
+public:
+    virtual void display(){ cout<<"C::display()"<<endl;} override
+    virtual void execute(){ cout<<"C::execute()"<<endl;} 
+    virtual void init(){cout<<"C::init()"<<endl;} override
+};
+
+int main() {
+    A *p1 = new B();
+    A *p2 = new C();
+    p1->display();
+    p2->display();
+    return 0;
+}
+
+```
+
+我们对上述程序进行编译，并查看这里给出 `A`, `B`, `C` 三个类的虚函数表，如下图所示:
+
+![4_24_1.png](https://pic.leetcode-cn.com/1661311210-yuOOTw-4_24_1.png)
+
+
+可以得出以下结论：
+
+* 类的内存占用由成员变量和指向虚函数表的指针组成，同时派生类的成员变量是会把基类的成员变量都继承的
+* 同名虚函数在基类和派生类中的虚函数表中，在虚函数表中偏移位置是一致的，图 `A,B,C` 的 `display` 的偏移位置都为 `0`。同样名称的虚函数，在基类中定义的虚函数与派生类中定义的虚函数，在虚函数表中的偏移量都是一致的，只有这样才能保证动态绑定。
+* 如果派生类中定义了与基类同名的虚函数，那么派生类的虚函数表中响应函数的入口地址会被替换成覆盖后的函数的地址。
+* 一旦有新的虚函数定义，会加入到当前虚函数表的末端。
+* 派生类的成员变量顺序也按照声明的顺序依次在内存中分配。
+
+我们可以分以一下动态绑定的实现：
+
+* 当我们用虚函数表指针去查找虚函数表中对应的函数的地址时，此时首先会找到函数地址的在虚函数表中的索引，这里 `display` 索引是 `0`。
+* 然后编译器会做一个替换，`（*(p->vptr)[0]）`，找到 `p` 指针的函数入口地址。
+* 程序运行后会执行这条语句 `*(p->vptr)[0]()`，完成函数的调用，实际即完成了动态绑定。
+
+参考资料:
+
+* [Virtual Function in C++](https://leetcode.cn/link/?target=https://www.***.org/virtual-function-cpp/?ref=gcse)
+* [Polymorphism in C++](https://leetcode.cn/link/?target=https://www.***.org/polymorphism-in-c/)
+* [C++ 虚函数表](https://leetcode.cn/link/?target=https://blog.csdn.net/nyist_zxp/article/details/80825031)
+
+
+#### 18. 编译时多态和运行时多态的区别 4
+
+面试高频指数：★★★★☆
+
+* 编译时多态：在程序编译过程中出现，发生在模板和函数重载中（泛型编程）。实际在编译器内部看来不管是重载还是模板，编译器内部都会生成不同的函数，在代码段中分别装有两个函数的不同实现。
+* 运行时多态：运行时多态也称动态绑定，在程序运行过程中出现，发生在继承体系中，是指通过基类的指针或引用访问派生类中的虚函数。
+
+2. 编译时多态和运行时多态的区别：
+
+* 时期不同：编译时多态发生在程序编译过程中，运行时多态发生在程序的运行过程中；
+* 实现方式不同：编译时多态运用泛型编程来实现，运行时多态借助虚函数表来实现。
+
+参考资料:
+
+* [C++动态绑定原理](https://leetcode.cn/link/?target=https://blog.csdn.net/qq295109601/article/details/118981515)
+
+
+#### 19. C++ 模板编程 3
+
+面试高频指数：★★★☆☆
+
+
+模板是 `C++` 编程语言的一个特性，它允许函数和类使用泛型类型进行操作。这允许一个函数或类在许多不同的数据类型上工作，而无需为每个类型重写。`C++` 模板是泛型编程的基础，泛型编程即以一种独立于任何特定类型的方式编写代码，`C++` 中使用 `template` 关键字。模板是创建泛型类或函数的蓝图或公式。库容器，比如迭代器和算法，都是泛型编程的例子，它们都使用了模板的概念。
+共有三种模板：函数模板、类模板以及自 `C++ 14` 以来的变量模板:
+
+1. 函数模板:
+   函数模板的行为类似于函数，只是模板可以有许多不同类型的参数。一个函数模板代表一个函数族。使用类型参数声明函数模板的格式是：
+
+```
+template<class identifier> declaration;
+template<typename identifier> declaration;
+
+```
+
+上述两种表达方式完全相同，引入后一种时为了防止混淆。比如 `C++` 标准库包含 `max(x, y)` 返回较大的 `x` 和的函数模板 `y` 。该函数模板可以这样定义:
+
+```
+template<typename T> T max(T &a, T &b) { return a > b ? a : b; }
+std :: cout << max ( 3 , 7 ) << '\n' ;   
+std :: cout << max ( 3.0 , 7.0 ) << '\n' ;   
+
+```
+
+
+这个单一的函数定义适用于许多数据类型。具体来说，它适用于定义了 `>`（大于运算符）的所有数据类型。除了限制对一个函数描述的更改并使代码更易于阅读之外，函数模板的使用减少了源代码的编写，与为特定程序中使用的所有不同数据类型编写单独的函数相比，模板不会产生更小的目标代码，实际编译器在编译时，会为根据不同的类型编译产生不同的函数。
+
+2. 类模板：
+   类模板提供了基于参数生成类的规范。类模板通常用于实现容器。类模板通过将一组给定的类型作为模板参数传递给它来实例化。`C++` 标准库包含许多类模板，特别是改编自标准模板库的容器，例如 `vector`，`list`。
+
+```
+template <class T>
+class Stack { 
+  private: 
+    vector<T> elements;     // 元素 
+ 
+  public: 
+    void push(T const&);  // 入栈
+    void pop();               // 出栈
+    T top() const;            // 返回栈顶元素
+    bool empty() const{       // 如果为空则返回真。
+        return elements.empty(); 
+    } 
+}; 
+
+```
+
+
+3. 变量模板：
+   在 `C++14` 以后，变量也可以参数化为特定的类型，这称为变量模板。
+
+```
+template<typename T> 
+constexpr T pi = T{3.141592653589793238462643383L}; // (Almost) from std::numbers::pi
+
+```
+
+使用变量模板时，必须显式地指定它的类型：
+
+```
+std::cout << pi<double> << '\n';
+std::cout << pi<float> << '\n';
+```
+
+4. 函数重载与模板的区别:
+   函数重载和模板都是面向对象多态特性的例子。当多个函数执行非常相似（不相同）的操作时使用函数重载，当多个函数执行相同操作时使用模板。当模板类或者模板函数中含有静态变量时，则每个模板的实例类型都含有一个静态成员。
+
+```
+template <class T>
+class A { 
+  public: 
+	static T val; 
+}; 
+A<int> a; // 含有静态成员 val;
+A<string> b; // 含有静态成员 val;
+
+```
+
+
+参考资料：
+
+* [Templates in C++ with Examples](https://leetcode.cn/link/?target=https://www.***.org/templates-cpp/)
+* [C++ 模板](https://leetcode.cn/link/?target=https://www.runoob.com/cplusplus/cpp-templates.html)
+* [Templates (C++)](https://leetcode.cn/link/?target=https://docs.microsoft.com/en-us/cpp/cpp/templates-cpp?view=msvc-170)
+* [Template (C++)](https://leetcode.cn/link/?target=https://en.wikipedia.org/wiki/Template_(C%2B%2B))
+
+
+#### 20. 如何避免拷贝 3
+
+面试高频指数：★★★☆☆
+
+最直观的想法是：将类的拷贝构造函数和赋值运算符重载声明为私有 `private`，但对于类的成员函数和友元函数依然可以调用，达不到完全禁止类的对象被拷贝的目的，而且程序会出现错误，因为未对函数进行定义。
+
+1. 声明一个基类，具体做法如下。
+
+* 定义一个基类，将其中的拷贝构造函数和赋值运算符重载声明为私有 `private`。
+* 派生类以私有 `private` 的方式继承基类。
+
+```
+class Uncopyable
+{
+public:
+    Uncopyable() {}
+    ~Uncopyable() {}
+
+private:
+    Uncopyable(const Uncopyable &);            // 拷贝构造函数
+    Uncopyable &operator=(const Uncopyable &); // 赋值运算符
+};
+class A : private Uncopyable // 注意继承方式
+{ 
+};
+
+```
+
+
+简单解释：
+
+* 能够保证，在派生类 `A` 的成员函数和友元函数中无法进行拷贝操作，因为无法调用基类 `Uncopyable` 的拷贝构造函数或赋值运算符重载。同样，在类的外部也无法进行拷贝操作。
+
+2. 拷贝构造函数 `=delete` 修饰:
+   `C++ 11` 支持 `delete` 直接禁用类的成员函数调用。
+
+```
+class Uncopyable
+{
+public:
+    Uncopyable() {}
+    ~Uncopyable() {}
+     Uncopyable(const Uncopyable &) = delete;            // 禁用拷贝构造函数
+     Uncopyable &operator=(const Uncopyable &) = delete; // 禁用赋值运算符
+};
+
+```
+
+参考资料：
+
+* [C++禁止使用拷贝构造函数和赋值运算符方法](https://leetcode.cn/link/?target=https://blog.csdn.net/qq_45662588/article/details/121032975)
+* [如何禁止自动生成拷贝构造函数？](https://leetcode.cn/link/?target=https://www.jianshu.com/p/1ba360949452)
