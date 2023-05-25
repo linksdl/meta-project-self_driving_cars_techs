@@ -1920,3 +1920,209 @@ public:
 
 * [C++禁止使用拷贝构造函数和赋值运算符方法](https://leetcode.cn/link/?target=https://blog.csdn.net/qq_45662588/article/details/121032975)
 * [如何禁止自动生成拷贝构造函数？](https://leetcode.cn/link/?target=https://www.jianshu.com/p/1ba360949452)
+
+
+#### 21. 为什么拷贝构造函数必须声明为引用 3
+
+面试高频指数：★★★☆☆
+
+1. 为什么拷贝函数必须为引用:
+   原因：避免拷贝构造函数无限制的递归而导致栈溢出。
+
+```
+#include <iostream>
+using namespace std;
+
+class A
+{
+private:
+    int val;
+
+public:
+    A(int tmp) : val(tmp) // 带参数构造函数
+    {
+        cout << "A(int tmp)" << endl;
+    }
+
+    A(const A &tmp) // 拷贝构造函数
+    {
+        cout << "A(const A &tmp)" << endl;
+        val = tmp.val;
+    }
+
+    A &operator=(const A &tmp) // 赋值运算符重载
+    {
+        cout << "A &operator=(const A &tmp)" << endl;
+        val = tmp.val;
+        return *this;
+    }
+
+    void fun(A tmp)
+    {
+    }
+};
+
+int main()
+{
+    A ex1(1);
+    A ex2(2);
+    A ex3 = ex1;
+    ex2 = ex1;
+    ex2.fun(ex1);
+    return 0;
+}
+/*
+运行结果：
+A(int tmp)
+A(int tmp)
+A(const A &tmp)
+A &operator=(const A &tmp)
+A(const A &tmp)
+*/
+
+```
+
+
+* 说明 `1`：`ex2 = ex1;` 和 `A ex3 = ex1;` 为什么调用的函数不一样？
+  对象 `ex2` 已经实例化了，不需要构造，此时只是将 `ex1` 赋值给 `ex2`，只会调用赋值运算符的重载；但是 `ex3` 还没有实例化，因此调用的是拷贝构造函数，构造出 `ex3`，而不是赋值函数，这里涉及到构造函数的隐式调用。
+* 说明 2：如果拷贝构造函数中形参不是引用类型，`A ex3 = ex1;` 会出现什么问题？
+  构造 `ex3`，实质上是 `ex3.A(ex1);`，假如拷贝构造函数参数不是引用类型，那么将使得 `ex3.A(ex1);` 相当于 `ex1` 作为函数 `A(const A tmp)` 的实参，在参数传递时相当于 `A tmp = ex1`，因为 `tmp` 没有被初始化，所以在 `A tmp = ex1` 中继续调用拷贝构造函数，接下来的是构造 `tmp`，也就是 `tmp.A(ex1)` ，必然又会有 `ex1` 作为函数 `A(const A tmp);` 的实参，在参数传递时相当于即 `A tmp = ex1`，那么又会触发拷贝构造函数，就这下永远的递归下去。
+* 说明 3：为什么 `ex2.fun(ex1);` 会调用拷贝构造函数？
+  `ex1` 作为参数传递给 `fun` 函数， 即 `A tmp = ex1;`，这个过程会调用拷贝构造函数进行初始化。
+
+2. 什么情况下会调用拷贝构造函数：
+
+* 直接初始化和拷贝初始化时
+
+```
+string dots("zhang"); //直接初始化
+string dots = "zhang" //拷贝初始化
+```
+
+* 将一个对象作为实参传递给一个非引用或非指针类型的形参时
+* 从一个返回类型为非引用或非指针的函数返回一个对象时
+* 用花括号列表初始化一个数组的元素或者一个聚合类（很少使用）中的成员时。
+
+3. 何时调用复制构造函数：
+   新建一个对象并将其初始化为同类现有对象时，复制构造函数都将被调用。这在很多情况下都可能发生，最常见的情况是新对象显式地初始化为现有的对象。例如，假设 `motto` 是一个 `StringBad` 对象，则下面 `4` 种声明都将调用复制构造函数：
+
+```
+StringBad ditto(motto);
+StringBad metoo = motto;
+StringBad also = StringBad(motto);
+StringBad * pStringBad = new StringBad(motto);
+
+```
+
+
+其中中间的 `2` 种声明可能会使用复制构造函数直接创建 `metoo` 和 `also` ，也可能使用复制构造函数生成一个临时对象，然后将临时对象的内容赋给 `metoo` 和 `also`，这取决于具体的实现。最后一种声明使用 `motto` 初始化一个匿名对象，并将新对象的地址赋给 `pStringBad` 指针。
+
+参考资料：
+
+* [拷贝构造函数在哪几种情况下会被调用](https://leetcode.cn/link/?target=https://zhuanlan.zhihu.com/p/150367892?from_voters_page=true)
+* [拷贝构造函数何时调用？](https://leetcode.cn/link/?target=https://www.zhihu.com/question/30726582)
+
+
+#### 22. 如何禁止一个类被实例化
+
+面试高频指数：★★★☆☆
+
+1. 方法一：
+
+* 在类中定义一个纯虚函数，使该类成为抽象基类，因为不能创建抽象基类的实例化对象；
+
+```
+#include <iostream>
+
+using namespace std;
+
+
+class A {
+public:
+    int var1, var2;
+    A(){
+        var1 = 10;
+        var2 = 20;
+    }
+    virtual void fun() = 0; // 纯虚函数
+};
+
+int main()
+{
+    A ex1; // error: cannot declare variable 'ex1' to be of abstract type 'A'
+    return 0;
+}
+
+```
+
+2. 方法二：
+
+* 将类的所有构造函数声明为私有 `private`；
+
+3. 方法三：
+
+* `C++ 11` 以后，将类的所有构造函数用 `=delete` 修饰；
+
+
+#### 23. 实例化一个对象需要哪几个阶段 3
+
+面试高频指数：★★★☆☆
+
+* **分配空间**
+  创建类对象首先要为该对象分配内存空间。不同的对象，为其分配空间的时机未必相同。全局对象、静态对象、分配在栈区域内的对象，在编译阶段进行内存分配；存储在堆空间的对象，是在运行阶段进行内存分配。
+* **初始化**
+  首先明确一点：初始化不同于赋值。初始化发生在赋值之前，初始化随对象的创建而进行，而赋值是在对象创建好后，为其赋上相应的值。这一点可以联想下上一个问题中提到：初始化列表先于构造函数体内的代码执行，初始化列表执行的是数据成员的初始化过程，这个可以从成员对象的构造函数被调用看的出来。
+* **赋值**
+  对象初始化完成后，可以对其进行赋值。对于一个类的对象，其成员变量的赋值过程发生在类的构造函数的函数体中。当执行完该函数体，也就意味着类对象的实例化过程完成了。（总结：构造函数实现了对象的初始化和赋值两个过程，对象的初始化是通过初始化列表来完成，而对象的赋值则才是通过构造函数的函数体来实现。）
+
+注：对于拥有虚函数的类的对象，还需要给虚表指针赋值。
+
+* 没有继承关系的类，分配完内存后，首先给虚表指针赋值，然后再列表初始化以及执行构造函数的函数体，即上述中的初始化和赋值操作。
+* 有继承关系的类，分配内存之后，首先进行基类的构造过程，然后给该派生类的虚表指针赋值，最后再列表初始化以及执行构造函数的函数体，即上述中的初始化和赋值操作。
+
+
+#### 24. 不允许修改类的成员变量的函数实现方法 3
+
+面试高频指数：★★★☆☆
+
+如果想达到一个类的成员函数不能修改类的成员变量，只需用 `const` 关键字来修饰该函数即可。该问题本质是考察 `const` 关键字修饰成员函数的作用，只不过以实例的方式来考察，面试者应熟练掌握 `const` 关键字的作用。同时 `C++` 还存在与 `const` 相反的关键字 `mutable`。被 `mutable` 修饰的变量，将永远处于可变的状态，即使在一个 `const` 函数中。如果我们需要在 `const` 函数中修改类的某些成员变量，这时就需要用到 `mutable`。
+使用 `mutable` 的注意事项：
+
+* `mutable` 只能作用于类的非静态和非常量数据成员。
+* 在一个类中，应尽量避免大量使用 `mutable`，大量使用 `mutable` 表示程序设计存在缺陷。
+
+```
+#include <iostream>
+
+using namespace std;
+
+class A
+{
+public:
+    mutable int var1;
+    int var2;
+    A()
+    {
+        var1 = 10;
+        var2 = 20;
+    }
+    void fun() const // 不能在 const 修饰的成员函数中修改成员变量的值，除非该成员变量用 mutable 修饰
+    {
+        var1 = 100; // ok
+        var2 = 200; // error: assignment of member 'A::var1' in read-only object
+    }
+};
+
+int main()
+{
+    A ex1;
+    return 0;
+}
+
+```
+
+我们可以看到在 `const` 函数中， `mutable` 修饰的变量可以修改，否则则不能修改。
+
+参考资料:
+
+* [深入理解C++中的mutable关键字](https://leetcode.cn/link/?target=https://www.iteye.com/blog/shansun123-398582)
