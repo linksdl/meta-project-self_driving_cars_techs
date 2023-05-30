@@ -21,7 +21,6 @@
 17. [switch 的 case 里为何不建议定义变量](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vd4rmh/)
 18. [什么是可变参数模板](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vdzv2s/)
 
-
 #### 01. 左值和右值：区别、引用及转化 5
 
 面试高频指数：★★★★★
@@ -176,7 +175,6 @@ rValue processed: 1
 
 ```
 
-
 有了右值引用后，函数调用可以写为如下，此时我们用右值引用绑定到右值上：
 
 ```
@@ -315,4 +313,561 @@ class Test {
 * [Understanding the meaning of lvalues and rvalues in C++](https://leetcode.cn/link/?target=https://www.internalpointers.com/post/understanding-meaning-lvalues-and-rvalues-c)
 * [“New” Value Terminology](https://leetcode.cn/link/?target=https://www.stroustrup.com/terminology.pdf)
 
-[](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vvt83m/)
+
+#### 02. std::move() 函数的实现原理 5
+
+面试高频指数：★★★★★
+
+1. `std::move()` 函数原型：
+   `move` 函数是将任意类型的左值转为其类型的右值引用。
+
+```
+template <typename T>
+typename remove_reference<T>::type&& move(T&& t)
+{
+	return static_cast<typename remove_reference<T>::type &&>(t);
+}
+
+```
+
+
+首先需要了解一下，引用折叠原理:
+
+* 右值传递给上述函数的形参 `T&&` 依然是右值，即 `T&& &&` 相当于 `T&&`。
+* 左值传递给上述函数的形参 `T&&` 依然是左值，即 `T&& &` 相当于 `T&`。
+  我们已经知道折叠原理，通过引用折叠原理可以知道，`move()` 函数的形参既可以是左值也可以是右值。
+
+再次详细描述 `move` 函数的处理流程:
+
+* 首先利用万能模板将传入的参数 `t` 进行处理，我们知道右值经过 `T&&` 传递类型保持不变还是右值，而左值经过 `T&&` 变为普通的左值引用，以保证模板可以传递任意实参，且保持类型不变；对参数 `t` 做一次右值引用，根据引用折叠规则，右值的右值引用是右值引用，而左值的右值引用是普通的左值引用。万能模板既可以接受左值作为实参也可以接受右值作为实参。
+* 通过 `remove_refrence` 移除引用，得到参数 `t` 具体的类型 `type`；
+* 最后通过 `static_cast<>` 进行强制类型转换，返回 `type &&` 右值引用。
+
+2. `remove_reference` 具体实现：
+   `remove_reference` 主要作用是解除类型中引用并返回变量的实际类型。
+
+```
+//原始的，最通用的版本
+template <typename T> struct remove_reference{
+    typedef T type;  //定义 T 的类型别名为 type
+};
+ 
+//部分版本特例化，将用于左值引用和右值引用
+template <class T> struct remove_reference<T&> //左值引用
+{ typedef T type; }
+ 
+template <class T> struct remove_reference<T&&> //右值引用
+{ typedef T type; }   
+  
+//举例如下,下列定义的a、b、c三个变量都是int类型
+int i;
+remove_refrence<decltype(42)>::type a;             //使用原版本，
+remove_refrence<decltype(i)>::type  b;             //左值引用特例版本
+remove_refrence<decltype(std::move(i))>::type  b;  //右值引用特例版本 
+
+```
+
+3. `forward` 的实现：
+   `forward` 保证了在转发时左值右值特性不会被更改，实现完美转发。主要解决引用函数参数为右值时，传进来之后有了变量名就变成了左值。比如如下代码:
+
+```
+#include <iostream>
+using namespace std;
+
+template<typename T>
+void fun(T&& tmp) 
+{ 
+    cout << "fun rvalue bind:" << tmp << endl; 
+} 
+
+template<typename T>
+void fun(T& tmp) 
+{ 
+    cout << "fun lvalue bind:" << tmp << endl; 
+} 
+
+template<typename T>
+void test(T&& x) {
+    fun(x);
+    fun(std::forward<T>(x));
+}
+
+int main() 
+{ 
+    int a = 10;
+    test(10);
+    test(a);
+    return 0;
+}
+/*
+fun lvalue bind:10
+fun rvalue bind:10
+fun lvalue bind:10
+fun lvalue bind:10
+*/
+
+
+```
+
+参数 `x` 为右值，到了函数内部则变量名则变为了左值，我们使用 `forward` 即可保留参数 `x` 的属性。
+`forward` 函数实现如下:
+
+```
+  /**
+   *  @brief  Forward an lvalue.
+   *  @return The parameter cast to the specified type.
+   *
+   *  This function is used to implement "perfect forwarding".
+   */
+template<typename _Tp>
+constexpr _Tp&&
+forward(typename std::remove_reference<_Tp>::type& __t) noexcept
+{ return static_cast<_Tp&&>(__t); }
+
+/**
+ *  @brief  Forward an rvalue.
+ *  @return The parameter cast to the specified type.
+ *
+ *  This function is used to implement "perfect forwarding".
+ */
+template<typename _Tp>
+constexpr _Tp&&
+forward(typename std::remove_reference<_Tp>::type&& __t) noexcept
+{
+    static_assert(!std::is_lvalue_reference<_Tp>::value, "template argument"
+        " substituting _Tp is an lvalue reference type");
+    return static_cast<_Tp&&>(__t);
+}
+
+```
+
+`forward` 函数的处理流程:
+
+* `forward` 同样利用引用折叠的特性，对参数 `t` 做一次右值引用，根据引用折叠规则，右值的右值引用是右值引用，而左值的右值引用是普通的左值引用。`forward` 的实现有两个函数：
+  第一个，接受的参数是左值引用，只能接受左值。
+  第二个，接受的参数是右值引用，只能接受右值。
+  根据引用折叠的原理：
+  * 如果传递的是左值，`_Tp` 推断为 `T &`，则返回变成 `static_cast<T& &&>`，也就是 `static_cast<T&>`，所以返回的是左值引用。
+  * 如果传递的是右值，`_Tp` 推断为 `T&&` 或者 `T`，则返回变成 `static_cast<T && &&>`，所以返回的是右值引用。
+* `forward` 与 `move` 最大的区别是，`move` 在进行类型转换时，利用 `remove_reference` 将外层的引用全部去掉，这样可以将 `t` 强制转换为指定类型的右值引用，而 `forward` 则利用引用折叠的技巧，巧妙的保留了变量原有的属性。
+  以下示例代码就可以观察到 `move` 与 `forward` 的原理区别:
+
+```
+#include <iostream>
+using namespace std;
+
+typedef int&  lref;
+typedef int&& rref;
+
+void fun(int&& tmp) 
+{ 
+    cout << "fun rvalue bind:" << tmp << endl; 
+} 
+
+void fun(int& tmp) 
+{ 
+    cout << "fun lvalue bind:" << tmp << endl; 
+} 
+
+int main() 
+{ 
+    int a = 11; 
+	int &b = a;
+	int &&c = 100;
+	fun(static_cast<lref &&>(b));
+	fun(static_cast<rref &&>(c));
+	fun(static_cast<int &&>(a));
+	fun(static_cast<int &&>(b));
+	fun(static_cast<int &&>(c));
+    return 0;
+}
+/*
+fun lvalue bind:11
+fun rvalue bind:100
+fun rvalue bind:11
+fun rvalue bind:11
+fun rvalue bind:100
+*/
+
+
+```
+
+参考资料：
+
+* [谈谈C++的左值右值，左右引用，移动语意及完美转发](https://leetcode.cn/link/?target=https://zhuanlan.zhihu.com/p/402251966)
+* [c++引用折叠](https://leetcode.cn/link/?target=https://blog.csdn.net/kupepoem/article/details/119944958)
+* [引用折叠和完美转发](https://leetcode.cn/link/?target=https://zhuanlan.zhihu.com/p/50816420)
+* [条款23.理解move和forward](https://leetcode.cn/link/?target=https://blog.csdn.net/qq_36553387/article/details/116885439)
+
+
+#### 03. 指针及其大小、用法 5
+
+面试高频指数：★★★★★
+
+1. 指针的定义:
+   指针是一种变量类型，其值为另一个变量的地址，即内存位置的直接地址。就像其他变量或常量一样，必须在使用指针存储其他变量地址之前，对其进行声明。在 `64` 位计算机中，指针占 `8` 个字节空间。使用指针时可以用以下几个操作：定义一个指针变量、把变量地址赋值给指针、访问指针变量中可用地址的值。通过使用一元运算符 `*` 来返回位于操作数所指定地址的变量的值。
+
+```
+#include<iostream>
+
+using namespace std;
+
+int main(){
+    int *p = nullptr;
+    cout << sizeof(p) << endl; // 8
+
+    char *p1 = nullptr;
+    cout << sizeof(p1) << endl; // 8
+    return 0;
+}
+
+
+```
+
+
+2. 指针的用法：
+
+* 空指针:
+  `C` 语言中定义了空指针为 `NULL`，实际是一个宏，它的值是 `0`，即 `#define NULL 0`。`C++` 中使用 `nullptr` 表示空指针，它是 `C++ 11` 中的关键字，是一种特殊类型的字面值，可以被转换成任意其他类型。
+* 指针的运算:
+  * 两个同类型指针可以比较大小；
+  * 两个同类型指针可以相减；
+  * 指针变量可以和整数类型变量或常量相加；
+  * 指针变量可以减去一个整数类型变量或常量；
+  * 指针变量可以自增，自减；
+
+```
+int a[10];
+int *p1 = a + 1; // 指针常量相加
+int *p2 = a + 4;
+bool greater = p2 > p1; // 比较大小
+int offset = p2 - a; // 相减
+p2++; // 自增
+p1--; // 自减
+
+
+```
+
+* 指向普通对象的指针:
+
+```
+#include <iostream>
+
+using namespace std;
+
+class A
+{
+};
+
+int main()
+{
+    A *p = new A();
+    return 0;
+}
+
+```
+
+
+* 指向常量对象的指针：常量指针，`const` 修饰表示指针指向的内容不能更改。
+  ```
+  #include <iostream>
+  using namespace std;
+
+  int main(void)
+  {
+      const int c_var = 10;
+      const int * p = &c_var;
+      cout << *p << endl;
+      return 0;
+  }
+
+  ```
+
+
+* 指向函数的指针：函数指针。
+
+```
+#include <iostream>
+using namespace std;
+
+int add(int a, int b){
+    return a + b;
+}
+
+typedef int (*fun_p)(int, int);
+
+int main(void)
+{
+    fun_p fn = add;
+    cout << fn(1, 6) << endl;
+    return 0;
+}
+
+```
+
+* 指向对象成员的指针，包括指向对象成员函数的指针和指向对象成员变量的指针。
+  特别注意：定义指向成员函数的指针时，要标明指针所属的类。
+
+```
+#include <iostream>
+
+using namespace std;
+
+class A
+{
+public:
+    int var1, var2; 
+	static int x;
+	static int get() {
+		return 100;
+	}
+
+    int add(){
+        return var1 + var2;
+    }
+};
+
+
+
+int main()
+{
+    A ex;
+    ex.var1 = 3;
+    ex.var2 = 4;
+    int *p = &ex.var1; // 指向对象成员变量的指针
+    cout << *p << endl;
+
+    int (A::*fun_p)();
+	int (*fun_q)();
+    fun_p = &A::add; // 指向对象非静态成员函数的指针 fun_p
+	fun_q = A::get; // 指向对象静态成员函数的指针 fun_q
+	cout << (ex.*fun_p)() << endl;
+    cout << (*fun_q)() << endl;
+    return 0;
+}
+
+
+```
+
+
+而对于函数类型到函数指针类型的默认转换，只有当函数类型是左值的时候才行。所有对于非静态的成员函数，就不存在这种从函数类型到函数指针类型的默认转换，于是编译器也就不知道这个 `p = A::add` 该怎么确定。
+
+* 由于非静态成员函数指针可以有多态行为，在编译期函数地址可能无法确定。
+* 静态成员函数指针在编译期函数地址则可以确定。
+* `this` 指针：指向类的当前对象的指针常量。
+
+```
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+class A
+{
+public:
+    void set_name(string tmp)
+    {
+        this->name = tmp;
+    }
+    void set_age(int tmp)
+    {
+        this->age = age;
+    }
+    void set_sex(int tmp)
+    {
+        this->sex = tmp;
+    }
+    void show()
+    {
+        cout << "Name: " << this->name << endl;
+        cout << "Age: " << this->age << endl;
+        cout << "Sex: " << this->sex << endl;
+    }
+
+private:
+    string name;
+    int age;
+    int sex;
+};
+
+int main()
+{
+    A *p = new A();
+    p->set_name("Alice");
+    p->set_age(16);
+    p->set_sex(1);
+    p->show();
+
+    return 0;
+}
+
+```
+
+
+参考资料：
+
+* [C++ 指针](https://leetcode.cn/link/?target=https://www.runoob.com/cplusplus/cpp-pointers.html)
+* [c++指针运算](https://leetcode.cn/link/?target=https://blog.csdn.net/maxzcl/article/details/117821601)
+
+
+#### 04. 指针和引用的区别 5
+
+面试高频指数：★★★★★
+
+* 指针：指针是一个变量，它保存另一个变量的内存地址。需要使用 `*` 运算符指针才能访问它指向的内存位置。
+* 引用：引用变量是别名，即已存在变量的另一个名称。对于编译器来说，引用和指针一样，也是通过存储对象的地址来实现的。实际可以将引用视为具有自动间接寻址的常量指针，编译器自动为引用使用 `*` 运算符。
+
+1. 二者的区别
+
+* 是否可变:
+  指针所指向的内存空间在程序运行过程中可以改变，而引用所绑定的对象一旦初始化绑定就不能改变。
+* 是否占内存:
+  指针本身在内存中占有内存空间，引用相当于变量的别名，在内存中不占内存空间（实际底层编译器可能用指针实现的引用），当我们使用 `&` 对引用取地址时，将会得到绑定对象的地址。
+
+```
+#include <iostream>
+using namespace std;
+
+int main() 
+{ 
+    int a = 10;
+    int &b = a;
+    cout<<&a<<endl;
+    cout<<&b<<endl;
+    return 0;
+}
+
+```
+
+* 是否可为空：
+  指针可以定义时不用初始化直接悬空，但是引用初始化时必须绑定对象。
+* 是否能为多级
+  指针可以有多级，但是引用只能一级。我们可以定义指针的指针，但不能定义引用的引用。
+
+参考资料：
+
+* [Differences between pointers and references in C++](https://leetcode.cn/link/?target=https://www.educative.io/answers/differences-between-pointers-and-references-in-cpp)
+* [Pointers vs References in C++](https://leetcode.cn/link/?target=https://www.***.org/pointers-vs-references-cpp/)
+* [What are the differences between a pointer variable and a reference variable?](https://leetcode.cn/link/?target=https://stackoverflow.com/questions/57483/what-are-the-differences-between-a-pointer-variable-and-a-reference-variable)
+
+
+#### 05. 常量指针和指针常量的区别 5
+
+面试高频指数：★★★★★
+
+1. 常量指针：
+   常量指针本质上是个指针，只不过这个指针指向的对象是常量。
+   特点：`const` 的位置在指针声明运算符 `*` 的左侧。只要 `const` 位于 `*` 的左侧，无论它在类型名的左边或右边，都表示指向常量的指针。（可以这样理解：`*` 左侧表示指针指向的对象，该对象为常量，那么该指针为常量指针。）
+
+constint * p;
+intconst * p;
+
+* `注意 1`：指针指向的对象不能通过这个指针来修改，也就是说常量指针可以被赋值为变量的地址，之所以叫做常量指针，是限制了通过这个指针修改变量的值。
+  例如：
+
+```
+#include <iostream>
+using namespace std;
+
+int main()
+{
+    const int c_var = 8;
+    const int *p = &c_var; 
+    *p = 6;            // error: assignment of read-only location '* p'
+    return 0;
+}
+
+
+```
+
+* `注意 2`：虽然常量指针指向的对象不能变化，可是因为常量指针本身是一个变量，因此，可以被重新赋值。
+  例如：
+
+```
+#include <iostream>
+using namespace std;
+
+int main()
+{
+    const int c_var1 = 8;
+    const int c_var2 = 8;
+    const int *p = &c_var1; 
+    p = &c_var2;
+    return 0;
+}
+
+```
+
+
+2. 指针常量：
+   指针常量的本质上是个常量，只不过这个常量的值是一个指针。
+   特点：`const` 位于指针声明操作符右侧，表明该对象本身是一个常量，`*` 左侧表示该指针指向的类型，即以 `*` 为分界线，其左侧表示指针指向的类型，右侧表示指针本身的性质。
+
+constint var;
+int * const c_p = &var;
+
+* `注意 1`：指针常量的值是指针，这个值因为是常量，所以指针本身不能改变。
+
+```
+#include <iostream>
+using namespace std;
+
+int main()
+{
+    int var, var1;
+    int * const c_p = &var;
+    c_p = &var1; // error: assignment of read-only variable 'c_p'
+    return 0;
+}
+
+```
+
+* `注意 2`：指针的内容可以改变。
+  ```
+  #include <iostream>
+  using namespace std;
+
+  int main()
+  {
+      int var = 3;
+      int * const c_p = &var;
+      *c_p = 12; 
+      return 0;
+  }
+
+  ```
+
+3. 指向常量的指针常量:
+   指向常量的指针常量，指针的指向不可修改，指针所指的内存区域中的值也不可修改。
+
+```
+#include <iostream>
+using namespace std;
+
+int main()
+{
+    int var, var1;
+    const int * const c_p = &var;
+    c_p = &var1; // error: assignment of read-only variable 'c_p'
+    *c_p = 12; // error: assignment of read-only location '*c_p'
+    return 0;
+}
+
+```
+
+4. 部分特例:
+   根据前三部分的结论，我们可以得到以下代码的表示内容:
+
+```
+int ** const p;  // p 是一指针常量，它是一个指向指针的指针常量；
+int * const * p; // p 是一个指针，它是一个指向指针常量的指针；
+int const ** p;  // p 是一个指针，它是一个指向常量的指针的指针；
+int * const * const p; // p 是一指针常量，它是一个指向指针常量的指针常量；
+
+
+```
+
+参考资料：
+
+* [What is the difference between const int*, const int * const, and int const *?](https://leetcode.cn/link/?target=https://stackoverflow.com/questions/1143262/what-is-the-difference-between-const-int-const-int-const-and-int-const)
+* [9.8 — Pointers and const](https://leetcode.cn/link/?target=https://www.learncpp.com/cpp-tutorial/pointers-and-const/)
+* [Difference between const int*, const int * const, and int const *](https://leetcode.cn/link/?target=https://www.***.org/difference-between-const-int-const-int-const-and-int-const/)
