@@ -861,7 +861,6 @@ int * const * const p; // p 是一指针常量，它是一个指向指针常量�
 * [9.8 — Pointers and const](https://leetcode.cn/link/?target=https://www.learncpp.com/cpp-tutorial/pointers-and-const/)
 * [Difference between const int*, const int * const, and int const *](https://leetcode.cn/link/?target=https://www.***.org/difference-between-const-int-const-int-const-and-int-const/)
 
-
 #### 06. 函数指针的定义 5
 
 面试高频指数：★★★★★
@@ -901,7 +900,6 @@ int main()
 
 ```
 
-
 需要注意的是，对于 `fun1` 和 `&fun1`:
 
 * 函数名 `fun1` 存放的是函数的首地址，它是一个函数类型 `void`，`&fun1` 表示一个指向函数对象 `fun1` 的地址，是一个指针类型。它的类型是 `int (*)(int,int)`，因此 `fun1` 和 `&fun1` 的值是一样的；
@@ -912,7 +910,6 @@ int main()
 
 * [为什么c语言中对函数名取地址和解引用得到的值一样？](https://leetcode.cn/link/?target=https://www.zhihu.com/question/293674445)
 * [Use of &#39;&amp;&#39; operator before a function name in C++](https://leetcode.cn/link/?target=https://stackoverflow.com/questions/23776784/use-of-operator-before-a-function-name-in-c)
-
 
 #### 07. 参数传递中：值传递、引用传递、指针传递的区别 5
 
@@ -966,7 +963,6 @@ var 引用传递时的地址：0x23fe4c
 
 ```
 
-
 说明：从上述代码的运行结果可以看出，只有在值传递时，形参和实参的地址不一样，在函数体内操作的不是变量本身。引用传递和指针传递，在函数体内操作的是变量本身。
 我们知道函数调用的方式，大部分的编译器按照函数形参定义的逆序，依次将参数压入栈内，上述提到参数的形式，如果是值传递，则压入栈中的是一个临时变量，该变量与传入的值内容相同；如果是指针传递或者引用传递，则压入栈的可能是一个临时的指针变量，该指针指向与传入的指针指向的内容相同。从函数调用机制来开，不管何种调用所有实参的传入时都在栈中开辟了空间。
 
@@ -974,7 +970,6 @@ var 引用传递时的地址：0x23fe4c
 
 * [c++值传递，指针传递，引用传递以及指针与引用的区别](https://leetcode.cn/link/?target=https://www.cnblogs.com/huolong-blog/p/7588335.html)
 * [C++中引用传递与指针传递区别（进一步整理）](https://leetcode.cn/link/?target=https://www.iteye.com/blog/xinklabi-653643)
-
 
 #### 08. 迭代器的作用 5
 
@@ -1019,7 +1014,6 @@ int main()
 
 ```
 
-
 参考资料：
 
 * [Introduction to Iterators in C++](https://leetcode.cn/link/?target=https://www.***.org/introduction-iterators-c/)
@@ -1027,7 +1021,6 @@ int main()
 * [Iterators in C++ STL](https://leetcode.cn/link/?target=https://www.***.org/iterators-c-stl/)
 * [std::iterator](https://leetcode.cn/link/?target=https://en.cppreference.com/w/cpp/iterator/iterator)
 * [C++ Iterators](https://leetcode.cn/link/?target=https://users.cs.northwestern.edu/~riesbeck/programming/c++/stl-iterators.html)
-
 
 #### 09. 野指针和悬空指针详解 4
 
@@ -1051,7 +1044,6 @@ void *p;
 // 此时 p 是“野指针”。
 ```
 
-
 * 如何避免野指针:
   指针在定义时即初始化，指针在释放完成后，需要将其置为空。
 
@@ -1060,3 +1052,394 @@ void *p;
 * [野指针](https://leetcode.cn/link/?target=https://baike.baidu.com/item/%E9%87%8E%E6%8C%87%E9%92%88/9654046?fr=aladdin)
 * [What are Wild Pointers? How can we avoid?](https://leetcode.cn/link/?target=https://www.***.org/what-are-wild-pointers-how-can-we-avoid/)
 * [What are Wild Pointers in C/C++?](https://leetcode.cn/link/?target=https://www.tutorialspoint.com/what-are-wild-pointers-in-c-cplusplus)
+
+
+#### 10. 强制类型转换的类型 4
+
+面试高频指数：★★★★☆
+
+1. `static_cast`：
+   `static_cast` 是“静态转换”的意思，也即在编译期间转换，转换失败的话会抛出一个编译错误。一般用于如下:
+
+* 用于数据的强制类型转换，强制将一种数据类型转换为另一种数据类型。
+* 用于基本数据类型的转换。
+* 用于类层次之间的基类和派生类之间指针或者引用的转换（不要求必须包含虚函数，但必须是有相互联系的类），进行上行转换（派生类的指针或引用转换成基类表示）是安全的；进行下行转换（基类的指针或引用转换成派生类表示）由于没有动态类型检查，所以是不安全的，最好用 `dynamic_cast` 进行下行转换。
+* 可以将空指针转化成目标类型的空指针。
+* 可以将任何类型的表达式转化成 `void` 类型。
+* 不能用于在不同类型的指针之间互相转换，也不能用于整型和指针之间的互相转换，当然也不能用于不同类型的引用之间的转换。
+
+2. `const_cast`：
+   主要用于 `const` 与非 `const`、`volatile` 与非 `volatile` 之间的转换。强制去掉常量属性，不能用于去掉变量的常量性，只能用于去除指针或引用的常量性，将常量指针转化为非常量指针或者将常量引用转化为非常量引用（注意：表达式的类型和要转化的类型是相同的）。
+3. `reinterpret_cast`：
+   改变指针或引用的类型、将指针或引用转换为一个足够长度的整型、将整型转化为指针或引用类型。`reinterpret_cast` 转换时，执行的过程是逐个比特复制的操作。
+4. `dynamic_cast`：
+
+* 其他三种都是编译时完成的，动态类型转换是在程序运行时处理的，运行时会进行类型检查。
+* 只能用于带有虚函数的基类或派生类的指针或者引用对象的转换，转换成功返回指向类型的指针或引用，转换失败返回 `NULL`；不能用于基本数据类型的转换。
+* 在向上进行转换时，即派生类的指针转换成基类的指针和 `static_cast` 效果是一样的，（注意：这里只是改变了指针的类型，指针指向的对象的类型并未发生改变）。
+
+```
+#include <iostream>
+#include <cstring>
+
+using namespace std;
+
+class Base
+{
+};
+
+class Derive : public Base
+{
+};
+
+int main()
+{
+    Base *p1 = new Derive();
+    Derive *p2 = new Derive();
+
+    //向上类型转换
+    p1 = dynamic_cast<Base *>(p2);
+    if (p1 == NULL)
+    {
+        cout << "NULL" << endl;
+    }
+    else
+    {
+        cout << "NOT NULL" << endl; //输出
+    }
+
+    return 0;
+}
+
+```
+
+
+* 在下行转换时，基类的指针类型转化为派生类的指针类型，只有当要转换的指针指向的对象类型和转化以后的对象类型相同时，才会转化成功。
+
+```
+#include <iostream>
+#include <cstring>
+
+using namespace std;
+
+class Base
+{
+public:
+    virtual void fun()
+    {
+        cout << "Base::fun()" << endl;
+    }
+};
+
+class Derive : public Base
+{
+public:
+    virtual void fun()
+    {
+        cout << "Derive::fun()" << endl;
+    }
+};
+
+int main()
+{
+    Base *p1 = new Derive();
+    Base *p2 = new Base();
+    Derive *p3 = new Derive();
+
+    //转换成功
+    p3 = dynamic_cast<Derive *>(p1);
+    if (p3 == NULL)
+    {
+        cout << "NULL" << endl;
+    }
+    else
+    {
+        cout << "NOT NULL" << endl; // 输出
+    }
+
+    //转换失败
+    p3 = dynamic_cast<Derive *>(p2);
+    if (p3 == NULL)
+    {
+        cout << "NULL" << endl; // 输出
+    }
+    else
+    {
+        cout << "NOT NULL" << endl;
+    }
+
+    return 0;
+}
+
+```
+
+参考资料：
+
+* [为什么说不要使用 dynamic_cast，需要运行时确定类型信息，说明设计有缺陷？](https://leetcode.cn/link/?target=https://www.zhihu.com/question/22445339)
+* [C++四种类型转换运算符：static_cast、dynamic_cast、const_cast和reinterpret_cast](https://leetcode.cn/link/?target=http://c.biancheng.net/cpp/biancheng/view/3297.html)
+* [static_cast reinterpret_cast dynamic_cast const_cast](https://leetcode.cn/link/?target=https://zhuanlan.zhihu.com/p/352766472)
+* [(C++ 成长记录) —— C++强制类型转换运算符（static_cast、reinterpret_cast、const_cast和dynamic_cast）](https://leetcode.cn/link/?target=https://zhuanlan.zhihu.com/p/368267441)
+* [When should static_cast, dynamic_cast, const_cast, and reinterpret_cast be used?](https://leetcode.cn/link/?target=https://stackoverflow.com/questions/332030/when-should-static-cast-dynamic-cast-const-cast-and-reinterpret-cast-be-used)
+* [C++中的类型转换（static_cast、const_cast、dynamic_cast、reinterpret_cast）](https://leetcode.cn/link/?target=https://blog.csdn.net/u012611878/article/details/78992132)
+* [Cast Operations](https://leetcode.cn/link/?target=https://docs.oracle.com/cd/E19422-01/819-3690/Cast.html)
+
+
+#### 11. 什么是类型萃取 4
+
+面试高频指数：★★★★☆
+
+类型萃取（`type traits`）使用模板技术来萃取类型（包含自定义类型和内置类型）的某些特性，用以判断该类型是否含有某些特性，从而在泛型算法中来对该类型进行特殊的处理用来提高效率或者得到其他优化。简单的来说类型萃取即确定变量去除引用修饰以后的真正的变量类型或者 `CV` 属性。`C++` 关于 `type traits` 的详细使用技巧可以参考头文件 `#include <type_traits>`。
+
+* 为什么需要 `type traits`：
+  对于普通的变量来说，确定变量的类型比较容易，比如 `int a = 10;` 可以很容易确定变量的实际类型为 `int`，但在使用模板时确定变量的类型就比较困难，模板传入的类型为不确定性。为什么需要确定变量的实际类型？因为模板函数针对传入的对不同的类型可能作出不同的处理，这就需要我们在处理函数模板对传入的参数类型和特性进行提取。比如自定义拷贝函数 `copy(T *dest, const T *src)` ，如果 `T` 此时为 `int` 类型，则此时我们只需要 `*dest = *src` 即可，但是如果我们此时传入的 `T` 为 `char *` 字符串类型时，则就不能简单进行指针赋值，所以函数在实际处理时则需要对传入的类型进行甄别，从而针对不同的类型给予不同的处理，这样才能使得函数具有通用性。
+* `remove_reference_t` 的原理：
+  `move` 函数在进行强制类型转换时，会使用到 `remove_reference_t`，该函数的作用是确定函数除去 `C-V` 和引用后的类型。以下为 `move` 的具体实现:
+
+```
+template<typename T>
+remove_reference_t<T>&& move(T&& t) {
+    return static_cast<remove_reference_t<T>&&>(t);
+}
+
+```
+
+通过 `remove_reference_t<T>` 可以把 `t` 对应的类型上的引用给去掉，然后把 `t` 对应的类型的右值引用符号 `&&` 强制绑定在变量 `t` 上，这样就强制将变量 `t` 转换为右值引用类型。`remove_reference` 函数的原型如下:
+
+```
+/// remove_reference
+template<typename _Tp>
+struct remove_reference
+{ typedef _Tp   type; };
+
+template<typename _Tp>
+struct remove_reference<_Tp&>
+{ typedef _Tp   type; };
+
+template<typename _Tp>
+struct remove_reference < _Tp&& >
+{ typedef _Tp   type; };
+
+```
+
+* 函数的实现非常简单，去掉绑定在类型中的引用，返回一个 实际类型 `type`。
+* `C++` 类型萃取一般用于模板中，当我们定义一个模板函数后，需要知道模板类型形参并加以运用时就奥数可以用类型萃取。通过确定变量的特征我们可以在模板中使用不同的处理方法。
+
+参考资料：
+
+* [Type Traits](https://leetcode.cn/link/?target=https://www.youtube.com/watch?v=eVtLOHoDbTo)
+* [A quick primer on type traits in modern C++](https://leetcode.cn/link/?target=https://www.internalpointers.com/post/quick-primer-type-traits-modern-cpp)
+* [C++之类型萃取](https://leetcode.cn/link/?target=https://blog.csdn.net/xuzhangze/article/details/78374890)
+
+#### 12. C++ 11 nullptr 比 NULL 的优势比较 3
+
+面试高频指数：★★★☆☆
+
+* `NULL`：预处理变量，是一个宏，它的值是 `0`，定义在头文件 `<cstdlib>` 中，即 `#define NULL 0`。
+* `nullptr`：`C++ 11` 中的关键字，是一种特殊类型的字面值，可以被转换成任意其他类型。
+
+二者相比 `nullptr` 的优势：
+
+* 有类型，类型是 `typdef decltype(nullptr) nullptr_t;`，使用 `nullptr` 提高代码的健壮性。
+* 函数重载：因为 `NULL` 本质上是 `0`，在函数调用过程中，若出现函数重载并且传递的实参是 `NULL`，可能会出现不知和哪一个函数匹配的情况；但是传递实参 `nullptr` 就不会出现这种情况。
+
+```
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+void fun(char const *p)
+{
+    cout << "fun(char const *p)" << endl;
+}
+
+void fun(int tmp)
+{
+    cout << "fun(int tmp)" << endl;
+}
+
+int main()
+{
+    fun(nullptr); // fun(char const *p)
+    /*
+    fun(NULL); // error: call of overloaded 'fun(NULL)' is ambiguous
+    */
+    return 0;
+}
+
+
+```
+
+参考资料：
+
+* [nullptr (C++/CLI and C++/CX)](https://leetcode.cn/link/?target=https://docs.microsoft.com/en-us/cpp/extensions/nullptr-cpp-component-extensions?view=msvc-170)
+* [Understanding nullptr in C++](https://leetcode.cn/link/?target=https://www.***.org/understanding-nullptr-c/)
+
+#### 13. 结构体相等的判断方式及 memcmp 函数的使用 3
+
+面试高频指数：★★★☆☆
+
+1. 符号重载：
+   需要重载操作符 `==` 判断两个结构体是否相等，不能用函数 `memcmp` 来判断两个结构体是否相等，因为 `memcmp` 函数是逐个字节进行比较的，而结构体存在内存空间中保存时存在字节对齐，字节对齐时补的字节内容是随机的，会产生垃圾值，所以无法比较。
+   利用运算符重载来实现结构体对象的比较：
+
+```
+#include <iostream>
+
+using namespace std;
+
+struct A
+{
+    char c;
+    int val;
+    A(char c_tmp, int tmp) : c(c_tmp), val(tmp) {}
+
+    friend bool operator==(const A &tmp1, const A &tmp2); //  友元运算符重载函数
+};
+
+bool operator==(const A &tmp1, const A &tmp2)
+{
+    return (tmp1.c == tmp2.c && tmp1.val == tmp2.val);
+}
+
+int main()
+{
+    A ex1('a', 90), ex2('b', 80);
+    if (ex1 == ex2)
+        cout << "ex1 == ex2" << endl;
+    else
+        cout << "ex1 != ex2" << endl; // 输出
+    return 0;
+}
+
+```
+
+参考资料：
+
+* [判断结构体相等](https://leetcode.cn/link/?target=https://www.jianshu.com/p/857703dcc7db?utm_campaign=maleskine&utm_content=note&utm_medium=seo_notes&utm_source=recommendation)
+* [No == operator found while comparing structs in C++](https://leetcode.cn/link/?target=https://stackoverflow.com/questions/5740310/no-operator-found-while-comparing-structs-in-c)
+
+
+#### 14. 模板及其实现 3
+
+面试高频指数：★★★☆☆
+
+1. 模板：创建类或者函数的蓝图或者公式，分为函数模板和类模板。
+   实现方式：模板定义以关键字 `template` 开始，后跟一个模板参数列表。
+   模板参数列表不能为空；
+   模板类型参数前必须使用关键字 `class` 或者 `typename`，在模板参数列表中这两个关键字含义相同，可互换使用。
+
+`template <typename T, typename U, ...>`
+
+
+2. 函数模板：通过定义一个函数模板，可以避免为每一种类型定义一个新函数。
+
+* 对于函数模板而言，模板类型参数可以用来指定返回类型或函数的参数类型，以及在函数体内用于变量声明或类型转换。
+* 函数模板实例化：当调用一个模板时，编译器用函数实参来推断模板实参，从而使用实参的类型来确定绑定到模板参数的类型。
+
+```
+#include<iostream>
+
+using namespace std;
+
+template <typename T>
+T add_fun(const T & tmp1, const T & tmp2){
+    return tmp1 + tmp2;
+}
+
+int main(){
+    int var1, var2;
+    cin >> var1 >> var2;
+    cout << add_fun(var1, var2);
+
+    double var3, var4;
+    cin >> var3 >> var4;
+    cout << add_fun(var3, var4);
+    return 0;
+}
+
+```
+
+
+3. 类模板：类似函数模板，类模板以关键字 `template` 开始，后跟模板参数列表。但是，编译器不能为类模板推断模板参数类型，需要在使用该类模板时，在模板名后面的尖括号中指明类型。
+
+```
+#include <iostream>
+
+using namespace std;
+
+template <typename T>
+class Complex
+{
+public:
+    //构造函数
+    Complex(T a, T b)
+    {
+        this->a = a;
+        this->b = b;
+    }
+
+    //运算符重载
+    Complex<T> operator+(Complex &c)
+    {
+        Complex<T> tmp(this->a + c.a, this->b + c.b);
+        cout << tmp.a << " " << tmp.b << endl;
+        return tmp;
+    }
+
+private:
+    T a;
+    T b;
+};
+
+int main()
+{
+    Complex<int> a(10, 20);
+    Complex<int> b(20, 30);
+    Complex<int> c = a + b;
+
+    return 0;
+}
+
+```
+
+
+4. 变量模板：
+   在 `C++14` 以后，变量也可以参数化为特定的类型，这称为变量模板。
+
+```
+template<typename T> 
+constexpr T pi = T{3.141592653589793238462643383L}; // (Almost) from std::numbers::pi
+
+
+```
+
+使用变量模板时，必须显式地指定它的类型：
+
+```
+std::cout << pi<double> << '\n';
+std::cout << pi<float> << '\n';
+```
+
+
+5. 函数重载与模板的区别:
+   函数重载和模板都是面向对象多态特性的例子。当多个函数执行非常相似（不相同）的操作时使用函数重载，当多个函数执行相同操作时使用模板，函数模板也可以重载。当模板类或者模板函数中含有静态变量时，则每个模板的实例类型都含有一个静态成员。
+
+```
+template <class T>
+class A { 
+  public: 
+	static T val; 
+}; 
+A<int> a; // 含有静态成员 int val;
+A<string> b; // 含有静态成员 string val;
+
+
+```
+
+
+参考资料：
+
+* [Templates in C++ with Examples](https://leetcode.cn/link/?target=https://www.***.org/templates-cpp/)
+* [C++ 模板](https://leetcode.cn/link/?target=https://www.runoob.com/cplusplus/cpp-templates.html)
+* [Templates (C++)](https://leetcode.cn/link/?target=https://docs.microsoft.com/en-us/cpp/cpp/templates-cpp?view=msvc-170)
+* [Template (C++)](https://leetcode.cn/link/?target=https://en.wikipedia.org/wiki/Template_(C%2B%2B))
