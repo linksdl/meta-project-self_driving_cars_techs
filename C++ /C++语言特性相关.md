@@ -1053,7 +1053,6 @@ void *p;
 * [What are Wild Pointers? How can we avoid?](https://leetcode.cn/link/?target=https://www.***.org/what-are-wild-pointers-how-can-we-avoid/)
 * [What are Wild Pointers in C/C++?](https://leetcode.cn/link/?target=https://www.tutorialspoint.com/what-are-wild-pointers-in-c-cplusplus)
 
-
 #### 10. 强制类型转换的类型 4
 
 面试高频指数：★★★★☆
@@ -1112,7 +1111,6 @@ int main()
 }
 
 ```
-
 
 * 在下行转换时，基类的指针类型转化为派生类的指针类型，只有当要转换的指针指向的对象类型和转化以后的对象类型相同时，才会转化成功。
 
@@ -1182,7 +1180,6 @@ int main()
 * [When should static_cast, dynamic_cast, const_cast, and reinterpret_cast be used?](https://leetcode.cn/link/?target=https://stackoverflow.com/questions/332030/when-should-static-cast-dynamic-cast-const-cast-and-reinterpret-cast-be-used)
 * [C++中的类型转换（static_cast、const_cast、dynamic_cast、reinterpret_cast）](https://leetcode.cn/link/?target=https://blog.csdn.net/u012611878/article/details/78992132)
 * [Cast Operations](https://leetcode.cn/link/?target=https://docs.oracle.com/cd/E19422-01/819-3690/Cast.html)
-
 
 #### 11. 什么是类型萃取 4
 
@@ -1318,7 +1315,6 @@ int main()
 * [判断结构体相等](https://leetcode.cn/link/?target=https://www.jianshu.com/p/857703dcc7db?utm_campaign=maleskine&utm_content=note&utm_medium=seo_notes&utm_source=recommendation)
 * [No == operator found while comparing structs in C++](https://leetcode.cn/link/?target=https://stackoverflow.com/questions/5740310/no-operator-found-while-comparing-structs-in-c)
 
-
 #### 14. 模板及其实现 3
 
 面试高频指数：★★★☆☆
@@ -1329,7 +1325,6 @@ int main()
    模板类型参数前必须使用关键字 `class` 或者 `typename`，在模板参数列表中这两个关键字含义相同，可互换使用。
 
 `template <typename T, typename U, ...>`
-
 
 2. 函数模板：通过定义一个函数模板，可以避免为每一种类型定义一个新函数。
 
@@ -1358,7 +1353,6 @@ int main(){
 }
 
 ```
-
 
 3. 类模板：类似函数模板，类模板以关键字 `template` 开始，后跟模板参数列表。但是，编译器不能为类模板推断模板参数类型，需要在使用该类模板时，在模板名后面的尖括号中指明类型。
 
@@ -1402,7 +1396,6 @@ int main()
 
 ```
 
-
 4. 变量模板：
    在 `C++14` 以后，变量也可以参数化为特定的类型，这称为变量模板。
 
@@ -1420,7 +1413,6 @@ std::cout << pi<double> << '\n';
 std::cout << pi<float> << '\n';
 ```
 
-
 5. 函数重载与模板的区别:
    函数重载和模板都是面向对象多态特性的例子。当多个函数执行非常相似（不相同）的操作时使用函数重载，当多个函数执行相同操作时使用模板，函数模板也可以重载。当模板类或者模板函数中含有静态变量时，则每个模板的实例类型都含有一个静态成员。
 
@@ -1436,10 +1428,249 @@ A<string> b; // 含有静态成员 string val;
 
 ```
 
-
 参考资料：
 
 * [Templates in C++ with Examples](https://leetcode.cn/link/?target=https://www.***.org/templates-cpp/)
 * [C++ 模板](https://leetcode.cn/link/?target=https://www.runoob.com/cplusplus/cpp-templates.html)
 * [Templates (C++)](https://leetcode.cn/link/?target=https://docs.microsoft.com/en-us/cpp/cpp/templates-cpp?view=msvc-170)
 * [Template (C++)](https://leetcode.cn/link/?target=https://en.wikipedia.org/wiki/Template_(C%2B%2B))
+
+
+#### 15. 函数模板和类模板的区别 3
+
+面试高频指数：★★★☆☆
+
+* 实例化方式不同：函数模板实例化由编译程序在处理函数调用时自动完成，类模板实例化需要在程序中显式指定。
+* 实例化的结果不同：函数模板实例化后是一个函数，类模板实例化后是一个类。
+* 默认参数：函数模板不允许有默认参数，类模板在模板参数列表中可以有默认参数。
+* 特化：函数模板只能全特化；而类模板可以全特化，也可以偏特化。
+* 调用方式不同：函数模板可以进行类型推导，可以隐式调用，也可以显式调用；类模板只能显式调用。
+  函数模板调用方式举例：
+
+```
+#include<iostream>
+
+using namespace std;
+
+template <typename T>
+T add_fun(const T & tmp1, const T & tmp2){
+    return tmp1 + tmp2;
+}
+
+int main(){
+    int var1, var2;
+    cin >> var1 >> var2;
+    cout << add_fun<int>(var1, var2); // 显式调用
+
+    double var3, var4;
+    cin >> var3 >> var4;
+    cout << add_fun(var3, var4); // 隐式调用
+    return 0;
+}
+
+```
+
+参考资料：
+
+* [函数模板与类模板](https://leetcode.cn/link/?target=https://zhuanlan.zhihu.com/p/381299879)
+* [Difference between Class Template and Function Template](https://leetcode.cn/link/?target=https://stackoverflow.com/questions/14040329/difference-between-class-template-and-function-template)
+* [Templates in C++ with Examples](https://leetcode.cn/link/?target=https://www.***.org/templates-cpp/)
+* [C++ Function Template and Class Template](https://leetcode.cn/link/?target=https://programmer.group/c-function-template-and-class-template.html)
+* [Templates in C++](https://leetcode.cn/link/?target=https://www.mygreatlearning.com/blog/templates-in-cpp/)
+
+
+#### 16. 什么是模板特化 3
+
+面试高频指数：★★★☆☆
+
+模板特化的原因：模板并非对任何模板实参都合适、都能实例化，某些情况下，通用模板的定义对特定类型不合适，可能会编译失败，或者得不到正确的结果。因此，当不希望使用模板版本时，可以定义类或者函数模板的一个特例化版本。
+模板特化：模板参数在某种特定类型下的具体实现。分为函数模板特化和类模板特化
+
+* 函数模板特化：将函数模板中的全部类型进行特例化，称为函数模板特化。
+* 类模板特化：将类模板中的部分或全部类型进行特例化，称为类模板特化。
+  特化分为全特化和偏特化：
+* 全特化：模板中的模板参数全部特例化。
+* 偏特化：模板中的模板参数只确定了一部分，剩余部分需要在编译器编译时确定。
+  说明：要区分下函数重载与函数模板特化
+  定义函数模板的特化版本，本质上是接管了编译器的工作，为原函数模板定义了一个特殊实例，而不是函数重载，函数模板特化并不影响函数匹配。
+
+```
+#include <iostream>
+#include <cstring>
+
+using namespace std;
+//函数模板
+template <class T>
+bool compare(T t1, T t2)
+{
+    cout << "通用版本：";
+    return t1 == t2;
+}
+
+template <> //函数模板特化
+bool compare(char *t1, char *t2)
+{
+    cout << "特化版本：";
+    return strcmp(t1, t2) == 0;
+}
+
+int main(int argc, char *argv[])
+{
+    char arr1[] = "hello";
+    char arr2[] = "abc";
+    cout << compare(123, 123) << endl;
+    cout << compare(arr1, arr2) << endl;
+
+    return 0;
+}
+/*
+运行结果：
+通用版本：1
+特化版本：0
+*/
+
+```
+
+参考资料：
+
+* [模板特化](https://leetcode.cn/link/?target=https://blog.csdn.net/langminglang/article/details/64160983)
+* [模板特化](https://leetcode.cn/link/?target=https://baike.baidu.com/item/%E6%A8%A1%E6%9D%BF%E7%89%B9%E5%8C%96/18760185)
+
+
+#### 17. 泛型编程如何实现 3
+
+面试高频指数：★★★☆☆
+
+泛型编程实现的基础：模板。模板是创建类或者函数的蓝图或者说公式，当时用一个 `vector` 这样的泛型，或者 `find` 这样的泛型函数时，编译时会转化为特定的类或者函数。
+泛型编程涉及到的知识点较广，例如：容器、迭代器、算法等都是泛型编程的实现实例。面试者可选择自己掌握比较扎实的一方面进行展开。
+
+* 容器：涉及到 `STL` 中的容器，例如：`vector`、`list`、`map` 等，可选其中熟悉底层原理的容器进行展开讲解。
+* 迭代器：在无需知道容器底层原理的情况下，遍历容器中的元素。
+* 模板：可参考本章节中的模板相关问题。
+
+泛型编程优缺点：
+
+* 通用性强：泛型算法是建立在语法一致性上，运用到的类型集是无限的/非绑定的。
+* 效率高：编译期能确定静态类型信息，其效率与针对某特定数据类型而设计的算法相同。
+* 类型检查严：静态类型信息被完整的保存在了编译期，在编译时可以发现更多潜在的错误。
+* 二进制复用性差：泛型算法是建立在语法一致性上，语法是代码层面的，语法上的约定无法体现在机器指令中。泛型算法实现的库，其源代码基本上是必须公开的，引用泛型中库都需要重新编译生成新的机器指令。而传统的 `C` 库全是以二进制目标文件形式发布的，需要使用这些库时直接动态链接加载使用即可，不需要进行再次编译。
+
+参考资料：
+
+* [泛型编程](https://leetcode.cn/link/?target=https://baike.baidu.com/item/%E6%B3%9B%E5%9E%8B%E7%BC%96%E7%A8%8B/6787248?fr=aladdin)
+* [泛型编程](https://leetcode.cn/link/?target=https://www.jianshu.com/p/62aa00e2be32)
+
+
+#### 18. switch 的 case 里为何不建议定义变量 3
+
+面试高频指数：★★★☆☆
+
+`switch` 下面的这个花括号表示一块作用域，而不是每一个 `case` 表示一块作用域。如果在某一 `case` 中定义了变量，其作用域在这块花括号内，按理说在另一个 `case` 内可以使用该变量，但是在实际使用时，每一个 `case` 之间互不影响，是相对封闭的，参考如下实例。
+
+实例：
+下述代码中，在 `switch` 的 `case` 中定义的变量，没有实际意义，仅为了解释上述原因。
+
+```
+#include <iostream>
+using namespace std;
+
+int main()
+{
+    // 局部变量声明
+    char var = 'D';
+
+    switch (var)
+    {
+    case 'A':
+        int cnt = 0; // 定义变量
+        cout << "Excellent." << endl
+             << cnt;
+        break;
+    case 'B':
+    case 'C':
+        ++cnt;
+        cout << "Good." << endl
+             << cnt;
+        break;
+    case 'D':
+        cout << "Not bad." << endl
+             << cnt;
+        break;
+    case 'F':
+        cout << "Bad." << endl
+             << cnt;
+        break;
+    default:
+        cout << "Bad." << endl
+             << cnt;
+    }
+
+    return 0;
+}
+
+```
+
+简单解释：上述代码中在符合 `A` 的条件下定义了变量，当符合 `B` 或者 `C` 的条件时，对该变量进行自增操作，但是因为不符合条件 `A` 未对变量进行定义，该变量无法使用。
+
+
+#### 19. 什么是可变参数模板 2
+
+面试高频指数：★★☆☆☆
+
+对于可变参数函数，在 `C` 语言中我们最熟悉的就是 `printf` 函数:
+
+```
+int printf(const char *format, ...)
+```
+
+在 `C++` 中的模板也可以支持可变参数：
+可变参数模板：接受可变数目参数的模板函数或模板类。将可变数目的参数被称为参数包，包括模板参数包和函数参数包。
+
+* 模板参数包：表示零个或多个模板参数；
+* 函数参数包：表示零个或多个函数参数。
+  用省略号来指出一个模板参数或函数参数表示一个包，在模板参数列表中，`class...` 或 `typename...` 指出接下来的参数表示零个或多个类型的列表；一个类型名后面跟一个省略号表示零个或多个给定类型的非类型参数的列表。当需要知道包中有多少元素时，可以使用 `sizeof...` 运算符。
+
+```
+template <typename T, typename... Args> // Args 是模板参数包
+void foo(const T &t, const Args&... rest); // 可变参数模板，rest 是函数参数包
+
+```
+
+实例：
+
+```
+#include <iostream>
+
+using namespace std;
+
+template <typename T>
+void print_fun(const T &t)
+{
+    cout << t << endl; // 最后一个元素
+}
+
+template <typename T, typename... Args>
+void print_fun(const T &t, const Args &...args)
+{
+    cout << t << " ";
+    print_fun(args...);
+}
+
+int main()
+{
+    print_fun("Hello", "world", "!");
+    return 0;
+}
+/*运行结果：
+Hello wolrd !
+
+*/
+
+```
+
+说明：可变参数函数通常是递归的，第一个版本的 `print_fun` 负责终止递归并打印初始调用中的最后一个实参。第二个版本的 `print_fun` 是可变参数版本，打印绑定到 `t` 的实参，并用来调用自身来打印函数参数包中的剩余值。
+
+参考资料：
+
+* [c++11-17 模板核心知识（四）—— 可变参数模板 Variadic Template](https://leetcode.cn/link/?target=https://zhuanlan.zhihu.com/p/338785886)
+* [可变参数模板是什么](https://leetcode.cn/link/?target=https://www.leixue.com/qa/what-are-variable-parameter-templates)
