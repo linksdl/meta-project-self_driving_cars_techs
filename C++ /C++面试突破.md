@@ -1045,7 +1045,6 @@ htons(uint16 x)       // uint16 类型 主机序转网络序
 * [What Is Little-Endian And Big-Endian Byte Ordering?](https://leetcode.cn/link/?target=https://www.section.io/engineering-education/what-is-little-endian-and-big-endian/)
 * [Big Endian and Little Endian](https://leetcode.cn/link/?target=https://chortle.ccsu.edu/assemblytutorial/Chapter-15/ass15_3.html)
 
-
 #### 09. 内存泄漏 4
 
 面试高频指数：★★★★☆
@@ -1084,7 +1083,6 @@ int main()
 * [Memory leak](https://leetcode.cn/link/?target=https://en.wikipedia.org/wiki/Memory_leak)
 * [Memory leak detection - How to find, eliminate, and avoid](https://leetcode.cn/link/?target=https://raygun.com/blog/memory-leak-detection/)
 
-
 #### 10. 内存泄漏检测与预防 3
 
 面试高频指数：★★★☆☆
@@ -1093,7 +1091,6 @@ int main()
    对于 `C/C++` 没有 `GC` 程序的语言来说因为内存造成的问题较多，当然一般情况下如果存在严重的内存泄漏，我们通过查看内存使用统计即可检测到内存泄漏，但是细小的内存泄漏很难通过统计观察到，目前一般都是利用各种内存检测工具来检测内存泄漏，当然关键还是在于统计和分析申请和释放的相关日志。内存检测工具有很多，这里重点介绍下 `valgrind` 。
 
 ![1_8_1.png](https://pic.leetcode-cn.com/1661173460-cqRhcI-1_8_1.png)
-
 
 1. `valgrind` 是一套 `Linux` 下，开放源代码（`GPL V2`）的仿真调试工具的集合，包括以下工具：
 
@@ -1336,7 +1333,6 @@ buf is deleted
 * [How do I use valgrind to find memory leaks?](https://leetcode.cn/link/?target=https://stackoverflow.com/questions/5134891/how-do-i-use-valgrind-to-find-memory-leaks)
 * [Resource acquisition is initialization](https://leetcode.cn/link/?target=https://en.wikipedia.org/wiki/Resource_acquisition_is_initialization)
 
-
 #### 11. include " " 和 <> 的区别 4
 
 面试高频指数：★★★★☆
@@ -1422,7 +1418,6 @@ auto j = a; // 此时j 为指针为 int* 类型，而不是 int(*)[9] 类型
 std::cout << typeid(j).name() << " "<<sizeof(j)<<" "<<sizeof(a)<< std::endl;
 
 ```
-
 
 2. `decltype` 类型推导:
    `decltype` 关键字：`decltype` 是 `“declare type”` 的缩写，译为“声明类型”。和 `auto` 的功能一样，都用来在编译时期进行自动类型推导。如果希望从表达式中推断出要定义的变量的类型，但是不想用该表达式的值初始化变量，这时就不能再用 `auto`。`decltype` 作用是选择并返回操作数的数据类型。
@@ -1576,7 +1571,6 @@ hello world!
 
 ```
 
-
 5. 右值引用：
    `C++` 表达式中的 “值分类”（`value categories`）属性为左值或右值。其中左值是对应（`refer to`）内存中有确定存储地址的对象的表达式的值，而右值是所有不是左值的表达式的值。因而，右值可以是字面量、临时对象等表达式。能否被赋值不是区分 `C++` 左值与右值的依据，`C++` 的 `const` 左值是不可赋值的；而作为临时对象的右值可能允许被赋值。左值与右值的根本区别在于是否允许取地址 `&` 运算符获得对应的内存地址。`C++` 标准定义了在表达式中左值到右值的三类隐式自动转换：
 
@@ -1727,8 +1721,6 @@ int random = generator();  // 产生随机数
 * [What is std::move(), and when should it be used?](https://leetcode.cn/link/?target=https://stackoverflow.com/questions/3413470/what-is-stdmove-and-when-should-it-be-used)
 * [constexpr](https://leetcode.cn/link/?target=https://zh.wikipedia.org/wiki/Constexpr)
 
-
-
 #### 02. C++ 14, C++ 17 新特性 4
 
 面试高频指数：★★★★☆
@@ -1807,344 +1799,240 @@ void test() {
 std::unique_ptr<A> ptr = std::make_unique<A>();
 </code></pre>
 
-* 共享的互斥体和锁
-  `C++ 14` 增加了一类共享的互斥体和相应的共享锁，通过使用 `std::shared_timed_mutex` 和 `std::shared_lock` 来进行线程同步。
-
-C++ 17 新特性
-
-* 结构化绑定
-  利用该特性可以把以 `C++` 中的 `pair`，`tuple`，`array`，`struct` 的成员赋值给多个变量。
-* C++
-
-<pre><div class="md-btns"><button class="md-btn-copy" title="undefined"><i></i></button></div><code>#include <iostream>
-#include <tuple>
-
-struct Point {
-    int x;
-    int y;
-    Point(int x, int y) {
-        this->x = x;
-        this->y = y;
-    }
-};
-
-int main() {
-    auto [x, y, z] = std::make_tuple(1, 2.3, "456");
-    auto [a, b] = std::make_pair(1, 2);
-    int arr[3] = {1, 2, 3};
-    auto [c, d, e] = arr;
-    auto [f, g] = Point(5, 6);
-    return 0;
-}
-</code></pre>
-
-* `if-switch` 语句初始化:
-  `if` 语句可以支持 `if (init; condition)` 写法，即在判断条件中对变量进行初始化。
-* C++
-
-<pre><div class="md-btns"><button class="md-btn-copy" title="undefined"><i></i></button></div><code>if (int a = 10; a < 101) {
-    cout << a;
-}
-</code></pre>
-
-* `constexpr lambda` 表达式:
-  `C++ 17` 前 `lambda` 表达式只能在运行时使用，`C++ 17` 引入了 `constexpr lambda` 表达式，可以用于在编译期进行计算。
-* C++
-
-<pre><div class="md-btns"><button class="md-btn-copy" title="undefined"><i></i></button></div><code>int main() {
-    constexpr auto lamb = [] (int n) { return n * n; };
-    static_assert(lamb(3) == 9, "a");
-}
-</code></pre>
-
-* `namespace` 嵌套:
-  `C++ 17` 支持命名空间嵌套，比如如下写法:
-* C++
-
-<pre><div class="md-btns"><button class="md-btn-copy" title="undefined"><i></i></button></div><code>#include <iostream>
-namespace A {
-    void func(){
-        std::cout<<"A func"<<std::endl;
-    }
-    namespace B {
-        namespace C {
-            void func(){
-                std::cout<<"C func"<<std::endl;
-            }
-        }
-    }
-}
-
-int main(int argc, char * argv[])
-{
-    A::func(); // A func 
-    A::B::C::func(); // C func
-    return 0;
-}
-</code></pre>
-
-* `std::any`：
-  增加了 `any` 可以存储任何类型，可以将其转化为任意类型。
-* C++
-
-<pre><div class="md-btns"><button class="md-btn-copy" title="undefined"><i></i></button></div><code>std::any t = 100;
-cout << std::any_cast<int>(t) << endl;
-t.reset();
-t = std::string("1111111");
-cout << std::any_cast<string>(t) << endl;
-</code></pre>
-
-* `std::basic_string_view`:
-  字符串视图实际为对外部字符串或字符串片断（`string-slice`）的引用。通过 `string view` 可以访问字符串，但不允许修改字符串。它并不真正持有这个字符串的拷贝，而是与相对应的字符串共享同一段空间。`string view` 的创建与修改不影响原始字符串。`string_view` 支持迭代器，也同样支持 `for` 语句获取元素等操作，标准库也为它编写了相关的 `istream` 和 `ostream` 的运算符重载形式，同时也支持字符串查找操作。
-* C++
-
-<pre><div class="md-btns"><button class="md-btn-copy" title="undefined"><i></i></button></div><code>string s = "123456789";
-std::string_view sv(s.c_str());
-cout<<sv<<endl;
-for (auto & ch : sv) {
-    cout << ch << ' ';
-}
-for (auto it = sv.crbegin(); it != sv.crend(); ++it) {
-    cout << *it << ' ';
-}
-cout<<sv.find("345")<<endl; // 2
-</code></pre>
+* [共享的互斥体和锁
+  `C++ 14` 增加了一类共享的互斥体和相应的共享锁，通过使用 `std::shared_timed_mutex` 和 `std::shared_lock` 来进行线程同步。]()
 
-`string_view` 并不真正的持有字符串，所以若视图所引用的字符串区域已经被销毁，那么对应的，视图也会相应的失效。
+[C++ 17 新特性]()
 
-* C++
+* [结构化绑定
+  利用该特性可以把以 `C++` 中的 `pair`，`tuple`，`array`，`struct` 的成员赋值给多个变量。]()
+* [C++]()
 
-<pre><div class="md-btns"><button class="md-btn-copy" title="undefined"><i></i></button></div><code>std::string_view test() {
-    char str[] = "1111111";
-    return {str};
-}
+* [`if-switch` 语句初始化:
+  `if` 语句可以支持 `if (init; condition)` 写法，即在判断条件中对变量进行初始化。]()
+* [C++]()
 
-int main() {
-    cout<< test() << endl; // error
-    return 0;
-}
-</code></pre>
+* [`constexpr lambda` 表达式:
+  `C++ 17` 前 `lambda` 表达式只能在运行时使用，`C++ 17` 引入了 `constexpr lambda` 表达式，可以用于在编译期进行计算。]()
+* [C++]()
 
-* `std::filesystem`：
-  `C++ 17` 正式将 `filesystem` 纳入标准中，提供了关于文件的大多数功能。
+* [`namespace` 嵌套:
+  `C++ 17` 支持命名空间嵌套，比如如下写法:]()
+* [C++]()
 
-参考资料：
+* [`code`]()
+* [`C++`]()
 
-* [C++14](https://leetcode.cn/link/?target=https://zh.m.wikipedia.org/zh-sg/C%2B%2B14)
-* [C++ 11 vs C++ 14 vs C++ 17](https://leetcode.cn/link/?target=https://www.***.org/c-11-vs-c-14-vs-c-17/)
-* [“Difference between C++11 and C++14 and C++17 ”](https://leetcode.cn/link/?target=https://medium.com/@ramprasad.s1973/difference-between-c-11-c-14-c-17-c73288193e17)
-* [C++17 new feature : If Else and Switch Statements with initializers](https://leetcode.cn/link/?target=https://www.***.org/c17-new-feature-else-switch-statements-initializers/)
-* [Changes between C++11 and C++14](https://leetcode.cn/link/?target=https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2018/p1319r0.html)
-* [What’s New in C++11 and C++14?](https://leetcode.cn/link/?target=https://www.opensourceforu.com/2018/11/whats-new-in-c11-and-c14/)
-* [C++11\14\17\20 特性介绍](https://leetcode.cn/link/?target=https://blog.csdn.net/bodybo/article/details/124901297)
-* [C++11、C++14、C++17、C++20新特性总结](https://leetcode.cn/link/?target=https://blog.csdn.net/qq_41854911/article/details/119657617)
-* [3.1 Lambda 表达式](https://leetcode.cn/link/?target=https://changkun.de/modern-cpp/zh-cn/03-runtime/#3-1-Lambda-%E8%A1%A8%E8%BE%BE%E5%BC%8F)
-* [【C++】C++ 17简单上手（2）——string_view](https://leetcode.cn/link/?target=https://blog.csdn.net/hepangda/article/details/80821567)
-* [10分钟速览 C++20 新增特性](https://leetcode.cn/link/?target=https://zhuanlan.zhihu.com/p/137646370)
-* [C++14的新特性简介](https://leetcode.cn/link/?target=https://cloud.tencent.com/developer/article/1670712)
+* [`code`]()
+* [`C++`]()
 
+[`code`]()
 
-#### 03. C 和 C++ 的对比 4
+* [`code`]()
 
-面试高频指数：★★★★☆
+* [`code`]()
 
-`C` 语言是典型面向过程（`Procedure Oriented`）的编程语言，`C++` 则是典型面向对象（`Object Oriented`）的编程语言，当然 `C++` 也支持面向过程编程。
+[`code`]()
 
-* 面向过程（`Procedure Oriented`）：一种以过程为中心的编程思想，侧重于分析解决问题所需的步骤，使用函数把这些步骤依次实现。
-* 面向对象（`Object Oriented`）：侧重于把构成问题的事务分解为各个对象。建立对象的目的不是完成其中的一个步骤，而是描述某个事务在解决整个具体问题步骤中的行为。面向对象语言的显著特征就是支持封装、继承、类的抽象。
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
 
-1. `C` 语言:
-   `C` 语言诞生于 `1969` 年在贝尔实验室诞生，`C` 语言是面向过程的编程，它最重要的特点是函数，通过 `main` 函数来调用各个子函数。程序运行的顺序都是程序员事先决定好的。截至本书完书时，当前 `C` 语言的最新稳定版本为 `C18`，目前力扣已经支持 `C11`。
-2. `C++` 语言:
-   `C++` 诞生于 `1979` 年，设计者为 `Bjarne Stroustrup`.
-   `C++` 是面向对象的编程，类是它的主要特点，在程序执行过程中，先由主 `main` 函数进入，定义一些类，根据需要执行类的成员函数，过程的概念被淡化了（实际上过程还是有的，就是主函数的那些语句）。以类驱动程序运行，类就是对象，所以我们称之为面向对象程序设计。面向对象在分析和解决问题的时候，将涉及到的数据和数据的操作封装在类中，通过类可以创建对象，以事件或消息来驱动对象执行处理。最新的 `C++` 语言标准为 `C++ 20`，目前力扣已经支持 `C++ 17`。
-3. 两者之间的比较:
-   `C++` 既继承了 `C` 强大的底层操作特性，又被赋予了面向对象机制。它特性繁多，支持面向对象语言的多继承、对值传递与引用传递的区分以及 `const` 关键字，现代 `C++` 编译器完全兼容 `C` 语言语法。
+#### `code`
 
-* **二者的相同之处** :
-  `C++` 能够大部分兼容 `C` 的语法，且二者之间相同的关键字和运算符功能和作用也几乎相同；二者之间的内存模型与硬件比较接近，几乎都可以直接操纵硬件。栈、堆、静态变量这些概念在两种语言都存在。
-* **二者的不同之处** ：
-* `C` 为面向过程的编程语言，不支持面向对象，不支持继承、多态、封装。
-* 类型检查更为严格，`C` 语言中的类型转换几乎是任意的，但是 `C++` 编译器对于类型转换进行非常严格检查，部分强制类型转换在 `C` 语言编译器下可以通过，但在 `C++` 编译器下无法通过。
-* `C` 和 `C++` 中都有结构的概念，但是在 `C` 语言中结构只有成员变量，而没成员方法，`C` 的成员变量没有权限控制，该结构体的变量对所有调用全部可见；而在 `C++` 中结构中，它可以有自己的成员变量和成员函数，`C++` 对类的成员变量具有访问权限控制。
-* 增加了面向对象的机制、泛型编程的机制（`Template`）、异常处理、引用、运算符重载、标准模板库（`STL`）、命名空间（避免全局命名冲突）。
-* 应用领域：对于 `C` 语言程序员来说，程序的底层实现和内存分布基本上都可见，所以一般常用于直接控制硬件，特别是 `C` 语言在嵌入式领域应用很广，比如常见的驱动开发等与硬件直接打交道的领域，`C++` 可以用于应用层开发，用户界面开发等与操作系统打交道的领域，特别是图形图像编程领域，几乎所有的高性能图形图像库都是用 `C++` 实现的。
+`code`
 
-参考资料：
+`code`
 
-* [C11 (C语言标准)](https://leetcode.cn/link/?target=https://zh.m.wikipedia.org/zh-sg/C11_(C%E8%AF%AD%E8%A8%80%E6%A0%87%E5%87%86))
-* [Difference between C and C++](https://leetcode.cn/link/?target=https://www.***.org/difference-between-c-and-c/)
-* [Difference between C and C++.](https://leetcode.cn/link/?target=https://www.tutorialspoint.com/difference-between-c-and-cplusplus)
+* `code`
+* `code`
 
+1. `code`
+2. `code`
+3. `code`
 
-#### 04. Java 和 C++ 的对比 4
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
 
-面试高频指数：★★★★☆
+`code`
 
-`Java` 和 `C++` 都是典型的面向对象（`Object Oriented`）的编程语言。
+* `code`
+* `code`
+* `code`
 
-1. `Java` 语言:
+#### `code`
 
-   `Java` 是一种广泛使用的计算机编程语言，拥有跨平台、面向对象、泛型编程的特性，广泛应用于企业级 `Web` 应用开发和移动应用开发。`Java` 语言由 `Sun` 微系统（`Sun MicroSystems`）公司在 `1995` 年正式发布。`Java` 伴随着互联网的迅猛发展而发展，逐渐成为重要的网络编程语言。
+`code`
 
-   `Java` 编程语言的风格十分接近 `C++` 语言。继承了 `C++` 语言面向对象技术的核心，舍弃了容易引起错误的指针，以引用取代；移除了 `C++` 中的运算符重载和多重继承特性，用接口取代；增加垃圾回收器功能。引入了泛型编程、类型安全的枚举、不定长参数和自动装/拆箱特性。`Java` 不同于一般的编译语言或解释型语言。它首先将原始码编译成字节码，再依赖各种不同平台上的虚拟机 （`JVM`）来解释执行字节码，从而具有 “一次编写，到处运行”的跨平台特性。
-2. 两者之间的比较:
+`code`
 
-* **二者的相同之处** :
-  `C++` 与 `Java` 均支持面对对象（`Object Oriented`），支持类、继承、封装等常见的概念。
-* **二者的不同之处** ：
-* `Java` 被编译成字节码，并运行在虚拟机 `JVM` 上，和开发平台无关，具有跨平台的特性；`C++` 直接编译成可执行文件，是否跨平台在于用到的编译器的特性是否有多平台的支持。
-* `Java` 是完全面向对象的语言，所有函数和变量部必须是类的一部分。除了基本数据类型之外，其余的都作为类对象，包括数组。对象将数据和方法结合起来，把它们封装在类中，这样每个对象都可实现自己的特点和行为。而 `C++` 允许将函数和变量定义为全局的。
-* 由于 `Java` 被编译为字节码，只要安装能够运行 `Java` 的虚拟机即可运行 `Java` 程序，因此 `Java` 程序具有很强的可移植性，具有 “一次编写，到处运行” 的跨平台特性；而 `C++` 跨平台后，必须需要重新编译；
-* `Java` 语言具有垃圾回收机制，由系统进行分配和回收内存，编程人员无需考虑内存管理的问题，可以有效的防止内存泄漏，有效的使用空闲的内存。`Java` 所有的对象都是用 `new` 操作符建立在内存堆栈上，类似于 `C++` 中的 `new` 操作符，但是当要释放该申请的内存空间时，`Java` 自动进行内存回收操作，`Java` 中的内存回收是以线程的方式在后台运行的，利用空闲时间。`C++` 则需要程序员进行内存管理，当资源释放时需要程序员进行手动释放内存空间。
-* `C++` 支持多重继承，允许多个父类派生一个类，虽然功能很强大，但是如果使用的不当会造成很多问题，例如：菱形继承；`Java` 不支持多重继承，但允许一个类可以继承多个接口，可以实现 `C++` 多重继承的功能，但又避免了多重继承带来的许多不便。
-* `C++` 支持方法与操作符的重载；但 `Java` 只支持方法重载，不支持操作符重载。
-* `C++` 用 `virtual` 关键字标记的方法可以被覆盖；`Java` 中非 `static` 方法均可被覆盖，`Java` 中的方法默认均可以被覆盖。
-* `C++` 可以直接操作指针，容易产生内存泄漏以及非法指针引用的问题；`Java` 并不是没有指针，虚拟机（`JVM`）内部还是使用了指针，只是编程人员不能直接使用指针，不能通过指针来直接访问内存，并且 `Java` 增加了内存管理机制。
-* `C++` 标准库不提供 `thread` 相关接口；`Java` 的标准 `SDK` 提供 `thread` 类。
-* `C++` 支持结构体（`structure`）与联合体（`union`），`Java` 不支持结构体（`structure`）与联合体（`union`）。
-* 从应用场景来说， `C++` 可以直接编译成可执行文件，运行效率比 `Java` 高。`Java` 目前主要用来开发 Web 应用。`C++` 主要用在嵌入式开发、网络、并发编程、图形图像处理、系统编程的方面。
+1. `code`
 
-参考资料：
+   `code`
 
-* [C++ Vs Java: Top 30 Differences Between C++ And Java With Examples](https://leetcode.cn/link/?target=https://www.softwaretestinghelp.com/cpp-vs-java/)
-* [C++ vs Java](https://leetcode.cn/link/?target=https://www.javatpoint.com/cpp-vs-java)
-* [Difference between C and C++.](https://leetcode.cn/link/?target=https://www.tutorialspoint.com/difference-between-c-and-cplusplus)
+   `code`
+2. `code`
 
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
 
-#### 05. Python 和 C++ 的对比 3
+`code`
 
-面试高频指数：★★★☆☆
+* `code`
+* `code`
+* `code`
 
-1. `Python` 语言:
-   `Python` 是一种广泛使用的解释型、高级和通用的编程语言。`Python` 支持多种编程范型，包括函数式、指令式、反射式、结构化和面向对象编程。它拥有动态类型系统和垃圾回收功能，能够自动管理内存使用，并且其本身拥有一个巨大而广泛的标准库。它的语言结构以及面向对象的方法旨在帮助程序员为小型的和大型的项目编写清晰的、合乎逻辑的代码。吉多·范罗苏姆于 `1991` 年首次发布 `Python 0.9.0`。`Python 2.0` 于 `2000` 年发布并引入了新功能。`Python 3.0` 于 `2008` 年发布，是该语言的主要修订版，并非完全向后兼容。`Python 2` 于 `2020` 年随 `2.7.18` 版停止支持。`Python` 的设计哲学强调代码的可读性和简洁的语法，尤其是使用空格缩进划分代码块。相比于 `C` 或 `Java`，`Python` 让开发者能够用更少的代码表达想法。`Python` 解释器本身几乎可以在所有的操作系统中运行。`Python` 的官方解释器 `CPython` 是用 `C` 语言编写的，它是一个由社群驱动的自由软件，目前由 `Python` 软件基金会管理。`Python` 是最受欢迎的编程语言之一。
+#### `code`
 
-   `Python` 是多泛型编程语言。它完全支持结构化编程和面向对象编程，还有很多特征支持函数式编程和元编程比如元对象协议（元类和魔术方法）。通过扩展还可以支持很多范型，包括面向切面编程、契约式设计和逻辑编程。
+`code`
 
-   `Python` 使用动态类型，在内存管理上采用引用计数和环检测相结合的垃圾收集器。它的特征还有动态名字解析（后期绑定（英语：`late binding`）），即在程序执行期间绑定方法和变量的名字。
+1. `code`
 
-   `Python` 对遵循 `LISP` 传统的函数式编程提供了有限的支持，它提供了 `map`、`filter` 和 `reduce` 函数；列表推导式、字典、集合（英语：`Set (abstract data type)`）和生成器表达式。标准库中的模块 `functools` 和 `itertools`，实现了从 `Haskell` 和 `Standard ML` 借鉴来的函数式工具。
+   `code`
 
-   `Python` 的设计哲学是“优雅”、“明确”、“简单”。它的重要准则被称为 “`Python` 之禅”。在 `Python` 解释器内运行 `import this` 可以获得完整的列表。`Python` 遵循的设计理念:
+   `code`
 
-* 优美优于丑陋。明了优于隐晦。
-* 简单优于复杂。复杂优于凌乱。
-* 扁平优于嵌套。稀疏优于稠密。
-* 可读性很重要。
+   `code`
 
-2. 两者之间的比较:
+   `code`
 
-* **二者的相同之处** :
-  `C++` 与 `Python` 均支持面向对象，二者均可用来编写大型应用程序。
-* **二者的不同之处** ：
-* 从语言自身来说，`Python` 为脚本语言，解释执行，不需要经过编译，所有的 `python` 源代码都是经过 `Python` 解释器；`C++` 是一种需要编译后才能运行的语言，在特定的机器上编译后运行。
-* `Python` 变量的作用域不仅局限于（`while，for`）循环内，在循环外还可以继续访问在循环内定义的变量；`C++` 则不允许循环外访问循环内定义的变量。
-* `Python` 没有严格限定函数的参数类型和返回值类型；`C++` 则严格限定函数参数和返回值的类型。
-* 从运行效率来说，`C++` 运行效率高，安全稳定。`Python` 代码和 `C++` 最终都会变成 `CPU` 指令来跑，但一般情况下，比如反转和合并两个字符串，`Python` 最终转换出来的 `CPU` 指令会比 C++ 多很多。首先，`Python` 中涉及的内容比 `C++` 多，经过了更多层，`Python` 中甚至连数字都是 `object`；其次，`Python` 是边解释边执行，和物理机 `CPU` 之间多了解释器这层，而 `C++` 是编译执行的，直接就是机器码，编译的时候编译器又可以进行一些优化。
-* 从开发效率来说，`Python` 开发效率高。`Python` 一两句代码就能实现的功能，`C++` 往往需要更多的代码才能实现。
-* 书写格式和语法不同，`Python` 的语法格式不同于其 `C++` 定义声明才能使用，而且极其灵活，完全面向更上层的开发者，`C++` 是严格静态类型声明语言，编译器在进行编译时必须经过严格的静态类型检查，如果发现类型检查错误，则中止编译；`Python` 为动态类型语言，我们在编写代码时不用指定变量的类型，只在执行时才会进行变量类型推导，确定变量类型。
-* `C++` 可以直接用来操纵硬件，适合用来作为系统编程；`Python` 作为一门脚本语言，功能小巧而精湛，非常适合做工具开发和运维开发。
+* `code`
+* `code`
+* `code`
+* `code`
 
-参考资料：
+2. `code`
 
-* [Python vs. C++ Differences: Difficulty, Popularity, and Career Options](https://leetcode.cn/link/?target=https://hackr.io/blog/python-vs-cpp)
-* [Python Vs C++ | Top 16 Differences Between C++ And Python](https://leetcode.cn/link/?target=https://www.softwaretestinghelp.com/python-vs-cpp/)
-* [Differences Between Python vs C++](https://leetcode.cn/link/?target=https://www.educba.com/python-vs-c-plus-plus/)
-* [Python vs C++: What’s the Difference?](https://leetcode.cn/link/?target=https://www.guru99.com/python-vs-c-plus-plus.html)
-* [Python vs C++: Know what are the differences](https://leetcode.cn/link/?target=https://www.edureka.co/blog/python-vs-cpp/)
-* [Difference between Python and C++](https://leetcode.cn/link/?target=https://www.***.org/difference-between-python-and-c/)
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
 
+`code`
 
-#### 06. Go 和 C++ 的对比 3
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
 
-面试高频指数：★★★☆☆
+#### `code`
 
-1. `Go` 语言:
+`code`
 
-`Go`（又称 `Golang`）是 `Google` 开发的一种静态强类型、编译型、并发型，并具有垃圾回收功能的编程语言。`Google` 的罗伯特·格瑞史莫（英语：`Robert Griesemer`）、罗勃·派克及肯·汤普逊于 `2007` 年 `9` 月开始设计 `Go`，稍后伊恩·兰斯·泰勒（`Ian Lance Taylor`）、拉斯·考克斯（`Russ Cox`）加入项目。`Go` 的语法接近 `C` 语言，但对于变量的声明（`type declaration`）有所不同。`Go` 支持垃圾回收功能。`Go` 的并行计算模型是以东尼·霍尔的通信顺序进程（`CSP`）为基础，采取类似模型的其他语言包括 `Occam` 和 `Limbo`，`Go` 也具有这个模型的特征，比如通道传输。通过 `goroutine` 和通道等并行构造可以建造线程池和管道等。在 `1.8` 版本中开放插件（`Plugin`）的支持，这意味着现在能从 `Go` 中动态加载部分函数。与 `C++` 相比，`Go` 并不包括如枚举、异常处理、继承、泛型、断言、虚函数等功能，但增加了切片（`Slice`）型、并发、管道、垃圾回收功能、接口等特性的语言级支持。`Go 2.0` 版本将支持泛型。不同于 `Java`，`Go` 原生提供了关联数组（也称为哈希表（`Hashes`）或字典（`Dictionaries`））。
+1. `code`
 
-1. 两者之间的比较:
+`code`
 
-* **二者的相同之处** :
-  二者都为静态类型编程语言，二者都为编译性语言，都具有高性能的特点。
-* **二者的不同之处** ：
-* `Go` 的许多越语法和逻辑跟 `C` 非常类似，`Go` 的运行效率很高，`Go` 主要是面向过程，对于面向对象支持较弱，不支持继承、多态这些概念，`Go` 通过结构体中含有方法来支持面向对象，但不支持多重继续，`Go` 没有类的概念，同时也不支持构造函数与析构函数；`C++` 则是面向对象（`Object Oriented`），支持继承、多重继承、多态、重载这些特性。
-* `Go` 语言自带垃圾回收（`garbage collection`）；`C++` 不支持内存垃圾自动回收，需要程序手动管理动态申请的内存。
-* `Go` 语言也支持指针，但是 `Go` 语言不支持指针的运算；`C++` 支持指针，同时也支持指针运算。
-* `C++` 编译器提供 `SIMD` 指令生成，但是 `Go` 编译器不支持 `SIMD` 指令的生成。
-* `C++` 遵循的许可为 `open source project 2.0`，而 `Go` 遵循的许可为 `BSD`。
-* `C++` 与 `Go` 都属于静态类型编程语言，但是 `Go` 语言需要遵循强类型语言规则，`Go` 不支持隐式类型转换。
-* `Go` 编译时如果需要引用外部函数则使用 `import` 关键字，引入 `packages`，而 `C++` 则使用 `#include` 关键字，引入头文件。
-* `Go` 不支持函数重载和操作符重载，而 `C++` 支持函数重载与操作符重载。
-* `Go` 中的空指针用 `nil` 表示，而 `C++` 中空指针可以用 `nullptr` 或者 `0` 表示。
-* `C++` 支持异常处理，可以捕获异常，`Go` 使用 `panic` 并保存所有的错误信息。
-* `Go` 可以利用 `goroutines` 与 `channel` 来进行并发与多线程，`C++` 只能使用线程。
+1. `code`
 
-参考资料：
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
 
-* [Go vs C++ Compared and Contrasted](https://leetcode.cn/link/?target=https://careerkarma.com/blog/go-vs-c-plus-plus/)
-* [Go 语言教程](https://leetcode.cn/link/?target=https://www.runoob.com/go/go-tutorial.html)
-* [C++ vs Go](https://leetcode.cn/link/?target=https://www.educba.com/c-plus-plus-vs-go/)
-* [Go vs C++](https://leetcode.cn/link/?target=https://www.***.org/go-vs-c-plus-plus/)
-* [Go](https://leetcode.cn/link/?target=https://zh.m.wikipedia.org/wiki/Go)
+`code`
 
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
 
-#### 07. Rust 和 C++ 的对比 3
+#### `code`
 
-面试高频指数：★★★☆☆
+`code`
 
-1.  `Rust` 语言:
+1. `code`
 
-`Rust` 是由 `Mozilla` 主导开发的通用、编译型编程语言。设计准则为“安全、并发、实用”，支持函数式、并发式、过程式以及面向对象的程序设计风格。`Rust` 语言原本是 `Mozilla` 员工 `Graydon Hoare` 的私人计划，而 `Mozilla` 于 `2009` 年开始赞助这个计划，并且在 `2010` 年首次公开。也在同一年，其编译器源代码开始由原本的 `OCaml` 语言转移到用 `Rust` 语言，进行 `bootstrapping` 工作，编译器在架构上采用了 `LLVM` 做为它的后端。第一个有版本号的 `Rust` 编译器于2012年1月发布。`Rust 1.0` 是第一个稳定版本，于 `2015` 年 `5` 月 `15` 日发布。`Rust` 的设计目标之一，是要使设计大型的互联网客户端和服务器的任务变得更容易，因此更加强调安全性、存储器配置、以及并发处理等方面的特性。在性能上，具有额外安全保证的代码会比 `C++` 慢一些，例如对 `Rust` 的数组进行操作时默认会检查索引是否越界，而 `C++` 则不会，但是如果以 `C++` 也手工提供保证的情况下，则两者性能上是相似的。为了提供存储器安全，它的设计不允许空指针和悬空指针。 指针只能透过固定的初始化形态来建构，而所有这些形态都要求它们的输入已经分析过了。`Rust` 有一个检查指针生命期间和指针冻结的系统，可以用来预防在 `C++` 中许多的类型错误，甚至是用了智能指针功能之后会发生的类型错误。
+`code`
 
-1. 两者之间的比较:
+1. `code`
 
-* **二者的相同之处** :
-  二者都支持指针操作，都可以用来作为系统编程语言，二者都可以用来操作底层硬件，二者都都具有与 `C` 语言程序相当的性能。
-* **二者的不同之处** ：
-* `Rust` 不允许空指针和悬空指针，`C++` 则允许空指针；
-* `Rust` 只支持函数式编程，`C++` 支持的语言特性较多；
-* `Rust` 没有头文件，`C++` 有头文件；
-* `Rust` 语言自带有内存管理，保证内存使用安全，`Rust` 利用编译时的静态分析很大程度上保证了代码使用内存的安全性；而 `C++` 需要进行手动申请和释放内存；
-* `Rust` 利用静态分析，在编译时会分析代码由于并发引起的数据竞争，较好的做好的并发处理；`C++` 的使用多线程并发容易引起各种数据竞争的问题。
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
 
-参考资料：
+`code`
 
-* [Rust vs. C++—the main differences between these popular programming languages](https://leetcode.cn/link/?target=https://codilime.com/blog/rust-vs-cpp-the-main-differences-between-these-popular-programming-languages/)
-* [Rust vs C++: an in-depth language comparison](https://leetcode.cn/link/?target=https://www.educative.io/blog/rust-vs-cpp)
-* [Rust vs C++ Comparison](https://leetcode.cn/link/?target=https://www.apriorit.com/dev-blog/520-rust-vs-c-comparison)
-* [Rust vs C++: Which Technology Should You Choose?](https://leetcode.cn/link/?target=https://www.ideamotive.co/blog/rust-vs-cpp-which-technology-should-you-choose)
-
+* `code`
+* `code`
+* `code`
+* `code`
 
 ### 3, C++ 关键字与关键库函数
 
 本章将重点涉及以下高频知识点：
 
 * [sizeof 和 strlen 的区别](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vw9445/)
-* [C 和 C++ static 中的作用](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vwrt6c/)
-* [const 作用及用法](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vwplqi/)
-* [define 和 const 的区别](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vwmd3e/)
-* [inline 作用及使用方法](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vwnolj/)
-* [new 和 malloc 的区别](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vwd4vd/)
-* [delete 与 free 的区别](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vw0gnh/)
-* [volatile 的作用与使用场景](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vwudo7/)
-* [用宏实现比较大小，以及两个数中的最小值](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vw2muv/)
-* [宏定义（define）和内联函数（inline）的区别](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vwvf0r/)
-* [C 和 C++ struct 的区别](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vw7qa3/)
-* [struct 和 union 的区别](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vwltmm/)
-* [extern C 的作用](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vw8m56/)
-* [strcpy 函数的缺陷](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vwqjji/)
-* [lambda 表达式的应用](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vwegz6/)
-* [explicit 的作用](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vwoqg2/)
-* [define 和 typedef 的区别](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vwantg/)
-* [inline 函数工作原理](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vwv57t/)
-* [class 和 struct 的异同](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vwilr1/)
-* [返回函数中静态变量的地址会发生什么](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vwtne5/)
-* [sizeof(1==1) 在 C 和 C++ 中的结果](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vw3ox2/)
-* [memmove 函数的底层原理](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vwqxfc/)
-* [auto 类型推导的原理](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vw6ybe/)
-* [new 的作用](https://leetcode.cn/leetbook/read/cmian-shi-tu-po/vwwcws/)
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
+* `code`
 
-#### 01. sizeof 和 strlen 的区别 5
+#### `code`
 
-面试高频指数：★★★★★
+`code`
